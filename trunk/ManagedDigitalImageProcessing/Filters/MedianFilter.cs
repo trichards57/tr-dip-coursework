@@ -6,11 +6,21 @@ using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
-    class CrossMedianFilter : FilterBase
+    /// <summary>
+    /// Apply a median filter to the input.
+    /// </summary>
+    class MedianFilter : FilterBase
     {
+        /// <summary>
+        /// The size of the filter window.
+        /// </summary>
         private int windowSize;
 
-        public CrossMedianFilter(int size = 3)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MedianFilter"/> class.
+        /// </summary>
+        /// <param name="size">The filter window size.</param>
+        public MedianFilter(int size = 3)
         {
             if (size % 2 == 0)
                 throw new ArgumentOutOfRangeException("size", windowSize, "The size must be odd.");
@@ -18,32 +28,43 @@ namespace ManagedDigitalImageProcessing.Filters
             windowSize = size;
         }
 
+        /// <summary>
+        /// Filters the specified input.
+        /// </summary>
+        /// <param name="input">The input image.</param>
+        /// <returns>
+        /// The filtered image.
+        /// </returns>
         public override PgmImage Filter(PgmImage input)
         {
             var output = new PgmImage();
             output.Header = input.Header;
             output.Data = new byte[input.Data.Length];
 
+            // Partial function application to simplify index calculation.
+            Func<int, int, int> calculateIndex = ((x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height));
+
             var offset = windowSize / 2;
 
-            for (var i = offset; i < output.Header.Width - offset; i++)
+            // Iterate through each column.
+            for (var i = 0; i < output.Header.Width; i++)
             {
-                for (var j = offset; j < output.Header.Height - offset; j++)
+                // Iterate through each point in the column.
+                for (var j = 0; j < output.Header.Height; j++)
                 {
                     var list = new List<byte>();
+                    // Iterate through each of the items in the window, adding the value to a list.
                     for (var k = -offset; k <= offset; k++)
                     {
-                        list.Add(input.Data[CalculateIndex(i + k, j, output.Header.Width)]);
+                        for (var l = -offset; l <= offset; l++)
+                        {
+                            list.Add(input.Data[calculateIndex(i + k, j + l)]);
+                        }
                     }
-                    for (var l = -offset; l <= offset; l++)
-                    {
-                        if (l != 0) // Added to avoid duplicating the center point.
-                            list.Add(input.Data[CalculateIndex(i, j + l, output.Header.Width)]);
-                    }
-
-
+                    // Sort the list.
                     list.Sort();
-                    output.Data[CalculateIndex(i, j, output.Header.Width)] = list[4];
+                    // Take the middle value (the median) and insert it in to the new image.
+                    output.Data[calculateIndex(i, j)] = list[list.Count / 2];
                 }
             }
 
