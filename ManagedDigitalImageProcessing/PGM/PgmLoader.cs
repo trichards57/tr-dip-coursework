@@ -8,8 +8,18 @@ using ManagedDigitalImageProcessing.PGM.Exceptions;
 
 namespace ManagedDigitalImageProcessing.PGM
 {
-    class PgmLoader
+    /// <summary>
+    /// Loads an image out of a %PGM file.
+    /// </summary>
+    static class PgmLoader
     {
+        /// <summary>
+        /// Loads a %PGM image.
+        /// </summary>
+        /// <param name="instream">The stream to load the image from.</param>
+        /// <returns>A PgmImage containing the loaded image.</returns>
+        /// <exception cref="InvalidPgmHeaderException">Thrown if there isn't enough data in the file to fill the image defined in the header.</exception>
+        /// <remarks>Not particularly safe.  Falls down if the entire file is long enough to fill the image but the actual data section (i.e. the section after the header) isn't (it will load the header in to the image).</remarks>
         public static PgmImage LoadImage(Stream instream)
         {
             var reader = new StreamReader(instream);
@@ -28,6 +38,11 @@ namespace ManagedDigitalImageProcessing.PGM
             return new PgmImage { Data = data, Header = header };   
         }
 
+        /// <summary>
+        /// Reads the header from a %PGM image.
+        /// </summary>
+        /// <param name="reader">The reader to read from.</param>
+        /// <returns>A PgmHeader loaded from <paramref name="reader"/>.</returns>
         public static PgmHeader ReadHeader(StreamReader reader)
         {
             var header = new PgmHeader();

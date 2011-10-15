@@ -7,12 +7,31 @@ using System.Drawing.Imaging;
 
 namespace ManagedDigitalImageProcessing.PGM
 {
+    /// <summary>
+    /// An image loaded from a %PGM file.
+    /// </summary>
     class PgmImage
     {
+        /// <summary>
+        /// Gets or sets the header of the file.
+        /// </summary>
+        /// <value>
+        /// The header of the file.
+        /// </value>
         public PgmHeader Header { get; set; }
 
+        /// <summary>
+        /// Gets or sets the image data.
+        /// </summary>
+        /// <value>
+        /// The image data.
+        /// </value>
         public byte[] Data { get; set; }
 
+        /// <summary>
+        /// Converts the image to a Bitmap.
+        /// </summary>
+        /// <returns></returns>
         public Bitmap ToBitmap()
         {
             var output = new Bitmap(Header.Width, Header.Height);
