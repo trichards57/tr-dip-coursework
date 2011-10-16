@@ -25,18 +25,17 @@ namespace ManagedDigitalImageProcessing
 
             var data = PGM.PgmLoader.LoadImage(inFile);
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             var noiseFilter = new GaussianFilter(3, 0.5);
             var edgeFilter = new SobelOperator();
-            var bitsliceFilter = new BitwiseAndFilter(0xF0);
+            var bitsliceFilter = new BitwiseAndFilter(0xC0);
             var nonMaximal = new NonMaximumSuppression();
             var hysteresis = new HysteresisThresholding(180, 10);
+            var laplaceFilter = new LaplacianOperator();
 
             var output = noiseFilter.Filter(data);
-            output = bitsliceFilter.Filter(output);
-            output = hysteresis.Filter(nonMaximal.Filter(edgeFilter.FilterSplit(output)).ToPgmImage());
+            //output = bitsliceFilter.Filter(output);
+            //output = hysteresis.Filter(nonMaximal.Filter(edgeFilter.FilterSplit(output)).ToPgmImage());
+            output = laplaceFilter.Filter(output);
 
             data.ToBitmap().Save("basic.png", ImageFormat.Png);
             output.ToBitmap().Save("output.png", ImageFormat.Png);
