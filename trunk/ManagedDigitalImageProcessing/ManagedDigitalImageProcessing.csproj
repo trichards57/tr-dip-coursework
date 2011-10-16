@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Filters\BitwiseAndFilter.cs" />
     <Compile Include="Filters\EdgeDetectors\HysteresisThresholding.cs" />
+    <Compile Include="Filters\EdgeDetectors\LaplacianOperator.cs" />
     <Compile Include="Filters\EdgeDetectors\NonMaximumResult.cs" />
     <Compile Include="Filters\EdgeDetectors\NonMaximumSuppression.cs" />
     <Compile Include="Filters\EdgeDetectors\SobelOperator.cs" />
