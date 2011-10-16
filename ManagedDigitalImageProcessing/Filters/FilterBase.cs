@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ManagedDigitalImageProcessing.PGM;
+using System.Drawing;
+using System.Threading.Tasks;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
@@ -35,6 +37,64 @@ namespace ManagedDigitalImageProcessing.Filters
                 y = height - (y - height) - 1;
 
             return x + y * width;
+        }
+
+        protected static byte[] Convolve(int[] input, byte[] data, Size inputSize, Size dataSize)
+        {
+            Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
+            Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
+
+            byte[] output = new byte[data.Length];
+            var xOffset = inputSize.Width / 2;
+            var yOffset = inputSize.Height / 2;
+
+            Parallel.For(0, dataSize.Width, i =>
+            {
+                for (var j = 0; j < dataSize.Height; j++)
+                {
+                    int sum = 0;
+                    for (var k = 0; k < inputSize.Width; k++)
+                    {
+                        for (var l = 0; l < inputSize.Height; l++)
+                        {
+                            sum += (int)data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
+                        }
+                    }
+                    output[calculateDataIndex(i, j)] = (byte)sum;
+                }
+            });
+
+            return output;
+        }
+
+        protected static byte[] Convolve(double[] input, byte[] data, Size inputSize, Size dataSize)
+        {
+            Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
+            Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
+
+            byte[] output = new byte[data.Length];
+            var xOffset = inputSize.Width / 2;
+            var yOffset = inputSize.Height / 2;
+
+            var reg = Parallel.For(0, dataSize.Width, i =>
+            {
+                for (var j = 0; j < dataSize.Height; j++)
+                {
+                    double sum = 0;
+                    for (var k = 0; k < inputSize.Width; k++)
+                    {
+                        for (var l = 0; l < inputSize.Height; l++)
+                        {
+                            sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
+                        }
+                    }
+                    output[calculateDataIndex(i, j)] = (byte)Math.Floor(sum);
+                }
+            });
+
+            while (!reg.IsCompleted) ;
+
+            return output;
         }
 
         /// <summary>
