@@ -6,6 +6,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using ManagedDigitalImageProcessing.Filters;
 using System.Diagnostics;
+using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
 
 namespace ManagedDigitalImageProcessing
 {
@@ -27,44 +28,18 @@ namespace ManagedDigitalImageProcessing
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            for (var i = 3; i < 26; i += 2)
-            {
-                var filter = new MedianFilter(i);
-                var filteredData = filter.Filter(data);
-                filteredData.ToBitmap().Save(string.Format("medianFilteredTest{0:00}.png", i), ImageFormat.Png);
-            }
+            var noiseFilter = new GaussianFilter(3, 0.5);
+            var edgeFilter = new SobelOperator();
+            var bitsliceFilter = new BitwiseAndFilter(0xF0);
+            var nonMaximal = new NonMaximumSuppression();
+            var hysteresis = new HysteresisThresholding(180, 10);
 
-            stopwatch.Stop();
-            Console.WriteLine("Median Filter Time : {0:0.0000}", stopwatch.Elapsed.TotalSeconds);
-
-            stopwatch.Restart();
-
-            for (var i = 3; i < 26; i += 2)
-            {
-                var filter = new HistogramMedianFilter(i);
-                var filteredData = filter.Filter(data);
-                filteredData.ToBitmap().Save(string.Format("histogramMedianFilteredTest{0:00}.png", i), ImageFormat.Png);
-            }
-
-            stopwatch.Stop();
-            Console.WriteLine("Histogram Median Filter Time : {0:0.0000}", stopwatch.Elapsed.TotalSeconds);
-
-            for (var i = 3; i < 26; i += 2)
-            {
-                var filter = new CrossMedianFilter(i);
-                var filteredData = filter.Filter(data);
-                filteredData.ToBitmap().Save(string.Format("crossFilteredTest{0:00}.png", i), ImageFormat.Png);
-            }
-
-            for (var i = 3; i < 26; i += 2)
-            {
-                var filter = new TruncatedMedianFilter(i);
-                var filteredData = filter.Filter(data);
-                filteredData.ToBitmap().Save(string.Format("truncatedMedianFilteredTest{0:00}.png", i), ImageFormat.Png);
-            }
+            var output = noiseFilter.Filter(data);
+            output = bitsliceFilter.Filter(output);
+            output = hysteresis.Filter(nonMaximal.Filter(edgeFilter.FilterSplit(output)).ToPgmImage());
 
             data.ToBitmap().Save("basic.png", ImageFormat.Png);
-
+            output.ToBitmap().Save("output.png", ImageFormat.Png);
         }
     }
 }

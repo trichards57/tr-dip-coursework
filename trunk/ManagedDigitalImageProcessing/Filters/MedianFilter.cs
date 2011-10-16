@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ManagedDigitalImageProcessing.PGM;
+using System.Threading.Tasks;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
@@ -23,7 +24,7 @@ namespace ManagedDigitalImageProcessing.Filters
         public MedianFilter(int size = 3)
         {
             if (size % 2 == 0)
-                throw new ArgumentOutOfRangeException("size", windowSize, "The size must be odd.");
+                throw new ArgumentOutOfRangeException("size", size, "The size must be odd.");
 
             windowSize = size;
         }
@@ -47,7 +48,7 @@ namespace ManagedDigitalImageProcessing.Filters
             var offset = windowSize / 2;
 
             // Iterate through each column.
-            for (var i = 0; i < output.Header.Width; i++)
+            Parallel.For(0, output.Header.Width, i =>
             {
                 // Iterate through each point in the column.
                 for (var j = 0; j < output.Header.Height; j++)
@@ -66,7 +67,7 @@ namespace ManagedDigitalImageProcessing.Filters
                     // Take the middle value (the median) and insert it in to the new image.
                     output.Data[calculateIndex(i, j)] = list[list.Count / 2];
                 }
-            }
+            });
 
             return output;
         }
