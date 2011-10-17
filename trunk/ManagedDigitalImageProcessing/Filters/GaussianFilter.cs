@@ -11,6 +11,12 @@ namespace ManagedDigitalImageProcessing.Filters
     {
         private double[] template;
         private int size;
+        private double sigma;
+
+        public GaussianFilter(double sigma) : this((int)(2 * Math.Ceiling(3 * sigma) + 1), sigma)
+        {
+            this.sigma = sigma;
+        }
 
         public GaussianFilter(int size, double sigma)
         {
@@ -43,6 +49,11 @@ namespace ManagedDigitalImageProcessing.Filters
             output.Data = Convolve(template, input.Data, new Size(size, size), new Size(input.Header.Width, input.Header.Height));
 
             return output;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Gauss {0}", sigma);
         }
     }
 }

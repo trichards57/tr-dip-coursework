@@ -107,5 +107,10 @@ namespace ManagedDigitalImageProcessing.Filters
             return output;
         }
 
+
+        public override string ToString()
+        {
+            return string.Format("Histogram {0}", windowSize);
+        }
     }
 }

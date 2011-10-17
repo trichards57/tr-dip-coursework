@@ -21,5 +21,10 @@ namespace ManagedDigitalImageProcessing.Filters
 
             return output;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Bitwise {0:X}", mask); 
+        }
     }
 }

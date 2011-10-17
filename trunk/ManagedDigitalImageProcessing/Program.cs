@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using ManagedDigitalImageProcessing.Filters;
 using System.Diagnostics;
 using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
+using System.Drawing;
 
 namespace ManagedDigitalImageProcessing
 {
@@ -25,20 +26,61 @@ namespace ManagedDigitalImageProcessing
 
             var data = PGM.PgmLoader.LoadImage(inFile);
 
-            var noiseFilter = new GaussianFilter(3, 0.5);
-            var edgeFilter = new SobelOperator();
-            var bitsliceFilter = new BitwiseAndFilter(0xC0);
-            var nonMaximal = new NonMaximumSuppression();
-            var hysteresis = new HysteresisThresholding(180, 10);
-            var laplaceFilter = new LaplacianOperator();
+            var medianFilters = new List<FilterBase>();
+            var gausFilters = new List<FilterBase>();
+            var bitsliceFilters = new List<FilterBase>();
+            var edgeDetectors = new List<FilterBase>();
 
-            var output = noiseFilter.Filter(data);
-            //output = bitsliceFilter.Filter(output);
-            //output = hysteresis.Filter(nonMaximal.Filter(edgeFilter.FilterSplit(output)).ToPgmImage());
-            output = laplaceFilter.Filter(output);
+            for (var i = 3; i < 23; i += 2)
+                medianFilters.Add(new HistogramMedianFilter(i));
+            medianFilters.Add(new NoOpFilter());
+
+            for (var i = 1; i < 12; i++)
+                gausFilters.Add(new GaussianFilter(i));
+            gausFilters.Add(new NoOpFilter());
+
+            bitsliceFilters.AddRange(new FilterBase[] { new BitwiseAndFilter(0xF0), new NoOpFilter() });
+            edgeDetectors.Add(new LaplacianOperator());
+            edgeDetectors.Add(new NoOpFilter());
+            edgeDetectors.Add(new CannyFilter(100, 20));
+            edgeDetectors.Add(new CannyFilter(50, 20));
+            edgeDetectors.Add(new CannyFilter(150, 20));
+            edgeDetectors.Add(new CannyFilter(200, 20));
+            edgeDetectors.Add(new CannyFilter(250, 20));
+            edgeDetectors.Add(new CannyFilter(100, 10));
+            edgeDetectors.Add(new CannyFilter(100, 30));
+            edgeDetectors.Add(new CannyFilter(100, 40));
+            edgeDetectors.Add(new CannyFilter(100, 50));
+            edgeDetectors.Add(new CannyFilter(100, 60));
+            edgeDetectors.Add(new CannyFilter(100, 70));
+
+            var count = 0;
+
+            for (var i = 0; i < medianFilters.Count; i++)
+            {
+                var output = medianFilters[i].Filter(data);
+                for (var j = 0; j < gausFilters.Count; j++)
+                {
+                    var output1 = gausFilters[j].Filter(output);
+                    for (var k = 0; k < bitsliceFilters.Count; k++)
+                    {
+                        var output2 = bitsliceFilters[k].Filter(output1);
+                        for (var l = 0; l < edgeDetectors.Count; l++)
+                        {
+                            var output3 = edgeDetectors[l].Filter(output2);
+
+                            var image = output3.ToBitmap();
+                            var graph = Graphics.FromImage(image);
+                            graph.DrawString(string.Format("{0} {1} {2} {3}", medianFilters[i].ToString(), gausFilters[j].ToString(), bitsliceFilters[k].ToString(), edgeDetectors[l].ToString()), SystemFonts.DefaultFont, Brushes.Red, new PointF(10, 10));
+                            image.Save(string.Format(@"e:\pictures\pic{0:00000000}.png", count++), ImageFormat.Png);
+                        }
+                    }
+                }
+            }
 
             data.ToBitmap().Save("basic.png", ImageFormat.Png);
-            output.ToBitmap().Save("output.png", ImageFormat.Png);
+
+            Process.Start("basic.png");
         }
     }
 }

@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filters\BitwiseAndFilter.cs" />
+    <Compile Include="Filters\EdgeDetectors\CannyFilter.cs" />
     <Compile Include="Filters\EdgeDetectors\HysteresisThresholding.cs" />
     <Compile Include="Filters\EdgeDetectors\LaplacianOperator.cs" />
     <Compile Include="Filters\EdgeDetectors\NonMaximumResult.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Filters\EdgeDetectors\EdgeDetector2.cs" />
     <Compile Include="Filters\FilterResult.cs" />
     <Compile Include="Filters\GaussianFilter.cs" />
+    <Compile Include="Filters\NoOpFilter.cs" />
     <Compile Include="Filters\TruncatedMedianFilter.cs" />
     <Compile Include="Filters\HistogramMedianFilter.cs" />
     <Compile Include="Filters\MedianFilter.cs" />
