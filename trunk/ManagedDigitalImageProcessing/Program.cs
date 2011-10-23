@@ -42,17 +42,11 @@ namespace ManagedDigitalImageProcessing
             bitsliceFilters.AddRange(new FilterBase[] { new BitwiseAndFilter(0xF0), new NoOpFilter() });
             edgeDetectors.Add(new LaplacianOperator());
             edgeDetectors.Add(new NoOpFilter());
-            edgeDetectors.Add(new CannyFilter(100, 20));
-            edgeDetectors.Add(new CannyFilter(50, 20));
-            edgeDetectors.Add(new CannyFilter(150, 20));
-            edgeDetectors.Add(new CannyFilter(200, 20));
-            edgeDetectors.Add(new CannyFilter(250, 20));
-            edgeDetectors.Add(new CannyFilter(100, 10));
-            edgeDetectors.Add(new CannyFilter(100, 30));
-            edgeDetectors.Add(new CannyFilter(100, 40));
-            edgeDetectors.Add(new CannyFilter(100, 50));
-            edgeDetectors.Add(new CannyFilter(100, 60));
-            edgeDetectors.Add(new CannyFilter(100, 70));
+            
+            for (byte i = 100; i < 240 && i > 99; i += 25)
+                for (byte j = 0; j < 100; j += 10)
+                    edgeDetectors.Add(new CannyFilter(i, j));
+
 
             var count = 0;
 
