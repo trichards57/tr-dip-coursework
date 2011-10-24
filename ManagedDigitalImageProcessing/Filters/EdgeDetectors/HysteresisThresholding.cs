@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ManagedDigitalImageProcessing.PGM;
+using System.Threading.Tasks;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
@@ -23,23 +24,20 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 
             Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
 
-            for (var i = 0; i < input.Header.Width; i++)
-            {
-                for (var j = 0; j < input.Header.Height; j++)
-                {
-                    if (input.Data[calculateIndex(i, j)] <= _highT || output[calculateIndex(i, j)]) continue;
-                    output[calculateIndex(i, j)] = true;
-                    output = Connect(i, j, output, input.Data, _lowT, calculateIndex);
-                }
-            }
+            Parallel.For(0, input.Header.Width, i =>
+                                                    {
+                                                        for (var j = 0; j < input.Header.Height; j++)
+                                                        {
+                                                            if (input.Data[calculateIndex(i, j)] <= _highT ||
+                                                                output[calculateIndex(i, j)]) continue;
+                                                            output[calculateIndex(i, j)] = true;
+                                                            output = Connect(i, j, output, input.Data, _lowT,
+                                                                             calculateIndex);
+                                                        }
+                                                    });
 
-            for (var i = 0; i < output.Length; i++)
-            {
-                if (output[i])
-                    outImage.Data[i] = 255;
-                else
-                    outImage.Data[i] = 0;
-            }
+            Parallel.For(0, output.Length, i =>
+                                               { outImage.Data[i] = (byte)(output[i] ? 255 : 0); });
 
             return outImage;
         }

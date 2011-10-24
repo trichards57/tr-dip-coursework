@@ -1,5 +1,5 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
@@ -15,7 +15,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         {
             var output = new PgmImage { Data = new byte[Header.Height * Header.Width], Header = Header };
 
-            for (var i = 0; i < Header.Width; i++)
+            Parallel.For(0, Header.Width, i =>
             {
                 for (var j = 0; j < Header.Height; j++)
                 {
@@ -24,7 +24,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                     else
                         output.Data[i + j * Header.Width] = 0;
                 }
-            }
+            });
 
             return output;
         }

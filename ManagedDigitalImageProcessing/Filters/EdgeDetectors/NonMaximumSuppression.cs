@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
@@ -13,10 +14,10 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             public int Y2;
         }
 
-        private CoordinatePair GetCoordinates(double angle)
+        private static CoordinatePair GetCoordinates(double angle)
         {
             var result = new CoordinatePair();
-            var delta = 1e-14;
+            const double delta = 1e-14;
 
             result.X1 = (int)Math.Ceiling((Math.Cos(angle + Math.PI / 8) * Math.Sqrt(2)) - 0.5 - delta);
             result.Y1 = (int)Math.Ceiling((-Math.Sin(angle + Math.PI / 8) * Math.Sqrt(2)) - 0.5 - delta);
@@ -36,12 +37,12 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             Func<int, int, double> pointMagnitude = (x, y) => magnitude(input.XData[calculateIndex(x, y)], input.YData[calculateIndex(x, y)]);
             Func<double, double, double> direction = (x, y) => Math.Atan(x / y);
 
-            for (var i = 0; i < input.Header.Width; i++)
+            Parallel.For(0, input.Header.Width, i =>
             {
                 for (var j = 0; j < input.Header.Height; j++)
                 {
-                    byte mx = input.XData[calculateIndex(i, j)];
-                    byte my = input.YData[calculateIndex(i, j)];
+                    var mx = input.XData[calculateIndex(i, j)];
+                    var my = input.YData[calculateIndex(i, j)];
 
                     double angle;
 
@@ -57,27 +58,16 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                     coords = GetCoordinates(angle + Math.PI);
                     var m2 = (my) * pointMagnitude(i + coords.X1, j + coords.Y1) + ((mx - my)) * pointMagnitude(i + coords.X2, j + coords.Y2);
 
-                    var normalAngle = angle + Math.PI / 2;
-                    if (normalAngle > 2 * Math.PI)
-                        normalAngle -= 2 * Math.PI;
-                    if (normalAngle < 0)
-                        normalAngle += 2 * Math.PI;
-
-                    //var m1 = (my / mx) * magnitude(input.XData[calculateIndex(i + 1, j - 1)], input.YData[calculateIndex(i + 1, j - 1)]) + ((mx - my) / mx) * magnitude(input.XData[calculateIndex(i, j - 1)], input.YData[calculateIndex(i, j - 1)]);
-                    //var m2 = (my / mx) * magnitude(input.XData[calculateIndex(i - 1, j + 1)], input.YData[calculateIndex(i - 1, j + 1)]) + ((mx - my) / mx) * magnitude(input.XData[calculateIndex(i, j + 1)], input.YData[calculateIndex(i, j + 1)]);
-
-
                     Func<double, byte> limit = (x =>
-                        {
-                            if (x > 255)
-                                return 255;
-                            else if (x < 0)
-                                return 0;
-                            else
-                                return (byte)x;
-                        });
+                                                    {
+                                                        if (x > 255)
+                                                            return 255;
+                                                        if (x < 0)
+                                                            return 0;
+                                                        return (byte)x;
+                                                    });
 
-                    if ((mx * magnitude(mx,my) > m1 && mx * magnitude(mx,my)>= m2) || ((mx*magnitude(mx,my)<m1 && mx*magnitude(mx,my)<=m2)))
+                    if ((mx * magnitude(mx, my) > m1 && mx * magnitude(mx, my) >= m2) || ((mx * magnitude(mx, my) < m1 && mx * magnitude(mx, my) <= m2)))
                     {
                         checked
                         {
@@ -87,7 +77,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                     else
                         result.Peak[calculateIndex(i, j)] = 0;
                 }
-            }
+            });
 
             return result;
         }
