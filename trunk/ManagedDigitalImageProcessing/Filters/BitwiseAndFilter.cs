@@ -6,7 +6,7 @@ using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
-    class BitwiseAndFilter : FilterBase
+    public class BitwiseAndFilter : FilterBase
     {
         private byte mask;
 

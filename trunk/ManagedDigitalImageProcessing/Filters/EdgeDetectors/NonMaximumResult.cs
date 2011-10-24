@@ -7,7 +7,7 @@ using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    class NonMaximumResult
+    public class NonMaximumResult
     {
         public PgmHeader Header { get; set; }
         public byte[] XData { get; set; }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    class CannyFilter : FilterBase
+    public class CannyFilter : FilterBase
     {
         private HysteresisThresholding hysteresis;
         private NonMaximumSuppression nonMaximal;
