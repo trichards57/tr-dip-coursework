@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    class SobelOperator : FilterBase
+    public class SobelOperator : FilterBase
     {
         public override PGM.PgmImage Filter(PGM.PgmImage input)
         {
@@ -29,11 +29,24 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var output = new FilterResult();
             output.Header = input.Header;
 
-            var template1 = new int[] { 1, 0, -1, 2, 0, -2, 1, 0, -1 };
-            var template2 = new int[] { 1, 2, 1, 0, 0, 0, -1, -2, -1 };
+            var template1 = new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+            var template2 = new double[] { 1, 2, 1, 0, 0, 0, -1, -2, -1 };
 
-            output.XData = Convolve(template1, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
-            output.YData = Convolve(template2, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
+            var data = Convolve(template1, input.Data.Select(t => (int)t).ToArray(), new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
+            checked
+            {
+                var max = data.Max(i => Math.Abs(i));
+                var data1 = data.AsParallel().AsOrdered().Select(i => (byte)(Math.Abs(i * 255 / max))).ToArray();
+                output.XData = data1;
+            }
+
+            data = Convolve(template2, input.Data.Select(t => (int)t).ToArray(), new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
+            checked
+            {
+                var max = data.Max(i => Math.Abs(i));
+                var data1 = data.AsParallel().AsOrdered().Select(i => (byte)(Math.Abs(i * 255 / max))).ToArray();
+                output.YData = data1;
+            }
 
             return output;
         }

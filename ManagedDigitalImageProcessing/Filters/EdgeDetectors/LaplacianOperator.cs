@@ -6,7 +6,7 @@ using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    class LaplacianOperator : FilterBase
+    public class LaplacianOperator : FilterBase
     {
         public override PgmImage Filter(PgmImage input)
         {

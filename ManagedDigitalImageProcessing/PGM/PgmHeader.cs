@@ -8,7 +8,7 @@ namespace ManagedDigitalImageProcessing.PGM
     /// <summary>
     /// The header of a %PGM file.
     /// </summary>
-    class PgmHeader
+    public class PgmHeader
     {
         /// <summary>
         /// Gets or sets the height of the file.

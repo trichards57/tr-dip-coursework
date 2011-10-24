@@ -6,7 +6,7 @@ using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    class NonMaximumSuppression : FilterBase
+    public class NonMaximumSuppression : FilterBase
     {
         public NonMaximumResult Filter(FilterResult input)
         {

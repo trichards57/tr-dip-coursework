@@ -12,7 +12,7 @@ namespace ManagedDigitalImageProcessing.Filters
     /// A base class to allow the CalculateIndex function to be reused, and to make calling multiple different
     /// filters in sequence easier.
     /// </summary>
-    abstract class FilterBase
+    public abstract class FilterBase
     {
         /// <summary>
         /// Calculates the index of a point at given coordinates.  Points that fall out of the range of the
@@ -63,6 +63,35 @@ namespace ManagedDigitalImageProcessing.Filters
                     output[calculateDataIndex(i, j)] = (byte)sum;
                 }
             });
+
+            return output;
+        }
+
+        protected static int[] Convolve(double[] input, int[] data, Size inputSize, Size dataSize)
+        {
+            Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
+            Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
+
+            int[] output = new int[data.Length];
+            var xOffset = inputSize.Width / 2;
+            var yOffset = inputSize.Height / 2;
+
+            for (var i = 0; i < dataSize.Width; i++)
+            {
+                for (var j = 0; j < dataSize.Height; j++)
+                {
+                    double sum = 0;
+                    for (var k = 0; k < inputSize.Width; k++)
+                    {
+                        for (var l = 0; l < inputSize.Height; l++)
+                        {
+                            sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
+                        }
+                    }
+                    output[calculateDataIndex(i, j)] = (int)Math.Floor(sum);
+                }
+            }
+
 
             return output;
         }

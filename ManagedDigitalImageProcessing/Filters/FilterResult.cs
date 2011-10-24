@@ -6,7 +6,7 @@ using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
-    class FilterResult
+    public class FilterResult
     {
         public PgmHeader Header { get; set; }
 

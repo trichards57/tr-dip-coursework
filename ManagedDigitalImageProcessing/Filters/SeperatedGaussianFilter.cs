@@ -7,34 +7,32 @@ using System.Drawing;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
-    public class GaussianFilter : FilterBase
+    public class SeperatedGaussianFilter : FilterBase
     {
         private double[] template;
         private int size;
         private double sigma;
 
-        public GaussianFilter(double sigma) : this((int)(2 * Math.Ceiling(3 * sigma) + 1), sigma)
+        public SeperatedGaussianFilter(double sigma)
+            : this((int)(2 * Math.Ceiling(3 * sigma) + 1), sigma)
         {
             this.sigma = sigma;
         }
 
-        public GaussianFilter(int size, double sigma)
+        public SeperatedGaussianFilter(int size, double sigma)
         {
             this.size = size;
-            var templateTemp = new double[size * size];
+            var templateTemp = new double[size];
             double sum = 0;
 
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, size, size);
+            //Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, size, size);
 
             var centre = size / 2;
 
             for (var i = 0; i < size; i++)
             {
-                for (var j = 0; j < size; j++)
-                {
-                    templateTemp[calculateIndex(i, j)] = Math.Exp(-(((j - centre) * (j - centre)) + ((i - centre) * (i - centre))) / (2 * sigma * sigma));
-                    sum += templateTemp[calculateIndex(i, j)];
-                }
+                templateTemp[i] = (Math.Exp(-((i - centre) * (i - centre)) / (2 * sigma * sigma)));
+                sum += templateTemp[i];
             }
 
             template = templateTemp.Select(t => t / sum).ToArray();
@@ -46,7 +44,8 @@ namespace ManagedDigitalImageProcessing.Filters
             output.Header = input.Header;
             output.Data = new byte[input.Data.Length];
 
-            output.Data = Convolve(template, input.Data, new Size(size, size), new Size(input.Header.Width, input.Header.Height));
+            var tempData = Convolve(template, input.Data, new Size(1, size), new Size(input.Header.Width, input.Header.Height));
+            output.Data = Convolve(template, tempData, new Size(size, 1), new Size(input.Header.Width, input.Header.Height));
 
             return output;
         }

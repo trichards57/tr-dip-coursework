@@ -26,10 +26,22 @@ namespace ManagedDigitalImageProcessing
 
             var data = PGM.PgmLoader.LoadImage(inFile);
 
-            var filter = new HistogramMedianFilter(27);
-            var output = filter.Filter(data);
+            var f1 = new GaussianFilter(5);
+            var f2 = new SeperatedGaussianFilter(5);
 
-            output.ToBitmap().Save("NewMedianFilter.png");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var output = f1.Filter(data);
+            stopwatch.Stop();
+            Console.WriteLine("Gauss {0}", stopwatch.ElapsedMilliseconds);
+
+            stopwatch.Restart();
+            var output1 = f2.Filter(data);
+            stopwatch.Stop();
+            Console.WriteLine("Separated Gauss {0}", stopwatch.ElapsedMilliseconds);
+            
+            output.ToBitmap().Save("Gauss.png");
+            output1.ToBitmap().Save("SepGauss.png");
         }
     }
 }

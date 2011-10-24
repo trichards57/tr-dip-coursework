@@ -10,7 +10,7 @@ namespace ManagedDigitalImageProcessing.PGM
     /// <summary>
     /// An image loaded from a %PGM file.
     /// </summary>
-    class PgmImage
+    public class PgmImage
     {
         /// <summary>
         /// Gets or sets the header of the file.

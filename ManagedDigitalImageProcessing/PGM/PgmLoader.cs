@@ -11,7 +11,7 @@ namespace ManagedDigitalImageProcessing.PGM
     /// <summary>
     /// Loads an image out of a %PGM file.
     /// </summary>
-    static class PgmLoader
+    public static class PgmLoader
     {
         /// <summary>
         /// Loads a %PGM image.

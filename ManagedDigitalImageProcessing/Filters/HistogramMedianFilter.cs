@@ -13,7 +13,7 @@ namespace ManagedDigitalImageProcessing.Filters
     /// Operates substantially faster than the MedianFilter, as it doesn't have to sort a list
     /// and only has to recalculate for the part of the window that has changed.
     /// </remarks>
-    class HistogramMedianFilter : FilterBase
+    public class HistogramMedianFilter : FilterBase
     {
         /// <summary>
         /// The size of the filter window.
