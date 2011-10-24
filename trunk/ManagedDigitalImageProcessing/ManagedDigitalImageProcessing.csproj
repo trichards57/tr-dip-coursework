@@ -74,11 +74,9 @@
     <Compile Include="Filters\FilterResult.cs" />
     <Compile Include="Filters\GaussianFilter.cs" />
     <Compile Include="Filters\NoOpFilter.cs" />
-    <Compile Include="Filters\TruncatedMedianFilter.cs" />
     <Compile Include="Filters\HistogramMedianFilter.cs" />
     <Compile Include="Filters\MedianFilter.cs" />
     <Compile Include="Filters\FilterBase.cs" />
-    <Compile Include="Filters\CrossMedianFilter.cs" />
     <Compile Include="PGM\Exceptions\InvalidPgmException.cs" />
     <Compile Include="PGM\Exceptions\InvalidPgmHeaderException.cs" />
     <Compile Include="PGM\PgmHeader.cs" />

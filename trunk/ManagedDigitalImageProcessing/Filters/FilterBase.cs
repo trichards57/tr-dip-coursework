@@ -73,21 +73,25 @@ namespace ManagedDigitalImageProcessing.Filters
             var xOffset = inputSize.Width / 2;
             var yOffset = inputSize.Height / 2;
 
-            for (var i = 0; i < dataSize.Width; i++)
-            {
-                for (var j = 0; j < dataSize.Height; j++)
-                {
-                    double sum = 0;
-                    for (var k = 0; k < inputSize.Width; k++)
-                    {
-                        for (var l = 0; l < inputSize.Height; l++)
-                        {
-                            sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
-                        }
-                    }
-                    output[calculateDataIndex(i, j)] = (int)Math.Floor(sum);
-                }
-            }
+            Parallel.For(0, dataSize.Width, i =>
+                                                {
+                                                    for (var j = 0; j < dataSize.Height; j++)
+                                                    {
+                                                        var sum = 0.0;
+                                                        for (var k = 0; k < inputSize.Width; k++)
+                                                        {
+                                                            for (var l = 0; l < inputSize.Height; l++)
+                                                            {
+                                                                sum +=
+                                                                    data[
+                                                                        calculateDataIndex(i + k - xOffset,
+                                                                                           j + l - yOffset)]*
+                                                                    input[calculateInputIndex(k, l)];
+                                                            }
+                                                        }
+                                                        output[calculateDataIndex(i, j)] = (int) Math.Floor(sum);
+                                                    }
+                                                });
 
 
             return output;
@@ -102,7 +106,7 @@ namespace ManagedDigitalImageProcessing.Filters
             var xOffset = inputSize.Width / 2;
             var yOffset = inputSize.Height / 2;
 
-            var reg = Parallel.For(0, dataSize.Width, i =>
+            Parallel.For(0, dataSize.Width, i =>
             {
                 for (var j = 0; j < dataSize.Height; j++)
                 {
@@ -117,10 +121,6 @@ namespace ManagedDigitalImageProcessing.Filters
                     output[calculateDataIndex(i, j)] = (byte)Math.Floor(sum);
                 }
             });
-
-            while (!reg.IsCompleted)
-            {
-            }
 
             return output;
         }

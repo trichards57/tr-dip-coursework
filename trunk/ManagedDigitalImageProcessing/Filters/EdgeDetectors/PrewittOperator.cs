@@ -1,5 +1,6 @@
 ﻿using System;
 using ManagedDigitalImageProcessing.PGM;
+using System.Threading.Tasks;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
@@ -15,8 +16,8 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var val1 = Convolve(template1, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
             var val2 = Convolve(template2, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
 
-            for (var i = 0; i < val1.Length; i++)
-                output.Data[i] = Math.Max(val1[i], val2[i]);
+            Parallel.For (0, val1.Length, i => 
+                output.Data[i] = Math.Max(val1[i], val2[i]));
 
             return output;
         }
