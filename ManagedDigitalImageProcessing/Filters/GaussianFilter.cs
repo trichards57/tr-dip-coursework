@@ -1,26 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ManagedDigitalImageProcessing.PGM;
 using System.Drawing;
+using System.Linq;
+using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
-    public class GaussianFilter : FilterBase
+    public sealed class GaussianFilter : FilterBase
     {
-        private double[] template;
-        private int size;
-        private double sigma;
+        private readonly double[] _template;
+        private readonly int _size;
+        private readonly double _sigma;
 
         public GaussianFilter(double sigma) : this((int)(2 * Math.Ceiling(3 * sigma) + 1), sigma)
         {
-            this.sigma = sigma;
+            _sigma = sigma;
         }
 
         public GaussianFilter(int size, double sigma)
         {
-            this.size = size;
+            _size = size;
             var templateTemp = new double[size * size];
             double sum = 0;
 
@@ -37,23 +35,21 @@ namespace ManagedDigitalImageProcessing.Filters
                 }
             }
 
-            template = templateTemp.Select(t => t / sum).ToArray();
+            _template = templateTemp.Select(t => t / sum).ToArray();
         }
 
-        public override PGM.PgmImage Filter(PGM.PgmImage input)
+        public override PgmImage Filter(PgmImage input)
         {
-            var output = new PgmImage();
-            output.Header = input.Header;
-            output.Data = new byte[input.Data.Length];
+            var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
 
-            output.Data = Convolve(template, input.Data, new Size(size, size), new Size(input.Header.Width, input.Header.Height));
+            output.Data = Convolve(_template, input.Data, new Size(_size, _size), new Size(input.Header.Width, input.Header.Height));
 
             return output;
         }
 
         public override string ToString()
         {
-            return string.Format("Gauss {0}", sigma);
+            return string.Format("Gauss {0}", _sigma);
         }
     }
 }

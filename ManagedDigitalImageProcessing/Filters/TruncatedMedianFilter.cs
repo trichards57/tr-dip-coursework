@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
@@ -15,12 +13,12 @@ namespace ManagedDigitalImageProcessing.Filters
     /// 
     /// Sourced from Feature Extraction and Image Processing p.93.
     /// </remarks>
-    class TruncatedMedianFilter : FilterBase
+    public sealed class TruncatedMedianFilter : FilterBase
     {
         /// <summary>
         /// The size of the filter window.
         /// </summary>
-        private int windowSize;
+        private readonly int _windowSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HistogramMedianFilter"/> class.
@@ -29,9 +27,9 @@ namespace ManagedDigitalImageProcessing.Filters
         public TruncatedMedianFilter(int size = 3)
         {
             if (size % 2 == 0)
-                throw new ArgumentOutOfRangeException("size", windowSize, "The size must be odd.");
+                throw new ArgumentOutOfRangeException("size", size, "The size must be odd.");
 
-            windowSize = size;
+            _windowSize = size;
         }
 
         /// <summary>
@@ -43,15 +41,13 @@ namespace ManagedDigitalImageProcessing.Filters
         /// </returns>
         public override PgmImage Filter(PgmImage input)
         {
-            var output = new PgmImage();
-            output.Header = input.Header;
-            output.Data = new byte[input.Data.Length];
+            var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
 
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = ((x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height));
 
-            var offset = windowSize / 2;
-            var medianPosition = ((windowSize * windowSize) / 2) + 1;
+            var offset = _windowSize / 2;
+            var medianPosition = ((_windowSize * _windowSize) / 2) + 1;
 
             // Iterate through each column.
             for (var i = 0; i < output.Header.Width; i++)
@@ -94,19 +90,17 @@ namespace ManagedDigitalImageProcessing.Filters
                     byte median = 0;
 
                     // Count through the histogram until the median is found or passed.
-                    for (int k = 0; k < 256; k++)
+                    for (var k = 0; k < 256; k++)
                     {
                         counter += histogram[k];
-                        if (counter >= medianPosition)
-                        {
-                            // We've reached the histogram item that contains the median value.
-                            // Return it.
-                            median = (byte)k;
-                            break;
-                        }
+                        if (counter < medianPosition) continue;
+                        // We've reached the histogram item that contains the median value.
+                        // Return it.
+                        median = (byte)k;
+                        break;
                     }
 
-                    var mean = histogram.AsParallel().Select((value, index) => value * index).Sum() / (windowSize * windowSize);
+                    var mean = histogram.AsParallel().Select((value, index) => value * index).Sum() / (_windowSize * _windowSize);
 
                     var histogramTemp = (byte[])histogram.Clone();
 
@@ -127,16 +121,14 @@ namespace ManagedDigitalImageProcessing.Filters
 
                     counter = 0;
 
-                    for (int k = 0; k < 256; k++)
+                    for (var k = 0; k < 256; k++)
                     {
                         counter += histogramTemp[k];
-                        if (counter >= medianPositionTemp)
-                        {
-                            // We've reached the histogram item that contains the median value.
-                            // Return it.
-                            output.Data[calculateIndex(i, j)] = (byte)k;
-                            break;
-                        }
+                        if (counter < medianPositionTemp) continue;
+                        // We've reached the histogram item that contains the median value.
+                        // Return it.
+                        output.Data[calculateIndex(i, j)] = (byte)k;
+                        break;
                     }
                 }
             }

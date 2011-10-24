@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ManagedDigitalImageProcessing.Filters
+﻿namespace ManagedDigitalImageProcessing.Filters
 {
-    class NoOpFilter : FilterBase
+    public sealed class NoOpFilter : FilterBase
     {
         public override PGM.PgmImage Filter(PGM.PgmImage input)
         {

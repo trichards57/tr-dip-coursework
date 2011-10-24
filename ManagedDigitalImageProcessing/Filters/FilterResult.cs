@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ManagedDigitalImageProcessing.PGM;
+﻿using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
-    public class FilterResult
+    public sealed class FilterResult
     {
         public PgmHeader Header { get; set; }
 

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ManagedDigitalImageProcessing.PGM.Exceptions
 {
     /// <summary>
     /// Exception thrown when the %PGM file is not valid.
     /// </summary>
-    class InvalidPgmException : Exception
+    public sealed class InvalidPgmException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidPgmException"/> class.
@@ -24,7 +21,7 @@ namespace ManagedDigitalImageProcessing.PGM.Exceptions
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner.</param>
-        public InvalidPgmException(string message, System.Exception inner) : base(message, inner) { }
+        public InvalidPgmException(string message, Exception inner) : base(message, inner) { }
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidPgmException"/> class with serialized data.
         /// </summary>

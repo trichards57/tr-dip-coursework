@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    public class NonMaximumSuppression : FilterBase
+    public sealed class NonMaximumSuppression : FilterBase
     {
         public NonMaximumResult Filter(FilterResult input)
         {
@@ -16,9 +13,9 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 
             Func<double, double, double> magnitude = (x, y) => Math.Sqrt(x * x + y * y);
 
-            for (int i = 0; i < input.Header.Width; i++)
+            for (var i = 0; i < input.Header.Width; i++)
             {
-                for (int j = 0; j < input.Header.Height; j++)
+                for (var j = 0; j < input.Header.Height; j++)
                 {
                     double mx = input.XData[calculateIndex(i,j)];
                     double my = input.YData[calculateIndex(i,j)];

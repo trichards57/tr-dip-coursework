@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    public class NonMaximumResult
+    public sealed class NonMaximumResult
     {
         public PgmHeader Header { get; set; }
         public byte[] XData { get; set; }

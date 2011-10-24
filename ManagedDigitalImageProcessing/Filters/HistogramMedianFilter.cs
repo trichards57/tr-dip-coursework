@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
@@ -13,12 +10,12 @@ namespace ManagedDigitalImageProcessing.Filters
     /// Operates substantially faster than the MedianFilter, as it doesn't have to sort a list
     /// and only has to recalculate for the part of the window that has changed.
     /// </remarks>
-    public class HistogramMedianFilter : FilterBase
+    public sealed class HistogramMedianFilter : FilterBase
     {
         /// <summary>
         /// The size of the filter window.
         /// </summary>
-        private int windowSize;
+        private readonly int _windowSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HistogramMedianFilter"/> class.
@@ -27,9 +24,9 @@ namespace ManagedDigitalImageProcessing.Filters
         public HistogramMedianFilter(int size = 3)
         {
             if (size % 2 == 0)
-                throw new ArgumentOutOfRangeException("size", windowSize, "The size must be odd.");
+                throw new ArgumentOutOfRangeException("size", size, "The size must be odd.");
 
-            windowSize = size;
+            _windowSize = size;
         }
 
         /// <summary>
@@ -41,15 +38,13 @@ namespace ManagedDigitalImageProcessing.Filters
         /// </returns>
         public override PgmImage Filter(PgmImage input)
         {
-            var output = new PgmImage();
-            output.Header = input.Header;
-            output.Data = new byte[input.Data.Length];
+            var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
 
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = ((x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height));
 
-            var offset = windowSize / 2;
-            var medianPosition = ((windowSize * windowSize) / 2) + 1;
+            var offset = _windowSize / 2;
+            var medianPosition = ((_windowSize * _windowSize) / 2) + 1;
 
             // Iterate through each column.
             for (var i = 0; i < output.Header.Width; i++)
@@ -90,16 +85,14 @@ namespace ManagedDigitalImageProcessing.Filters
                     uint counter = 0;
 
                     // Count through the histogram until the median is found or passed.
-                    for (int k = 0; k < 256; k++)
+                    for (var k = 0; k < 256; k++)
                     {
                         counter += histogram[k];
-                        if (counter >= medianPosition)
-                        {
-                            // We've reached the histogram item that contains the median value.
-                            // Return it.
-                            output.Data[calculateIndex(i, j)] = (byte)k;
-                            break;
-                        }
+                        if (counter < medianPosition) continue;
+                        // We've reached the histogram item that contains the median value.
+                        // Return it.
+                        output.Data[calculateIndex(i, j)] = (byte)k;
+                        break;
                     }
                 }
             }
@@ -110,7 +103,7 @@ namespace ManagedDigitalImageProcessing.Filters
 
         public override string ToString()
         {
-            return string.Format("Histogram {0}", windowSize);
+            return string.Format("Histogram {0}", _windowSize);
         }
     }
 }

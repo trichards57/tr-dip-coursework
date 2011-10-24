@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.IO;
 using ManagedDigitalImageProcessing.PGM.Exceptions;
 
 namespace ManagedDigitalImageProcessing.PGM
@@ -25,7 +20,7 @@ namespace ManagedDigitalImageProcessing.PGM
             var reader = new StreamReader(instream);
             var header = ReadHeader(reader);
 
-            int length = header.Height * header.Width;
+            var length = header.Height * header.Width;
 
             instream.Seek(-length, SeekOrigin.End);
             var binaryReader = new BinaryReader(instream);

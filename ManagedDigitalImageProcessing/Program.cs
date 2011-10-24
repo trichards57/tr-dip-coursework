@@ -1,26 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Drawing.Imaging;
-using ManagedDigitalImageProcessing.Filters;
 using System.Diagnostics;
-using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
-using System.Drawing;
+using System.IO;
+using ManagedDigitalImageProcessing.Filters;
 
 namespace ManagedDigitalImageProcessing
 {
     /// <summary>
     /// The main class for the program.
     /// </summary>
-    class Program
+    static class Program
     {
         /// <summary>
         /// The initial function called when the program starts.
         /// </summary>
-        /// <param name="args">The arguments presented to the program.</param>
-        static void Main(string[] args)
+        static void Main()
         {
             var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
 

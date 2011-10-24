@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ManagedDigitalImageProcessing.PGM;
 using System.Drawing;
 using System.Threading.Tasks;
+using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
@@ -44,7 +41,7 @@ namespace ManagedDigitalImageProcessing.Filters
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
 
-            byte[] output = new byte[data.Length];
+            var output = new byte[data.Length];
             var xOffset = inputSize.Width / 2;
             var yOffset = inputSize.Height / 2;
 
@@ -52,12 +49,12 @@ namespace ManagedDigitalImageProcessing.Filters
             {
                 for (var j = 0; j < dataSize.Height; j++)
                 {
-                    int sum = 0;
+                    var sum = 0;
                     for (var k = 0; k < inputSize.Width; k++)
                     {
                         for (var l = 0; l < inputSize.Height; l++)
                         {
-                            sum += (int)data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
+                            sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
                         }
                     }
                     output[calculateDataIndex(i, j)] = (byte)sum;
@@ -72,7 +69,7 @@ namespace ManagedDigitalImageProcessing.Filters
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
 
-            int[] output = new int[data.Length];
+            var output = new int[data.Length];
             var xOffset = inputSize.Width / 2;
             var yOffset = inputSize.Height / 2;
 
@@ -101,7 +98,7 @@ namespace ManagedDigitalImageProcessing.Filters
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
 
-            byte[] output = new byte[data.Length];
+            var output = new byte[data.Length];
             var xOffset = inputSize.Width / 2;
             var yOffset = inputSize.Height / 2;
 
@@ -121,7 +118,9 @@ namespace ManagedDigitalImageProcessing.Filters
                 }
             });
 
-            while (!reg.IsCompleted) ;
+            while (!reg.IsCompleted)
+            {
+            }
 
             return output;
         }
