@@ -56,7 +56,7 @@ namespace ManagedDigitalImageProcessing.Filters
             {
                 // Histogram must be reset at the start of each column.
                 // Each element of the array represents a different value in the histogram.
-                var histogram = new byte[256];
+                var histogram = new uint[256];
 
                 // Iterate through each point in the column.
                 for (var j = 0; j < output.Header.Height; j++)
@@ -87,7 +87,7 @@ namespace ManagedDigitalImageProcessing.Filters
                         }
                     }
 
-                    var counter = 0;
+                    uint counter = 0;
 
                     // Count through the histogram until the median is found or passed.
                     for (int k = 0; k < 256; k++)
