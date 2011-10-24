@@ -35,7 +35,9 @@ namespace ManagedDigitalImageProcessing.PGM
             {
                 for (var j = 0; j < Header.Width; j++)
                 {
-                    output.SetPixel(j, i, Color.FromArgb(Data[i * Header.Width + j], Data[i * Header.Width + j], Data[i * Header.Width + j]));
+                    output.SetPixel(j, i, Color.FromArgb(Data[i * Header.Width + j],
+                                                   Data[i * Header.Width + j],
+                                                   Data[i * Header.Width + j]));
                 }
             }
 

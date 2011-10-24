@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
+using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
@@ -23,17 +23,16 @@ namespace ManagedDigitalImageProcessing.Filters
             var templateTemp = new double[size];
             double sum = 0;
 
-            //Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, size, size);
-
             var centre = size / 2;
 
-            for (var i = 0; i < size; i++)
-            {
-                templateTemp[i] = (Math.Exp(-((i - centre) * (i - centre)) / (2 * sigma * sigma)));
-                sum += templateTemp[i];
-            }
+            Parallel.For(0, size, i =>
+                                      {
+                                          templateTemp[i] = (Math.Exp(-((i - centre)*(i - centre))/(2*sigma*sigma)));
+                                          sum += templateTemp[i];
+                                      });
 
-            _template = templateTemp.Select(t => t / sum).ToArray();
+            _template = new double[templateTemp.Length];
+            Parallel.For(0, templateTemp.Length, i => _template[i] = templateTemp[i] / sum);
         }
 
         public override PgmImage Filter(PgmImage input)

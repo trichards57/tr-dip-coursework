@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
+using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
@@ -11,7 +11,8 @@ namespace ManagedDigitalImageProcessing.Filters
         private readonly int _size;
         private readonly double _sigma;
 
-        public GaussianFilter(double sigma) : this((int)(2 * Math.Ceiling(3 * sigma) + 1), sigma)
+        public GaussianFilter(double sigma)
+            : this((int)(2 * Math.Ceiling(3 * sigma) + 1), sigma)
         {
             _sigma = sigma;
         }
@@ -26,21 +27,24 @@ namespace ManagedDigitalImageProcessing.Filters
 
             var centre = size / 2;
 
-            for (var i = 0; i < size; i++)
-            {
-                for (var j = 0; j < size; j++)
-                {
-                    templateTemp[calculateIndex(i, j)] = Math.Exp(-(((j - centre) * (j - centre)) + ((i - centre) * (i - centre))) / (2 * sigma * sigma));
-                    sum += templateTemp[calculateIndex(i, j)];
-                }
-            }
+            Parallel.For(0, size, i =>
+                                      {
+                                          for (var j = 0; j < size; j++)
+                                          {
+                                              templateTemp[calculateIndex(i, j)] =
+                                                  Math.Exp(-(((j - centre) * (j - centre)) + ((i - centre) * (i - centre))) /
+                                                           (2 * sigma * sigma));
+                                              sum += templateTemp[calculateIndex(i, j)];
+                                          }
+                                      });
 
-            _template = templateTemp.Select(t => t / sum).ToArray();
+            _template = new double[templateTemp.Length];
+            Parallel.For(0, templateTemp.Length, i => _template[i] = templateTemp[i] / sum);
         }
 
         public override PgmImage Filter(PgmImage input)
         {
-            var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
+            var output = new PgmImage { Header = input.Header, Data = new byte[input.Data.Length] };
 
             output.Data = Convolve(_template, input.Data, new Size(_size, _size), new Size(input.Header.Width, input.Header.Height));
 
