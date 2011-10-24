@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ManagedDigitalImageProcessing.PGM;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     public class SobelOperator : FilterBase
     {
-        public override PGM.PgmImage Filter(PGM.PgmImage input)
+        public override PgmImage Filter(PgmImage input)
         {
-            var output = new PgmImage();
-            output.Header = input.Header;
-            output.Data = new byte[input.Header.Width * input.Header.Height];
+            var output = new PgmImage {Header = input.Header, Data = new byte[input.Header.Width*input.Header.Height]};
 
             var outputTemp = FilterSplit(input);
 
@@ -26,8 +20,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 
         public FilterResult FilterSplit(PgmImage input)
         {
-            var output = new FilterResult();
-            output.Header = input.Header;
+            var output = new FilterResult {Header = input.Header};
 
             var template1 = new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
             var template2 = new double[] { 1, 2, 1, 0, 0, 0, -1, -2, -1 };

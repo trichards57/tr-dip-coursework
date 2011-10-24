@@ -1,35 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
+﻿namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    public class CannyFilter : FilterBase
+    public sealed class CannyFilter : FilterBase
     {
-        private HysteresisThresholding hysteresis;
-        private NonMaximumSuppression nonMaximal;
-        private SobelOperator edgeFilter;
-        private byte highT;
-        private byte lowT;
+        private readonly HysteresisThresholding _hysteresis;
+        private readonly NonMaximumSuppression _nonMaximal;
+        private readonly SobelOperator _edgeFilter;
+        private readonly byte _highT;
+        private readonly byte _lowT;
 
         public CannyFilter(byte highThreshold, byte lowThreshold)
         {
-            hysteresis = new HysteresisThresholding(highThreshold, lowThreshold);
-            nonMaximal = new NonMaximumSuppression();
-            edgeFilter = new SobelOperator();
-            highT = highThreshold;
-            lowT = lowThreshold;
+            _hysteresis = new HysteresisThresholding(highThreshold, lowThreshold);
+            _nonMaximal = new NonMaximumSuppression();
+            _edgeFilter = new SobelOperator();
+            _highT = highThreshold;
+            _lowT = lowThreshold;
         }
 
         public override PGM.PgmImage Filter(PGM.PgmImage input)
         {
-            return hysteresis.Filter(nonMaximal.Filter(edgeFilter.FilterSplit(input)).ToPgmImage());
+            return _hysteresis.Filter(_nonMaximal.Filter(_edgeFilter.FilterSplit(input)).ToPgmImage());
         }
 
         public override string ToString()
         {
-            return string.Format("Canny {0} {1}", highT, lowT);
+            return string.Format("Canny {0} {1}", _highT, _lowT);
         }
     }
 }

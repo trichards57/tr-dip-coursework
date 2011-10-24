@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing;
 
 namespace ManagedDigitalImageProcessing.PGM
 {
     /// <summary>
     /// An image loaded from a %PGM file.
     /// </summary>
-    public class PgmImage
+    public sealed class PgmImage
     {
         /// <summary>
         /// Gets or sets the header of the file.

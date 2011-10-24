@@ -1,45 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading.Tasks;
-using ManagedDigitalImageProcessing.PGM;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using ManagedDigitalImageProcessing.Filters;
 using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
+using ManagedDigitalImageProcessing.PGM;
 
 namespace DIPUI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    internal sealed partial class MainWindow
     {
-        PgmImage input;
-        PgmImage output;
+        PgmImage _input;
+        PgmImage _output;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        public void StartBusy()
+        private void StartBusy()
         {
             var action = new Action(() => UpdateButton.IsEnabled = false);
             Dispatcher.Invoke(action);
         }
 
-        public void StopBusy()
+        private void StopBusy()
         {
             var action = new Action(() => UpdateButton.IsEnabled = true);
             Dispatcher.Invoke(action);
@@ -52,12 +44,12 @@ namespace DIPUI
                 StartBusy();
                 using (var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    input = PgmLoader.LoadImage(inFile);
+                    _input = PgmLoader.LoadImage(inFile);
                 }
 
                 var action = new Action(() =>
                 {
-                    var bitmap = input.ToBitmap();
+                    var bitmap = _input.ToBitmap();
                     var handle = bitmap.GetHbitmap();
                     var source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height));
                     InputImage.Source = source;
@@ -69,21 +61,20 @@ namespace DIPUI
             task.Start();
         }
 
-        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateButtonClick(object sender, RoutedEventArgs e)
         {
             var filterTasks = new List<FilterTask>();
 
             Func<object, PgmImage> getImage = (img =>
-            {
-                if (img is PgmImage)
-                    return (PgmImage)img;
-                else if (img is Task<PgmImage>)
-                    return ((Task<PgmImage>)img).Result;
-                else
-                    return null;
-            });
-                        
-            
+                                                   {
+                                                       if (img is PgmImage)
+                                                           return (PgmImage)img;
+                                                       if (img is Task<PgmImage>)
+                                                           return ((Task<PgmImage>)img).Result;
+                                                       return null;
+                                                   });
+
+
             if (EnableMedianCheckBox.IsChecked == true)
             {
                 var windowSize = int.Parse(MedianSizeTextBox.Text);
@@ -110,7 +101,7 @@ namespace DIPUI
                 filterTasks.Add(new FilterTask { Task = f, Priority = priority });
             }
 
-            int currentPriority = 0;
+            var currentPriority = 0;
             if (filterTasks.Count > 0)
                 currentPriority = filterTasks.Max(t => t.Priority) + 1;
 
@@ -133,11 +124,11 @@ namespace DIPUI
 
                 Func<object, PgmImage> f = (img =>
                     {
-                        var data = getImage(img); 
+                        var data = getImage(img);
                         var filter = new CannyFilter(highT, lowT);
                         return filter.Filter(data);
                     });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority++ });
+                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
             }
             else if (EnableLaplacianRadioButton.IsChecked == true)
             {
@@ -147,7 +138,7 @@ namespace DIPUI
                     var filter = new LaplacianOperator();
                     return filter.Filter(data);
                 });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority++ });
+                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
             }
             else if (NonMaximalSuppressionOnlyRadioButton.IsChecked == true)
             {
@@ -159,7 +150,7 @@ namespace DIPUI
                         var output = nonMax.Filter(sobelOperator.FilterSplit(data));
                         return output.ToPgmImage();
                     });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority++ });
+                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
             }
             else if (SobelOnlyRadioButton.IsChecked == true)
             {
@@ -170,15 +161,15 @@ namespace DIPUI
                         var output = sobelOperator.Filter(data);
                         return output;
                     });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority++ });
+                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
             }
 
             Action<object> finalF = (img =>
             {
-                output = ((Task<PgmImage>)img).Result;
+                _output = ((Task<PgmImage>)img).Result;
                 var action = new Action(() =>
                 {
-                    var bitmap = output.ToBitmap();
+                    var bitmap = _output.ToBitmap();
                     var handle = bitmap.GetHbitmap();
                     var source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height));
                     OutputImage.Source = source;
@@ -188,22 +179,16 @@ namespace DIPUI
             });
 
             var orderedTasks = filterTasks.OrderBy(t => t.Priority);
-            if (filterTasks.Count() > 0)
-            {
-                var startTask = new Task<PgmImage>(orderedTasks.First().Task, input);
-                var currentTask = startTask;
+            if (filterTasks.Count() <= 0) return;
+            var startTask = new Task<PgmImage>(orderedTasks.First().Task, _input);
 
-                foreach (var t in orderedTasks.Skip(1))
-                {
-                    currentTask = currentTask.ContinueWith(t.Task);
-                }
+            var currentTask = orderedTasks.Skip(1).Aggregate(startTask, (current, t) => current.ContinueWith(t.Task));
 
 
-                currentTask.ContinueWith(finalF);
+            currentTask.ContinueWith(finalF);
 
-                StartBusy();
-                startTask.Start();
-            }
+            StartBusy();
+            startTask.Start();
         }
 
         struct FilterTask

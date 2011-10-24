@@ -6,7 +6,7 @@ namespace ManagedDigitalImageProcessing.PGM.Exceptions
     /// Exception thrown when the %PGM header is invalid.
     /// </summary>
     [Serializable]
-    public class InvalidPgmHeaderException : Exception
+    public sealed class InvalidPgmHeaderException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidPgmHeaderException"/> class.
@@ -22,7 +22,7 @@ namespace ManagedDigitalImageProcessing.PGM.Exceptions
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner.</param>
-        public InvalidPgmHeaderException(string message, System.Exception inner) : base(message, inner) { }
+        public InvalidPgmHeaderException(string message, Exception inner) : base(message, inner) { }
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidPgmHeaderException"/> class with serialized data.
         /// </summary>
@@ -31,7 +31,7 @@ namespace ManagedDigitalImageProcessing.PGM.Exceptions
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
         ///   
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
-        protected InvalidPgmHeaderException(
+        private InvalidPgmHeaderException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
