@@ -163,6 +163,17 @@ namespace DIPUI
                     });
                 filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
             }
+            else if (NoOpEdgeDetectorRadioButton.IsChecked == true)
+            {
+                Func<object, PgmImage> f = (img =>
+                                                {
+                                                    var data = getImage(img);
+                                                    var op = new NoOpFilter();
+                                                    var output = op.Filter(data);
+                                                    return output;
+                                                });
+                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
+            }
 
             Action<object> finalF = (img =>
             {

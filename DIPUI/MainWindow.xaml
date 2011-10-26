@@ -61,6 +61,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <RadioButton IsChecked="True" Name="EnableCannyRadioButton" Grid.Column="0" VerticalAlignment="Center">Enable Canny</RadioButton>
                     <Label Grid.Column="1" IsEnabled="{Binding ElementName=EnableCannyRadioButton, Path=IsChecked}">Upper Threshold</Label>
@@ -75,6 +76,7 @@
                                  x:FieldModifier="private">Enable Non-Maximum Suppression</RadioButton>
                     <RadioButton Name="SobelOnlyRadioButton" Grid.Column="0" VerticalAlignment="Center" Grid.Row="3"
                                  x:FieldModifier="private">Enable Sobel-Operator</RadioButton>
+                    <RadioButton Name="NoOpEdgeDetectorRadioButton" Grid.Column="0" VerticalAlignment="Center" Grid.Row="4" x:FieldModifier="private">No Operation</RadioButton>
                 </Grid>
             </Expander>
             <Button Name="UpdateButton" Click="UpdateButtonClick" x:FieldModifier="private">Update</Button>
