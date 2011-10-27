@@ -9,7 +9,7 @@ namespace DIPUI.ViewModels
 {
     class EdgeDetector : ViewModelBase
     {
-        private bool? _selected;
+        private bool? _selected = false;
 
         public string Name { get; private set; }
         public bool? Selected
@@ -22,14 +22,16 @@ namespace DIPUI.ViewModels
             }
         }
 
-        public EdgeDetector(string name, Func<PgmImage, PgmImage> filterFunction)
+        protected EdgeDetector(string name)
         {
             Name = name;
-            Selected = false;
+        }
 
+        public EdgeDetector(string name, Func<PgmImage, PgmImage> filterFunction) : this(name)
+        {
             FilterFunction = filterFunction;
         }
 
-        public Func<PgmImage, PgmImage> FilterFunction { get; private set; }
+        public virtual Func<PgmImage, PgmImage> FilterFunction { get; protected set; }
     }
 }

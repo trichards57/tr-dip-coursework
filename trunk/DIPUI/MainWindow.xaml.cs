@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using DIPUI.ViewModels;
 using ManagedDigitalImageProcessing.Filters;
-using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace DIPUI
@@ -63,8 +63,6 @@ namespace DIPUI
 
         private void UpdateButtonClick(object sender, RoutedEventArgs e)
         {
-            var filterTasks = new List<FilterTask>();
-
             Func<object, PgmImage> getImage = (img =>
                                                    {
                                                        if (img is PgmImage)
@@ -74,32 +72,15 @@ namespace DIPUI
                                                        return null;
                                                    });
 
+            var datacontext = (MainViewModel)FindResource("dataContext");
 
-            if (EnableMedianCheckBox.IsChecked == true)
-            {
-                var windowSize = int.Parse(MedianSizeTextBox.Text);
-                Func<object, PgmImage> f = (img =>
-                {
-                    var data = getImage(img);
-                    var filter = new HistogramMedianFilter(windowSize);
-                    return filter.Filter(data);
-                }
-                        );
-                var priority = int.Parse(MedianPriorityTextBox.Text);
-                filterTasks.Add(new FilterTask { Task = f, Priority = priority });
-            }
-            if (EnableGaussianCheckBox.IsChecked == true)
-            {
-                var windowSize = double.Parse(GaussianSizeTextBox.Text);
-                Func<object, PgmImage> f = (img =>
-                {
-                    var data = getImage(img);
-                    var filter = new SeperatedGaussianFilter(windowSize);
-                    return filter.Filter(data);
-                });
-                var priority = int.Parse(GaussianPriorityTextBox.Text);
-                filterTasks.Add(new FilterTask { Task = f, Priority = priority });
-            }
+            var filterTasks = (from f in datacontext.SelectedFilters
+                               let action = (Func<object, PgmImage>) (img =>
+                                                                          {
+                                                                              var data = getImage(img);
+                                                                              return f.FilterFunction(data);
+                                                                          })
+                               select new FilterTask {Task = action, Priority = f.Priority}).ToList();
 
             var currentPriority = 0;
             if (filterTasks.Count > 0)
@@ -117,63 +98,15 @@ namespace DIPUI
                 filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority++ });
             }
 
-            if (EnableCannyRadioButton.IsChecked == true)
-            {
-                var highT = byte.Parse(CannyUpperThresholdComboBox.Text);
-                var lowT = byte.Parse(CannyLowerThresholdComboBox.Text);
 
-                Func<object, PgmImage> f = (img =>
-                    {
-                        var data = getImage(img);
-                        var filter = new CannyFilter(highT, lowT);
-                        return filter.Filter(data);
-                    });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
-            }
-            else if (EnableLaplacianRadioButton.IsChecked == true)
-            {
-                Func<object, PgmImage> f = (img =>
-                {
-                    var data = getImage(img);
-                    var filter = new LaplacianOperator();
-                    return filter.Filter(data);
-                });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
-            }
-            else if (NonMaximalSuppressionOnlyRadioButton.IsChecked == true)
-            {
-                Func<object, PgmImage> f = (img =>
-                    {
-                        var data = getImage(img);
-                        var sobelOperator = new SobelOperator();
-                        var nonMax = new NonMaximumSuppression();
-                        var output = nonMax.Filter(sobelOperator.FilterSplit(data));
-                        return output.ToPgmImage();
-                    });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
-            }
-            else if (SobelOnlyRadioButton.IsChecked == true)
-            {
-                Func<object, PgmImage> f = (img =>
-                    {
-                        var data = getImage(img);
-                        var sobelOperator = new SobelOperator();
-                        var output = sobelOperator.Filter(data);
-                        return output;
-                    });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
-            }
-            else if (NoOpEdgeDetectorRadioButton.IsChecked == true)
-            {
-                Func<object, PgmImage> f = (img =>
-                                                {
-                                                    var data = getImage(img);
-                                                    var op = new NoOpFilter();
-                                                    var output = op.Filter(data);
-                                                    return output;
-                                                });
-                filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority });
-            }
+
+            Func<object, PgmImage> func = (img =>
+                                            {
+                                                var data = getImage(img);
+                                                var edgeDetector = datacontext.SelectedEdgeDetector;
+                                                return edgeDetector.FilterFunction(data);
+                                            });
+            filterTasks.Add(new FilterTask { Task = func, Priority = currentPriority });
 
             Action<object> finalF = (img =>
             {
