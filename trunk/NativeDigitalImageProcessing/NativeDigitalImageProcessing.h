@@ -10,13 +10,3 @@
 #define NATIVEDIGITALIMAGEPROCESSING_API __declspec(dllimport)
 #endif
 
-// This class is exported from the NativeDigitalImageProcessing.dll
-class NATIVEDIGITALIMAGEPROCESSING_API CNativeDigitalImageProcessing {
-public:
-	CNativeDigitalImageProcessing(void);
-	// TODO: add your methods here.
-};
-
-extern NATIVEDIGITALIMAGEPROCESSING_API int nNativeDigitalImageProcessing;
-
-NATIVEDIGITALIMAGEPROCESSING_API int fnNativeDigitalImageProcessing(void);
