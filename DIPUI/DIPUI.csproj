@@ -58,8 +58,11 @@
     </ApplicationDefinition>
     <Compile Include="ViewModels\CannyEdgeDetector.cs" />
     <Compile Include="ViewModels\EdgeDetector.cs" />
+    <Compile Include="ViewModels\Filter.cs" />
+    <Compile Include="ViewModels\GaussianFilter.cs" />
     <Compile Include="ViewModels\InvalidPropertyNameException.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MedianFilter.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -74,6 +77,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resources\EdgeDetectors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Filters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

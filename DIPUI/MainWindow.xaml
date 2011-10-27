@@ -11,39 +11,13 @@
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="Resources/EdgeDetectors.xaml" />
+                    <ResourceDictionary Source="Resources/Filters.xaml" />
                 </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
         </DockPanel.Resources>
         <StackPanel DockPanel.Dock="Left">
-            <Expander IsExpanded="True" Header="Smoothing Filters">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <CheckBox Name="EnableMedianCheckBox" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0">Enable Median</CheckBox>
-                    <CheckBox Name="EnableGaussianCheckBox" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1">Enable Gaussian</CheckBox>
-                    <Label IsEnabled="{Binding ElementName=EnableMedianCheckBox, Path=IsChecked}" Grid.Column="1" Grid.Row="0">Window Size</Label>
-                    <Label IsEnabled="{Binding ElementName=EnableGaussianCheckBox, Path=IsChecked}" Grid.Column="1" Grid.Row="1">Window Size</Label>
-                    <TextBox IsEnabled="{Binding ElementName=EnableMedianCheckBox, Path=IsChecked}" Name="MedianSizeTextBox" Grid.Column="2" Grid.Row="0" MinWidth="30"
-                             x:FieldModifier="private" />
-                    <TextBox IsEnabled="{Binding ElementName=EnableGaussianCheckBox, Path=IsChecked}" Name="GaussianSizeTextBox" Grid.Column="2" Grid.Row="1" MinWidth="30"
-                             x:FieldModifier="private" />
-                    <Label IsEnabled="{Binding ElementName=EnableMedianCheckBox, Path=IsChecked}" Grid.Column="3" Grid.Row="0">Priority</Label>
-                    <Label IsEnabled="{Binding ElementName=EnableGaussianCheckBox, Path=IsChecked}" Grid.Column="3" Grid.Row="1">Priority</Label>
-                    <TextBox IsEnabled="{Binding ElementName=EnableMedianCheckBox, Path=IsChecked}" Name="MedianPriorityTextBox" Grid.Column="4" Grid.Row="0" MinWidth="30"
-                             x:FieldModifier="private" />
-                    <TextBox IsEnabled="{Binding ElementName=EnableGaussianCheckBox, Path=IsChecked}" Name="GaussianPriorityTextBox" Grid.Column="4" Grid.Row="1" MinWidth="30"
-                             x:FieldModifier="private" />
-                </Grid>
+            <Expander IsExpanded="True" Header="Filters">
+                <ItemsControl ItemsSource="{Binding Path=Filters}" />
             </Expander>
             <Expander IsExpanded="True" Header="Bit Slicing">
                 <Grid>
@@ -60,39 +34,7 @@
             </Expander>
             <Expander IsExpanded="True" Header="Edge Detector">
                 <ItemsControl ItemsSource="{Binding Path=EdgeDetectors}" />
-            </Expander>
-            <Expander IsExpanded="True" Header="Edge Detector">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <RadioButton IsChecked="True" Name="EnableCannyRadioButton" Grid.Column="0" VerticalAlignment="Center">Enable Canny</RadioButton>
-                    <Label Grid.Column="1" IsEnabled="{Binding ElementName=EnableCannyRadioButton, Path=IsChecked}">Upper Threshold</Label>
-                    <TextBox Name="CannyUpperThresholdComboBox" MinWidth="30" Grid.Column="2" IsEnabled="{Binding ElementName=EnableCannyRadioButton, Path=IsChecked}"
-                             x:FieldModifier="private" />
-                    <Label Grid.Column="3" IsEnabled="{Binding ElementName=EnableCannyRadioButton, Path=IsChecked}">Lower Threshold</Label>
-                    <TextBox Name="CannyLowerThresholdComboBox" MinWidth="30" Grid.Column="4" IsEnabled="{Binding ElementName=EnableCannyRadioButton, Path=IsChecked}"
-                             x:FieldModifier="private" />
-                    <RadioButton Name="EnableLaplacianRadioButton" Grid.Column="0" VerticalAlignment="Center" Grid.Row="1"
-                                 x:FieldModifier="private">Enable Laplacian</RadioButton>
-                    <RadioButton Name="NonMaximalSuppressionOnlyRadioButton" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2"
-                                 x:FieldModifier="private">Enable Non-Maximum Suppression</RadioButton>
-                    <RadioButton Name="SobelOnlyRadioButton" Grid.Column="0" VerticalAlignment="Center" Grid.Row="3"
-                                 x:FieldModifier="private">Enable Sobel-Operator</RadioButton>
-                    <RadioButton Name="NoOpEdgeDetectorRadioButton" Grid.Column="0" VerticalAlignment="Center" Grid.Row="4" x:FieldModifier="private">No Operation</RadioButton>
-                </Grid>
-            </Expander>
+            </Expander>            
             <Button Name="UpdateButton" Click="UpdateButtonClick" x:FieldModifier="private">Update</Button>
         </StackPanel>
         <Grid>

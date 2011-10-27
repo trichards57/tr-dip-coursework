@@ -8,13 +8,28 @@ namespace DIPUI.ViewModels
         public CannyEdgeDetector()
             : base("Canny")
         {
-            
         }
 
-        private int _upperThreshold = 100;
-        private int _lowerThreshold = 10;
+        public override Func<ManagedDigitalImageProcessing.PGM.PgmImage, ManagedDigitalImageProcessing.PGM.PgmImage> FilterFunction
+        {
+            get
+            {
+                return (img =>
+                            {
+                                var filter = new CannyFilter(UpperThreshold, LowerThreshold);
+                                return filter.Filter(img);
+                            });
+            }
+            protected set
+            {
 
-        public int UpperThreshold
+            }
+        }
+
+        private byte _upperThreshold = 100;
+        private byte _lowerThreshold = 10;
+
+        public byte UpperThreshold
         {
             get { return _upperThreshold; }
             set
@@ -28,7 +43,7 @@ namespace DIPUI.ViewModels
             }
         }
 
-        public int LowerThreshold
+        public byte LowerThreshold
         {
             get { return _lowerThreshold; }
             set
