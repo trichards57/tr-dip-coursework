@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ManagedDigitalImageProcessing.Filters;
+using ManagedDigitalImageProcessing.PGM;
 
 namespace DIPUI.ViewModels
 {
@@ -21,17 +22,14 @@ namespace DIPUI.ViewModels
             }
         }
 
-        public EdgeDetector(string name)
+        public EdgeDetector(string name, Func<PgmImage, PgmImage> filterFunction)
         {
             Name = name;
             Selected = false;
+
+            FilterFunction = filterFunction;
         }
 
-        private Type _filter;
-        public Type Filter
-        {
-            get { return _filter; }
-            set { _filter = value; }
-        }
+        public Func<PgmImage, PgmImage> FilterFunction { get; private set; }
     }
 }

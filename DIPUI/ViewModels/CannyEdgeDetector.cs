@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
 
 namespace DIPUI.ViewModels
 {
@@ -10,6 +8,7 @@ namespace DIPUI.ViewModels
         public CannyEdgeDetector()
             : base("Canny")
         {
+            
         }
 
         private int _upperThreshold = 100;
