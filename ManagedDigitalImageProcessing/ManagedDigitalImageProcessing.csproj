@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filters\BitwiseAndFilter.cs" />
+    <Compile Include="Filters\NativeFilter.cs" />
     <Compile Include="Filters\SeperatedGaussianFilter.cs" />
     <Compile Include="Filters\EdgeDetectors\CannyFilter.cs" />
     <Compile Include="Filters\EdgeDetectors\HysteresisThresholding.cs" />
