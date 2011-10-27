@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using ManagedDigitalImageProcessing.PGM;
 
 namespace DIPUI.ViewModels
 {
@@ -8,6 +12,15 @@ namespace DIPUI.ViewModels
 
         public MainViewModel()
         {
+            Func<object, PgmImage> getImage = (img =>
+            {
+                if (img is PgmImage)
+                    return (PgmImage)img;
+                if (img is Task<PgmImage>)
+                    return ((Task<PgmImage>)img).Result;
+                return null;
+            });
+
             EdgeDetectors = new ObservableCollection<EdgeDetector>
                                 {
                                     new CannyEdgeDetector(),
@@ -16,6 +29,9 @@ namespace DIPUI.ViewModels
                                     new EdgeDetector("Sobel Operator"),
                                     new EdgeDetector("None")
                                 };
+            EdgeDetectors.First().Selected = true;
         }
+
+
     }
 }

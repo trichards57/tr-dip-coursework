@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ManagedDigitalImageProcessing.Filters;
 
 namespace DIPUI.ViewModels
 {
@@ -23,6 +24,14 @@ namespace DIPUI.ViewModels
         public EdgeDetector(string name)
         {
             Name = name;
+            Selected = false;
+        }
+
+        private Type _filter;
+        public Type Filter
+        {
+            get { return _filter; }
+            set { _filter = value; }
         }
     }
 }

@@ -2,6 +2,20 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewModels="clr-namespace:DIPUI.ViewModels">
     <DataTemplate DataType="{x:Type viewModels:EdgeDetector}">
-        
+        <RadioButton VerticalAlignment="Center" Content="{Binding Path=Name}" IsChecked="{Binding Path=Selected}" GroupName="EdgeDetectors" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:CannyEdgeDetector}">
+        <DataTemplate.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="MinWidth" Value="30" />
+            </Style>
+        </DataTemplate.Resources>
+        <StackPanel Orientation="Horizontal">
+            <RadioButton VerticalAlignment="Center" Content="{Binding Path=Name}" IsChecked="{Binding Path=Selected}" GroupName="EdgeDetectors" />
+            <Label IsEnabled="{Binding Path=Selected}">Upper Threshold</Label>
+            <TextBox Text="{Binding Path=UpperThreshold, Mode=TwoWay}" />
+            <Label IsEnabled="{Binding Path=Selected}">Lower Threshold</Label>
+            <TextBox Text="{Binding Path=LowerThreshold, Mode=TwoWay}" />
+        </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

@@ -1,8 +1,19 @@
 ﻿<Window x:Class="DIPUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModel="clr-namespace:DIPUI.ViewModels"
         Title="MainWindow" Height="350" Width="525" Loaded="WindowLoaded" x:ClassModifier="internal">
-    <DockPanel>
+    <Window.Resources>
+        <viewModel:MainViewModel x:Key="dataContext" />
+    </Window.Resources>
+    <DockPanel DataContext="{StaticResource dataContext}">
+        <DockPanel.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="Resources/EdgeDetectors.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </DockPanel.Resources>
         <StackPanel DockPanel.Dock="Left">
             <Expander IsExpanded="True" Header="Smoothing Filters">
                 <Grid>
@@ -46,6 +57,9 @@
                     <TextBox Name="BitSliceLevelTextBox" MinWidth="30" Grid.Column="2" IsEnabled="{Binding ElementName=EnableBitSliceCheckBox, Path=IsChecked}"
                              x:FieldModifier="private" />
                 </Grid>
+            </Expander>
+            <Expander IsExpanded="True" Header="Edge Detector">
+                <ItemsControl ItemsSource="{Binding Path=EdgeDetectors}" />
             </Expander>
             <Expander IsExpanded="True" Header="Edge Detector">
                 <Grid>
