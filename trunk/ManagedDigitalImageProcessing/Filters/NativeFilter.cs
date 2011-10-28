@@ -8,7 +8,7 @@ namespace ManagedDigitalImageProcessing.Filters
 {
     class NativeFilter
     {
-        [DllImport("NativeDigitalImageProcessing.dll")]
-        public static extern void BitwiseAndFilter([MarshalAs(UnmanagedType.LPArray, SizeParamIndex=1)]byte[] data, int dataLength, byte mask);
+        [DllImport("NativeDigitalImageProcessing.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void BitwiseAndFilter(int dataLength, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex=0)] byte[] data, byte mask);
     }
 }
