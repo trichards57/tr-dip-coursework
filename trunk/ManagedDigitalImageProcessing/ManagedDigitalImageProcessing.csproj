@@ -61,7 +61,7 @@
   <ItemGroup>
     <Compile Include="FFT\ComplexNumber.cs" />
     <Compile Include="FFT\FFT.cs" />
-    <Compile Include="Filters\NoiseReduction\AdaptiveHistogramMedianFilter.cs" />
+    <Compile Include="Filters\NoiseReduction\HistogramMedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\MedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\BitwiseAndFilter.cs" />
     <Compile Include="Filters\NoiseReduction\NativeFilter.cs" />
@@ -75,7 +75,7 @@
     <Compile Include="Filters\EdgeDetectors\SobelOperator.cs" />
     <Compile Include="Filters\EdgeDetectors\FilterResult.cs" />
     <Compile Include="Filters\NoiseReduction\GaussianFilter.cs" />
-    <Compile Include="Filters\NoiseReduction\HistogramMedianFilter.cs" />
+    <Compile Include="Filters\NoiseReduction\AdaptiveHistogramMedianFilter.cs" />
     <Compile Include="Filters\FilterBase.cs" />
     <Compile Include="PGM\Exceptions\InvalidPgmException.cs" />
     <Compile Include="PGM\Exceptions\InvalidPgmHeaderException.cs" />
