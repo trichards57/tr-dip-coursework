@@ -1,8 +1,8 @@
 ﻿using ManagedDigitalImageProcessing.PGM;
 
-namespace ManagedDigitalImageProcessing.Filters
+namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    public sealed class FilterResult
+    public sealed class SobelFilterResult
     {
         public PgmHeader Header { get; set; }
 

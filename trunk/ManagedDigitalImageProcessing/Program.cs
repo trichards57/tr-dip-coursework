@@ -24,14 +24,25 @@ namespace ManagedDigitalImageProcessing
 
             var data = PgmLoader.LoadImage(inFile);
 
-            var medFilter = new MedianFilter(11);
-            var histMedFilter = new HistogramMedianFilter(11);
+            var adaptFilter = new AdaptiveHistogramMedianFilter(99, 0.5, 15);
+            var histMedFilter = new HistogramMedianFilter(15);
 
-            var output1 = medFilter.Filter(data);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var output1 = adaptFilter.Filter(data);
+            stopwatch.Stop();
+
+            Console.WriteLine("Adaptive : {0}", stopwatch.ElapsedMilliseconds);
+
+            stopwatch.Restart();
             var output2 = histMedFilter.Filter(data);
+            stopwatch.Stop();
+
+            Console.WriteLine("Static : {0}", stopwatch.ElapsedMilliseconds);
 
             output1.ToBitmap().Save("Test1.png");
             output2.ToBitmap().Save("Test2.png");
         }
     }
 }
+
