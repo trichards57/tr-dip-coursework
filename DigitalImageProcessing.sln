@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedDigitalImageProcessing", "ManagedDigitalImageProcessing\ManagedDigitalImageProcessing.csproj", "{F563502E-F56D-4AFB-9051-601F70459270}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0} = {3E7F84C2-F7F0-47E6-A64E-11327752EBE0}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DIPUI", "DIPUI\DIPUI.csproj", "{ED14BFDD-6202-44A7-8831-6EFA7033DA0C}"
 EndProject

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using ManagedDigitalImageProcessing.FFT;
 using ManagedDigitalImageProcessing.Filters;
 using ManagedDigitalImageProcessing.PGM;
 
@@ -19,32 +21,51 @@ namespace ManagedDigitalImageProcessing
             var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
 
             var data = PgmLoader.LoadImage(inFile);
-            var filter = new BitwiseAndFilter(0xF0);
 
+            var sizer = new Resizer(1024, 512);
+            var output = sizer.Filter(data);
 
+            output.ToBitmap().Save("ResizedOutput.png");
+            data.ToBitmap().Save("OriginalImage.png");
 
-            var length = data.Data.Length;
-            var paddedLength = length + (16 - (length % 16)); // Increased so that the data fits perfectly in to the SSE2 registers.
-            var bytes = new byte[paddedLength];
-            Array.Copy(data.Data, bytes, length);
+            var complexData = output.Data.Select(c => (ComplexNumber)c).ToList();
 
             var stopwatch = new Stopwatch();
-
             stopwatch.Start();
-            for (var i = 0; i < 50; i++)
-                NativeFilter.BitwiseAndFilter(paddedLength, bytes, 0xF0);
-
+            var outputData = FFT.FFT.DitFFT2D(complexData, 1024, 512);
             stopwatch.Stop();
+            Console.WriteLine("Serial FFT : {0}", stopwatch.ElapsedMilliseconds);
 
-            var newStopwatch = new Stopwatch();
-            newStopwatch.Start();
-            for (var i = 0; i < 50; i++)
-                filter.Filter(data);
-            newStopwatch.Stop();
+            stopwatch.Restart();
+            var testData = FFT.FFT.InverseDitFFT2D(outputData, 1024, 512);
+            stopwatch.Stop();
+            Console.WriteLine("Serial IFFT : {0}", stopwatch.ElapsedMilliseconds);
 
-            Console.WriteLine("Managed Function : {0}", newStopwatch.ElapsedMilliseconds);
-            Console.WriteLine("Unmanaged Function : {0}", stopwatch.ElapsedMilliseconds);
-            Console.ReadLine();
+            stopwatch.Restart();
+            outputData = ParallelFFT.DitFFT2D(complexData, 1024, 512);
+            stopwatch.Stop();
+            Console.WriteLine("Parallel FFT : {0}", stopwatch.ElapsedMilliseconds);
+
+            stopwatch.Restart();
+            testData = ParallelFFT.InverseDitFFT2D(outputData, 1024, 512);
+            stopwatch.Stop();
+            Console.WriteLine("Parallel IFFT : {0}", stopwatch.ElapsedMilliseconds);
+
+
+            var newData = outputData.Select(c => Math.Log(c.Magnitude())).ToArray();
+            var newTestData = testData.Select(c => c.Magnitude()).ToArray();
+
+            var max = newData.Max();
+            var testMax = newTestData.Max();
+
+            var scaledNewData = newData.Select(i => (byte)(i * 255.0 / max)).ToArray();
+            var scaledTestData = newTestData.Select(i => (byte) (i*255.0/testMax)).ToArray();
+
+            output.Data = scaledNewData;
+            output.ToBitmap().Save("FFTOutput.png");
+
+            output.Data = scaledTestData;
+            output.ToBitmap().Save("IFFTOutput.png");
         }
     }
 }
