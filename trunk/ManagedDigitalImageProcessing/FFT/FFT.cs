@@ -1,108 +1,115 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ManagedDigitalImageProcessing.FFT
 {
     // From http://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm
-    class FFT
+    static class FFT
     {
-        protected static int CalculateIndex(int x, int y, int width, int height)
+        private static ComplexNumber[] DitFFT(ComplexNumber[] x)
         {
-            if (x < 0)
-                x = -x;
-            if (x >= width)
-                x = width - (x - width) - 1;
-
-            if (y < 0)
-                y = -y;
-            if (y >= height)
-                y = height - (y - height) - 1;
-
-            return x + y * width;
-        }
-
-        public static List<ComplexNumber> DitFFT(List<ComplexNumber> x)
-        {
-            if (x.Count == 1)
+            if (x.Length == 1)
                 return x;
-            var list1 = DitFFT(x.Where((c, i) => i % 2 == 0).ToList());
-            var list2 = DitFFT(x.Where((c, i) => i % 2 == 1).ToList());
-            var output = new ComplexNumber[list1.Count + list2.Count];
-            for (var i = 0; i < list1.Count; i++)
+
+            var list1 = new ComplexNumber[x.Length / 2];
+            var list2 = new ComplexNumber[x.Length / 2];
+
+            for (var i = 0; i < x.Length; i++)
+            {
+                if (i % 2 == 0)
+                    list1[i / 2] = x[i];
+                else
+                    list2[i / 2] = x[i];
+            }
+
+            list1 = DitFFT(list1);
+            list2 = DitFFT(list2);
+
+            var output = new ComplexNumber[list1.Length + list2.Length];
+            for (var i = 0; i < list1.Length; i++)
             {
                 var t = list1[i];
                 output[i] = t +
-                            new ComplexNumber(Math.Cos(2 * Math.PI * i / (list1.Count * 2)),
-                                              -Math.Sin(2 * Math.PI * i / (list1.Count * 2))) * list2[i];
-                output[i + list1.Count] = t - new ComplexNumber(Math.Cos(2 * Math.PI * i / (list1.Count * 2)),
-                                                                -Math.Sin(2 * Math.PI * i / (list1.Count * 2))) * list2[i];
+                            new ComplexNumber(Math.Cos(2 * Math.PI * i / (list1.Length * 2)),
+                                              -Math.Sin(2 * Math.PI * i / (list1.Length * 2))) * list2[i];
+                output[i + list1.Length] = t - new ComplexNumber(Math.Cos(2 * Math.PI * i / (list1.Length * 2)),
+                                                                -Math.Sin(2 * Math.PI * i / (list1.Length * 2))) * list2[i];
 
 
             }
-            return output.ToList();
+            return output;
         }
 
-        public static List<ComplexNumber> InverseDitFFT(List<ComplexNumber> x)
+        private static ComplexNumber[] InverseDitFFT(ComplexNumber[] x)
         {
-            var swappedList = x.Select(n => n.Swap()).ToList();
+            var swappedList = new ComplexNumber[x.Length];
+            for (var i = 0; i < x.Length; i++)
+                swappedList[i] = x[i].Swap();
 
             var outputTemp = DitFFT(swappedList);
-            return outputTemp.Select(n => n.Swap()).ToList();
+
+            swappedList = new ComplexNumber[outputTemp.Length];
+            for (var i = 0; i < outputTemp.Length; i++)
+                swappedList[i] = outputTemp[i].Swap();
+
+            return swappedList;
         }
 
-        public static List<ComplexNumber> DitFFT2D(List<ComplexNumber> x, int width, int height)
+        private static ComplexNumber[] DitFFT2D(ComplexNumber[] x, int width, int height, bool centerOutput, Func<ComplexNumber[], ComplexNumber[]> fftOp)
         {
-            for (var i = 0; i < width; i++)
+            var buffer = new ComplexNumber[x.Length];
+
+            if (centerOutput)
             {
-                for (var j = 0; j < height; j++)
+                for (var i = 0; i < width; i++)
                 {
-                    x[i + j * 1024] *= Math.Pow(-1, i + j);
+                    for (var j = 0; j < height; j++)
+                    {
+                        buffer[i + j * width] = x[i + j * width] * Math.Pow(-1, i + j);
+                    }
                 }
             }
+            else
+            {
+                Array.Copy(x, buffer, x.Length);
+            }
 
+            var outputTemp = new ComplexNumber[x.Length];
 
-            var outputTemp = new List<ComplexNumber>();
             for (var i = 0; i < height; i++)
             {
-                outputTemp.AddRange(DitFFT(x.Skip(i * width).Take(width).ToList()));
+                var buf = new ComplexNumber[width];
+                Array.Copy(buffer, i * width, buf, 0, width);
+                var fftOutput = fftOp(buf);
+                Array.Copy(fftOutput, 0, outputTemp, i * width, width);
             }
             var output = new ComplexNumber[width * height];
             for (var i = 0; i < width; i++)
             {
-                var colIndex = i;
-                var col = outputTemp.Where((val, index) => index%width == colIndex).ToList();
-                var colOut = DitFFT(col);
+                var buf = new ComplexNumber[height];
                 for (var j = 0; j < height; j++)
                 {
-                    output[i + j*width] = colOut[j];
+                    var index = i + j * width;
+                    buf[j] = outputTemp[index];
                 }
-            }
 
-            return output.ToList();
-        }
-
-        public static List<ComplexNumber> InverseDitFFT2D(List<ComplexNumber> x, int width, int height)
-        {
-            var outputTemp = new List<ComplexNumber>();
-            for (var i = 0; i < height; i++)
-            {
-                outputTemp.AddRange(InverseDitFFT(x.Skip(i * width).Take(width).ToList()));
-            }
-            var output = new ComplexNumber[width * height];
-            for (var i = 0; i < width; i++)
-            {
-                var colIndex = i;
-                var col = outputTemp.Where((val, index) => index % width == colIndex).ToList();
-                var colOut = InverseDitFFT(col);
+                var colOut = fftOp(buf);
                 for (var j = 0; j < height; j++)
                 {
                     output[i + j * width] = colOut[j];
                 }
             }
 
-            return output.ToList();
+            return output;
+        }
+
+        public static ComplexNumber[] DitFFT2D(ComplexNumber[] x, int width, int height)
+        {
+            return DitFFT2D(x, width, height, true, DitFFT);
+        }
+
+        public static ComplexNumber[] InverseDitFFT2D(ComplexNumber[] x, int width, int height)
+        {
+            return DitFFT2D(x, width, height, false, InverseDitFFT);
         }
     }
 }

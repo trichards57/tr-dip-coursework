@@ -17,7 +17,7 @@
             _lowT = lowThreshold;
         }
 
-        public override PGM.PgmImage Filter(PGM.PgmImage input)
+        public PGM.PgmImage Filter(PGM.PgmImage input)
         {
             return _hysteresis.Filter(_nonMaximal.Filter(_edgeFilter.FilterSplit(input)).ToPgmImage());
         }

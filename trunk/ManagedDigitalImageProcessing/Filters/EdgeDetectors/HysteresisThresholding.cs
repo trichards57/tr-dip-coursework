@@ -16,7 +16,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             _lowT = lowThreshold;
         }
 
-        public override PgmImage Filter(PgmImage input)
+        public PgmImage Filter(PgmImage input)
         {
             var output = new bool[input.Header.Height * input.Header.Width];
 

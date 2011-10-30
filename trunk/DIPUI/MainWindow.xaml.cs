@@ -8,6 +8,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using DIPUI.ViewModels;
 using ManagedDigitalImageProcessing.Filters;
+using ManagedDigitalImageProcessing.Filters.NoiseReduction;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace DIPUI

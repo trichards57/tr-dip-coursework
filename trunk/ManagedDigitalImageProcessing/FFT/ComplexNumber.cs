@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ManagedDigitalImageProcessing.FFT
 {
-    class ComplexNumber
+    internal sealed class ComplexNumber
     {
         public double Real { get; set; }
         public double Imaginary { get; set; }
