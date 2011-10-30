@@ -27,7 +27,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             return result;
         }
 
-        public NonMaximumResult Filter(FilterResult input)
+        public NonMaximumResult Filter(SobelFilterResult input)
         {
             var result = new NonMaximumResult { XData = input.XData, YData = input.YData, Peak = new byte[input.XData.Length], Header = input.Header };
 
@@ -80,11 +80,6 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             });
 
             return result;
-        }
-
-        public override PgmImage Filter(PgmImage input)
-        {
-            throw new NotImplementedException();
         }
     }
 }

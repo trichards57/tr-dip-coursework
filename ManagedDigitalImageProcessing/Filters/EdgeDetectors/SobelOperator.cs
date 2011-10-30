@@ -7,7 +7,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     public sealed class SobelOperator : FilterBase
     {
-        public override PgmImage Filter(PgmImage input)
+        public PgmImage Filter(PgmImage input)
         {
             var output = new PgmImage { Header = input.Header, Data = new byte[input.Header.Width * input.Header.Height] };
 
@@ -22,9 +22,9 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             return output;
         }
 
-        public FilterResult FilterSplit(PgmImage input)
+        public SobelFilterResult FilterSplit(PgmImage input)
         {
-            var output = new FilterResult { Header = input.Header };
+            var output = new SobelFilterResult { Header = input.Header };
 
             var template1 = new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
             var template2 = new double[] { 1, 2, 1, 0, 0, 0, -1, -2, -1 };

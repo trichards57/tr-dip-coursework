@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using ManagedDigitalImageProcessing.FFT;
 using ManagedDigitalImageProcessing.Filters;
+using ManagedDigitalImageProcessing.Filters.NoiseReduction;
+using ManagedDigitalImageProcessing.Filters.Utilities;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing
@@ -22,50 +24,14 @@ namespace ManagedDigitalImageProcessing
 
             var data = PgmLoader.LoadImage(inFile);
 
-            var sizer = new Resizer(1024, 512);
-            var output = sizer.Filter(data);
+            var medFilter = new MedianFilter(11);
+            var histMedFilter = new HistogramMedianFilter(11);
 
-            output.ToBitmap().Save("ResizedOutput.png");
-            data.ToBitmap().Save("OriginalImage.png");
+            var output1 = medFilter.Filter(data);
+            var output2 = histMedFilter.Filter(data);
 
-            var complexData = output.Data.Select(c => (ComplexNumber)c).ToList();
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var outputData = FFT.FFT.DitFFT2D(complexData, 1024, 512);
-            stopwatch.Stop();
-            Console.WriteLine("Serial FFT : {0}", stopwatch.ElapsedMilliseconds);
-
-            stopwatch.Restart();
-            var testData = FFT.FFT.InverseDitFFT2D(outputData, 1024, 512);
-            stopwatch.Stop();
-            Console.WriteLine("Serial IFFT : {0}", stopwatch.ElapsedMilliseconds);
-
-            stopwatch.Restart();
-            outputData = ParallelFFT.DitFFT2D(complexData, 1024, 512);
-            stopwatch.Stop();
-            Console.WriteLine("Parallel FFT : {0}", stopwatch.ElapsedMilliseconds);
-
-            stopwatch.Restart();
-            testData = ParallelFFT.InverseDitFFT2D(outputData, 1024, 512);
-            stopwatch.Stop();
-            Console.WriteLine("Parallel IFFT : {0}", stopwatch.ElapsedMilliseconds);
-
-
-            var newData = outputData.Select(c => Math.Log(c.Magnitude())).ToArray();
-            var newTestData = testData.Select(c => c.Magnitude()).ToArray();
-
-            var max = newData.Max();
-            var testMax = newTestData.Max();
-
-            var scaledNewData = newData.Select(i => (byte)(i * 255.0 / max)).ToArray();
-            var scaledTestData = newTestData.Select(i => (byte) (i*255.0/testMax)).ToArray();
-
-            output.Data = scaledNewData;
-            output.ToBitmap().Save("FFTOutput.png");
-
-            output.Data = scaledTestData;
-            output.ToBitmap().Save("IFFTOutput.png");
+            output1.ToBitmap().Save("Test1.png");
+            output2.ToBitmap().Save("Test2.png");
         }
     }
 }

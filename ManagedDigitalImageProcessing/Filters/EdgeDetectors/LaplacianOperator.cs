@@ -4,7 +4,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     public sealed class LaplacianOperator : FilterBase
     {
-        public override PgmImage Filter(PgmImage input)
+        public PgmImage Filter(PgmImage input)
         {
             var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
 

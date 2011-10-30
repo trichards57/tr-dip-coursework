@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
-using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters
 {
@@ -14,7 +13,7 @@ namespace ManagedDigitalImageProcessing.Filters
         /// <summary>
         /// Calculates the index of a point at given coordinates.  Points that fall out of the range of the
         /// image are reflected back in to the image (only works for positions less than width or height out
-        /// of range.
+        /// of range).
         /// </summary>
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
@@ -124,12 +123,5 @@ namespace ManagedDigitalImageProcessing.Filters
 
             return output;
         }
-
-        /// <summary>
-        /// Filters the specified input.
-        /// </summary>
-        /// <param name="input">The input image.</param>
-        /// <returns>The filtered image.</returns>
-        public abstract PgmImage Filter(PgmImage input);
     }
 }

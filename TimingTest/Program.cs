@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ManagedDigitalImageProcessing.Filters;
+using ManagedDigitalImageProcessing.Filters.NoiseReduction;
 using ManagedDigitalImageProcessing.PGM;
 
 namespace TimingTest
