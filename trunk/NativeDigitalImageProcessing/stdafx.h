@@ -7,11 +7,14 @@
 
 #include "targetver.h"
 
+
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
 #include <windows.h>
 #include <emmintrin.h>
-
+#include <vector>
+#include <algorithm>
+#include <omp.h>
 
 
 // TODO: reference additional headers your program requires here
