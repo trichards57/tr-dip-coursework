@@ -40,6 +40,7 @@ namespace DIPUI.ViewModels
             Filters = new ObservableCollection<Filter>
                           {
                               new MedianFilter(),
+                              new AdaptiveMedianFilter(),
                               new GaussianFilter()
                           };
         }

@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="FFT\ComplexNumber.cs" />
     <Compile Include="FFT\FFT.cs" />
+    <Compile Include="Filters\NoiseReduction\AdaptiveHistogramMedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\MedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\BitwiseAndFilter.cs" />
     <Compile Include="Filters\NoiseReduction\NativeFilter.cs" />

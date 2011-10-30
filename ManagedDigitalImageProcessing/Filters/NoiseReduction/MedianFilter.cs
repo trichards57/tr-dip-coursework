@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.PGM;
 
-namespace ManagedDigitalImageProcessing.Filters
+namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
     /// <summary>
     /// Apply a median filter to the input.
@@ -34,9 +33,9 @@ namespace ManagedDigitalImageProcessing.Filters
         /// <returns>
         /// The filtered image.
         /// </returns>
-        public override PgmImage Filter(PgmImage input)
+        public PgmImage Filter(PgmImage input)
         {
-            var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
+            var output = new PgmImage { Header = input.Header, Data = new byte[input.Data.Length] };
 
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = ((x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height));
@@ -49,19 +48,20 @@ namespace ManagedDigitalImageProcessing.Filters
                 // Iterate through each point in the column.
                 for (var j = 0; j < output.Header.Height; j++)
                 {
-                    var list = new List<byte>();
+                    var list = new byte[_windowSize * _windowSize];
+                    var count = 0;
                     // Iterate through each of the items in the window, adding the value to a list.
                     for (var k = -offset; k <= offset; k++)
                     {
                         for (var l = -offset; l <= offset; l++)
                         {
-                            list.Add(input.Data[calculateIndex(i + k, j + l)]);
+                            list[count++] = input.Data[calculateIndex(i + k, j + l)];
                         }
                     }
                     // Sort the list.
-                    list.Sort();
+                    Array.Sort(list);
                     // Take the middle value (the median) and insert it in to the new image.
-                    output.Data[calculateIndex(i, j)] = list[list.Count / 2];
+                    output.Data[calculateIndex(i, j)] = list[list.Length / 2];
                 }
             });
 

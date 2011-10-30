@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.PGM;
 
-namespace ManagedDigitalImageProcessing.Filters
+namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
     public sealed class SeperatedGaussianFilter : FilterBase
     {
@@ -35,7 +35,7 @@ namespace ManagedDigitalImageProcessing.Filters
             Parallel.For(0, templateTemp.Length, i => _template[i] = templateTemp[i] / sum);
         }
 
-        public override PgmImage Filter(PgmImage input)
+        public PgmImage Filter(PgmImage input)
         {
             var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
 

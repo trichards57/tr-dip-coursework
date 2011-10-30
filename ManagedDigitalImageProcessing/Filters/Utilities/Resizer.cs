@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using ManagedDigitalImageProcessing.PGM;
 
 // From http://paulbourke.net/texture_colour/imageprocess/
 
-namespace ManagedDigitalImageProcessing.Filters
+namespace ManagedDigitalImageProcessing.Filters.Utilities
 {
     class Resizer : FilterBase
     {
@@ -20,7 +16,7 @@ namespace ManagedDigitalImageProcessing.Filters
             _targetWidth = targetWidth;
         }
 
-        public override PGM.PgmImage Filter(PGM.PgmImage input)
+        public virtual PGM.PgmImage Filter(PGM.PgmImage input)
         {
             var width = input.Header.Width;
             var height = input.Header.Height;

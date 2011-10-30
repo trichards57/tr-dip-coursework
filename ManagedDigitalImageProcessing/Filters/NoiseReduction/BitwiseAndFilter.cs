@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.PGM;
 
-namespace ManagedDigitalImageProcessing.Filters
+namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
     public sealed class BitwiseAndFilter : FilterBase
     {
@@ -9,7 +9,7 @@ namespace ManagedDigitalImageProcessing.Filters
 
         public BitwiseAndFilter(byte mask) { _mask = mask; }
 
-        public override PgmImage Filter(PgmImage input)
+        public PgmImage Filter(PgmImage input)
         {
             var output = new PgmImage { Header = input.Header, Data = new byte[input.Data.Length] };
 
