@@ -1,8 +1,6 @@
-// NativeDigitalImageProcessing.cpp : Defines the exported functions for the DLL application.
-//
-
 #include "stdafx.h"
 #include "NativeDigitalImageProcessing.h"
+#include "Utilities.h"
 
 using namespace std;
 
@@ -21,21 +19,6 @@ extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT BitwiseAndFilter(int dataLen
 	}
 
 	return 0;
-}
-
-int CalculateIndex(int x, int y, int width, int height)
-{
-	if (x < 0)
-		x = -x;
-	if (x >= width)
-		x = width - (x - width) - 1;
-
-	if (y < 0)
-		y = -y;
-	if (y >= height)
-		y = height - (y - height) - 1;
-
-	return x + y * width;
 }
 
 extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT MedianFilter(int dataLength, unsigned char data[], unsigned char dataOut[], int picWidth, int picHeight, int windowSize)
@@ -67,7 +50,7 @@ extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT MedianFilter(int dataLength,
 			}
 
 			sort(lists[threadNum], lists[threadNum]+dataCount);
-			dataOut[CalculateIndex(i, j, picWidth, picHeight)] = lists[threadNum][medianPosition];
+			dataOut[CalculateIndex(i, j, picWidth)] = lists[threadNum][medianPosition];
 		}
 	}
 

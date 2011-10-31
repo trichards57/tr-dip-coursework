@@ -6,12 +6,10 @@ using ManagedDigitalImageProcessing.PGM;
 namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
     /// <summary>
-    /// Apply a median filter to the input, using a histogram to optimise the median operation.
+    /// Apply an adaptive median filter to the input, using a histogram to optimise the median operation.
     /// </summary>
-    /// <remarks>
-    /// Operates substantially faster than the MedianFilter, as it doesn't have to sort a list
-    /// and only has to recalculate for the part of the window that has changed.
-    /// </remarks>
+    /// 
+    /// From 'An Adaptive Weighted Median Filter for Speckle Suppression in Medical Ultrasonic Images'
     public sealed class AdaptiveHistogramMedianFilter : FilterBase
     {
         /// <summary>

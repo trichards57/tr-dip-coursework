@@ -16,7 +16,7 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
             _targetWidth = targetWidth;
         }
 
-        public virtual PGM.PgmImage Filter(PGM.PgmImage input)
+        public virtual PgmImage Filter(PgmImage input)
         {
             var width = input.Header.Width;
             var height = input.Header.Height;
