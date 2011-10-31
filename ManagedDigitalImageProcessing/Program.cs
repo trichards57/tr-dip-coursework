@@ -26,22 +26,26 @@ namespace ManagedDigitalImageProcessing
 
             var adaptFilter = new AdaptiveHistogramMedianFilter(99, 0.5, 15);
             var histMedFilter = new HistogramMedianFilter(15);
+            var medFilter = new MedianFilter(15);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var output1 = adaptFilter.Filter(data);
+            var output1 = medFilter.Filter(data);
             stopwatch.Stop();
 
-            Console.WriteLine("Adaptive : {0}", stopwatch.ElapsedMilliseconds);
+            Console.WriteLine("Managed : {0}", stopwatch.ElapsedMilliseconds);
 
             stopwatch.Restart();
-            var output2 = histMedFilter.Filter(data);
+            var outputData = new byte[data.Data.Length];
+            NativeFilters.MedianFilter(data.Data.Length, data.Data, outputData, data.Header.Width, data.Header.Height,
+                                       15);
             stopwatch.Stop();
 
-            Console.WriteLine("Static : {0}", stopwatch.ElapsedMilliseconds);
+            Console.WriteLine("Unmanaged : {0}", stopwatch.ElapsedMilliseconds);
 
             output1.ToBitmap().Save("Test1.png");
-            output2.ToBitmap().Save("Test2.png");
+            output1.Data = outputData;
+            output1.ToBitmap().Save("Test2.png");
         }
     }
 }

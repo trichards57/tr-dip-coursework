@@ -64,7 +64,7 @@
     <Compile Include="Filters\NoiseReduction\HistogramMedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\MedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\BitwiseAndFilter.cs" />
-    <Compile Include="Filters\NoiseReduction\NativeFilter.cs" />
+    <Compile Include="Filters\NoiseReduction\NativeFilters.cs" />
     <Compile Include="Filters\Utilities\Resizer.cs" />
     <Compile Include="Filters\NoiseReduction\SeperatedGaussianFilter.cs" />
     <Compile Include="Filters\EdgeDetectors\CannyFilter.cs" />
