@@ -2,15 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedDigitalImageProcessing", "ManagedDigitalImageProcessing\ManagedDigitalImageProcessing.csproj", "{F563502E-F56D-4AFB-9051-601F70459270}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0} = {3E7F84C2-F7F0-47E6-A64E-11327752EBE0}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DIPUI", "DIPUI\DIPUI.csproj", "{ED14BFDD-6202-44A7-8831-6EFA7033DA0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimingTest", "TimingTest\TimingTest.csproj", "{CCCD7392-BA66-438C-B8B3-5B6695077174}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeDigitalImageProcessing", "NativeDigitalImageProcessing\NativeDigitalImageProcessing.vcxproj", "{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,16 +47,6 @@ Global
 		{CCCD7392-BA66-438C-B8B3-5B6695077174}.Release|Win32.ActiveCfg = Release|x86
 		{CCCD7392-BA66-438C-B8B3-5B6695077174}.Release|x86.ActiveCfg = Release|x86
 		{CCCD7392-BA66-438C-B8B3-5B6695077174}.Release|x86.Build.0 = Release|x86
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Debug|Win32.Build.0 = Debug|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Debug|x86.ActiveCfg = Debug|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Release|Win32.ActiveCfg = Release|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Release|Win32.Build.0 = Release|Win32
-		{3E7F84C2-F7F0-47E6-A64E-11327752EBE0}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

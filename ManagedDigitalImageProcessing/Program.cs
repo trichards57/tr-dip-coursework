@@ -37,8 +37,7 @@ namespace ManagedDigitalImageProcessing
 
             stopwatch.Restart();
             var outputData = new byte[data.Data.Length];
-            NativeFilters.MedianFilter(data.Data.Length, data.Data, outputData, data.Header.Width, data.Header.Height,
-                                       15);
+            
             stopwatch.Stop();
 
             Console.WriteLine("Unmanaged : {0}", stopwatch.ElapsedMilliseconds);
