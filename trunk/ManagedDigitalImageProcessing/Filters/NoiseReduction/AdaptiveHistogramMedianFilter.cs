@@ -114,10 +114,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                                                                  }
                                                              }
 
-                                                             var medianPosition = ((weightSum) / 2) + 1;
-
-                                                             if (medianPosition > 1)
-                                                                 medianPosition = medianPosition;
+                                                             var medianPosition = ((weightSum) / 2) + 1;   
 
                                                              // Count through the histogram until the median is found or passed.
                                                              for (var k = 0; k < 256; k++)
