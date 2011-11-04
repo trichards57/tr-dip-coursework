@@ -23,6 +23,9 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
             Func<int, int, int> originalIndex = ((x, y) => CalculateIndex(x, y, width, height));
             Func<int, int, int> newIndex = ((x, y) => CalculateIndex(x, y, _targetWidth, _targetHeight));
 
+            if (_targetWidth == width && _targetHeight == height)
+                return input;
+
             var output = new byte[_targetHeight * _targetWidth];
 
             for (var i = 0; i < _targetWidth; i++)
@@ -44,13 +47,13 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
                     {
                         for (var n = -1; n <= 2; n++)
                         {
-                                sum += (input.Data[originalIndex(iDash + m, jDash + n)] * Weighting(m - dx) * Weighting(dy - n));
+                            sum += (input.Data[originalIndex(iDash + m, jDash + n)] * Weighting(m - dx) * Weighting(dy - n));
                         }
                     }
 
                     checked
                     {
-                        output[newIndex(i, j)] = (byte) sum;
+                        output[newIndex(i, j)] = (byte)sum;
                     }
                 }
             }
