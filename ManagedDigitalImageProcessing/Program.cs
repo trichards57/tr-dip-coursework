@@ -23,6 +23,14 @@ namespace ManagedDigitalImageProcessing
         {
             var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
             var data = PgmLoader.LoadImage(inFile);
+
+            var fftBandstopFilter = new FFTBandStop(50, 600);
+            var fftSmFilter = new FFTSmoothedBandStop(50, 600, 70);
+            var output = fftBandstopFilter.Filter(data);
+            var output1 = fftSmFilter.Filter(data);
+
+            output.ToBitmap().Save("Test.png");
+            output1.ToBitmap().Save("Test1.png");
         }
     }
 }

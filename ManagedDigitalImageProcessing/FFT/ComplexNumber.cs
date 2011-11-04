@@ -49,7 +49,7 @@ namespace ManagedDigitalImageProcessing.FFT
             return new ComplexNumber(value, 0);
         }
 
-        public static explicit operator ComplexNumber(byte value)
+        public static implicit operator ComplexNumber(byte value)
         {
             return new ComplexNumber(value, 0);
         }
