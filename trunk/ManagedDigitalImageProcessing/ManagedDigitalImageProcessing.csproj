@@ -64,13 +64,13 @@
     <Compile Include="Filters\NoiseReduction\FFTSmoothedBandStop.cs" />
     <Compile Include="Filters\NoiseReduction\FFTBandStop.cs" />
     <Compile Include="Filters\EdgeDetectors\MorphologicalGradient.cs" />
-    <Compile Include="Filters\EdgeDetectors\PgmFilter.cs" />
     <Compile Include="Filters\NoiseReduction\Close.cs" />
     <Compile Include="Filters\NoiseReduction\Erode.cs" />
     <Compile Include="Filters\NoiseReduction\Dilate.cs" />
     <Compile Include="Filters\NoiseReduction\HistogramMedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\MedianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\BitwiseAndFilter.cs" />
+    <Compile Include="Filters\NoiseReduction\NativeFilters.cs" />
     <Compile Include="Filters\NoiseReduction\Open.cs" />
     <Compile Include="Filters\Utilities\Resizer.cs" />
     <Compile Include="Filters\NoiseReduction\SeperatedGaussianFilter.cs" />
