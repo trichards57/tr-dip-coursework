@@ -17,10 +17,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </summary>
         private readonly int _windowSize;
 
-        private double _centreWeight;
-        private double _scalingConstant;
-
-
+        private readonly double _centreWeight;
+        private readonly double _scalingConstant;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="HistogramMedianFilter"/> class.
         /// </summary>
@@ -49,7 +48,6 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         {
             var output = new PgmImage { Header = input.Header, Data = new byte[input.Data.Length] };
 
-            ;
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = ((x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height));
 
@@ -74,8 +72,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                                                                      sum += level;
                                                                  }
                                                              }
-
-
+                                                             
                                                              uint counter = 0;
 
                                                              var mean = (double)sum / itemCount;

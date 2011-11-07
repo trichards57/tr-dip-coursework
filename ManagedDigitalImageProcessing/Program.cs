@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using ManagedDigitalImageProcessing.FFT;
-using ManagedDigitalImageProcessing.Filters;
 using ManagedDigitalImageProcessing.Filters.NoiseReduction;
-using ManagedDigitalImageProcessing.Filters.Utilities;
 using ManagedDigitalImageProcessing.PGM;
-using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
 
 namespace ManagedDigitalImageProcessing
 {
@@ -24,13 +19,39 @@ namespace ManagedDigitalImageProcessing
             var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
             var data = PgmLoader.LoadImage(inFile);
 
-            var fftBandstopFilter = new FFTBandStop(50, 600);
-            var fftSmFilter = new FFTSmoothedBandStop(50, 600, 70);
-            var output = fftBandstopFilter.Filter(data);
-            var output1 = fftSmFilter.Filter(data);
+            var outputData = new byte[data.Data.Length];
+            NativeFilters.MedianFilter(data.Data.Length, data.Data, outputData, data.Header.Width,
+                                                       data.Header.Height, 11);
 
-            output.ToBitmap().Save("Test.png");
-            output1.ToBitmap().Save("Test1.png");
+            var histFilter = new AdaptiveHistogramMedianFilter(99, 0.5, 21);
+            
+            var stopwatch = new Stopwatch();
+            var testNumber = 1;
+
+            var outImage = new PgmImage {Header = data.Header};
+
+            stopwatch.Start();
+            for (var i = 0; i < testNumber; i++)
+                NativeFilters.AdaptiveHistogramMedianFilter(data.Data.Length, data.Data, outputData, data.Header.Width,
+                                                       data.Header.Height, 11, 99, 0.5);
+            stopwatch.Stop();
+
+            outImage.Data = outputData;
+            outImage.ToBitmap().Save("Test1.png");
+
+            Console.WriteLine("Unmanaged Histogram : {0}", (double)stopwatch.ElapsedMilliseconds / testNumber);
+
+            stopwatch.Restart();
+            for (var i = 0; i < testNumber; i++)
+                outImage = histFilter.Filter(data);
+            stopwatch.Stop();
+
+            //outImage.Data = outputData;
+            outImage.ToBitmap().Save("Test2.png");
+
+            Console.WriteLine("Managed Histogram   : {0}", (double)stopwatch.ElapsedMilliseconds / testNumber);
+
+            Console.ReadLine();
         }
     }
 }

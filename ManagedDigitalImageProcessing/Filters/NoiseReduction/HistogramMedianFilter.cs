@@ -39,7 +39,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </returns>
         public PgmImage Filter(PgmImage input)
         {
-            var output = new PgmImage {Header = input.Header, Data = new byte[input.Data.Length]};
+            var output = new PgmImage { Header = input.Header, Data = new byte[input.Data.Length] };
 
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = ((x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height));
@@ -96,7 +96,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                                                                  if (counter < medianPosition) continue;
                                                                  // We've reached the histogram item that contains the median value.
                                                                  // Return it.
-                                                                 output.Data[calculateIndex(i, j)] = (byte) k;
+                                                                 output.Data[calculateIndex(i, j)] = (byte)k;
                                                                  break;
                                                              }
                                                          }
