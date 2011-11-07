@@ -2,7 +2,7 @@
 #include "Morphological.h"
 #include "Utilities.h"
 
-extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Erode(int dataLength, char data[], char dataOut[], int picWidth, int picHeight, int orderingFunctionSize, bool square)
+extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Erode(int dataLength, unsigned char data[], unsigned char dataOut[], int picWidth, int picHeight, int orderingFunctionSize, bool square)
 {
 	int i;
 	int offset = orderingFunctionSize / 2;
@@ -33,7 +33,7 @@ extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Erode(int dataLength, char d
 	return 0;
 }
 
-extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Dilate(int dataLength, char data[], char dataOut[], int picWidth, int picHeight, int orderingFunctionSize, bool square)
+extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Dilate(int dataLength, unsigned char data[], unsigned char dataOut[], int picWidth, int picHeight, int orderingFunctionSize, bool square)
 {
 	int i;
 	int offset = orderingFunctionSize / 2;
@@ -60,6 +60,26 @@ extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Dilate(int dataLength, char 
 			dataOut[CalculateIndex(i,j,picWidth)] = max; 
 		}
 	}
+
+	return 0;
+}
+
+extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Close(int dataLength, unsigned char data[], unsigned char dataOut[], int picWidth, int picHeight, int orderingFunctionSize, bool square)
+{
+	unsigned char* buffer = new unsigned char[dataLength];
+
+	Dilate(dataLength, data, buffer, picWidth, picHeight, orderingFunctionSize, square);
+	Erode(dataLength, buffer, dataOut, picWidth, picHeight, orderingFunctionSize, square);
+
+	return 0;
+}
+
+extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Open(int dataLength, unsigned char data[], unsigned char dataOut[], int picWidth, int picHeight, int orderingFunctionSize, bool square)
+{
+	unsigned char* buffer = new unsigned char[dataLength];
+
+	Erode(dataLength, data, buffer, picWidth, picHeight, orderingFunctionSize, square);
+	Dilate(dataLength, buffer, dataOut, picWidth, picHeight, orderingFunctionSize, square);
 
 	return 0;
 }

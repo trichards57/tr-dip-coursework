@@ -22,18 +22,17 @@ namespace ManagedDigitalImageProcessing
             var outputData = new byte[data.Data.Length];
             NativeMorphologicalOperators.Erode(data.Data.Length, data.Data, outputData, data.Header.Width,
                                                        data.Header.Height, 7, false);
-            //var filter = new Dilate(7);
+            //var filter = new Close(15);
 
-            
             var stopwatch = new Stopwatch();
-            var testNumber = 5;
+            var testNumber = 1;
 
             var outImage = new PgmImage {Header = data.Header};
 
             stopwatch.Start();
             for (var i = 0; i < testNumber; i++)
-                NativeMorphologicalOperators.Dilate(data.Data.Length, data.Data, outputData, data.Header.Width,
-                                                       data.Header.Height, 7, false);
+                NativeMorphologicalOperators.Open(data.Data.Length, data.Data, outputData, data.Header.Width,
+                                                       data.Header.Height, 15, false);
             stopwatch.Stop();
 
             outImage.Data = outputData;
@@ -45,7 +44,6 @@ namespace ManagedDigitalImageProcessing
             //outImage = filter.Filter(data);
             stopwatch.Stop();
 
-            //outImage.Data = outputData;
             outImage.ToBitmap().Save("Test2.png");
 
             Console.WriteLine("Managed Histogram   : {0}", (double)stopwatch.ElapsedMilliseconds / testNumber);

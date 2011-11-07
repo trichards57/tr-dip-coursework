@@ -64,10 +64,8 @@
     <Compile Include="Filters\NoiseReduction\FFTSmoothedBandStop.cs" />
     <Compile Include="Filters\NoiseReduction\FFTBandStop.cs" />
     <Compile Include="Filters\EdgeDetectors\MorphologicalGradient.cs" />
-    <Compile Include="Filters\NoiseReduction\Close.cs" />
     <Compile Include="Filters\NoiseReduction\NativeMorphologicalOperators.cs" />
     <Compile Include="Filters\NoiseReduction\NativeNoiseFilters.cs" />
-    <Compile Include="Filters\NoiseReduction\Open.cs" />
     <Compile Include="Filters\Utilities\Resizer.cs" />
     <Compile Include="Filters\NoiseReduction\SeperatedGaussianFilter.cs" />
     <Compile Include="Filters\EdgeDetectors\CannyFilter.cs" />

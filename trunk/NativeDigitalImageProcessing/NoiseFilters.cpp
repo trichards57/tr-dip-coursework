@@ -4,7 +4,7 @@
 
 using namespace std;
 
-extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT BitwiseAndFilter(int dataLength, char data[], char dataOut[], char mask)
+extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT BitwiseAndFilter(int dataLength, unsigned char data[], unsigned char dataOut[], char mask)
 {
 	int i;
 
