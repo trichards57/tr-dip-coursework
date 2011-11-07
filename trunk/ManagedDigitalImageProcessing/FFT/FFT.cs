@@ -5,7 +5,7 @@ namespace ManagedDigitalImageProcessing.FFT
     // From http://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm
     static class FFT
     {
-        private static ComplexNumber[] DitFFT(ComplexNumber[] x)
+        public static ComplexNumber[] DitFFT(ComplexNumber[] x)
         {
             if (x.Length == 1)
                 return x;

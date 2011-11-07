@@ -79,6 +79,7 @@
     <None Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FFT.h" />
     <ClInclude Include="Morphological.h" />
     <ClInclude Include="NoiseFilters.h" />
     <ClInclude Include="NativeDigitalImageProcessing.h" />
@@ -94,6 +95,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="FFT.cpp" />
     <ClCompile Include="Morphological.cpp" />
     <ClCompile Include="NoiseFilters.cpp" />
     <ClCompile Include="stdafx.cpp">
