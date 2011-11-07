@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="FFT\ComplexNumber.cs" />
     <Compile Include="FFT\FFT.cs" />
+    <Compile Include="FFT\NativeFFT.cs" />
     <Compile Include="Filters\NoiseReduction\FFTSmoothedBandStop.cs" />
     <Compile Include="Filters\NoiseReduction\FFTBandStop.cs" />
     <Compile Include="Filters\NoiseReduction\NativeMorphologicalOperators.cs" />

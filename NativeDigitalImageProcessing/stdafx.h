@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <numeric>
 #include <omp.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 
 // TODO: reference additional headers your program requires here
