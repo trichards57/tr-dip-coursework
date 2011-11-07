@@ -3,7 +3,7 @@ using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
 
 namespace DIPUI.ViewModels
 {
-    class CannyEdgeDetector : EdgeDetector
+    sealed class CannyEdgeDetector : EdgeDetector
     {
         public CannyEdgeDetector()
             : base("Canny")

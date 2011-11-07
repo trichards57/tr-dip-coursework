@@ -63,7 +63,6 @@
     <Compile Include="FFT\FFT.cs" />
     <Compile Include="Filters\NoiseReduction\FFTSmoothedBandStop.cs" />
     <Compile Include="Filters\NoiseReduction\FFTBandStop.cs" />
-    <Compile Include="Filters\EdgeDetectors\MorphologicalGradient.cs" />
     <Compile Include="Filters\NoiseReduction\NativeMorphologicalOperators.cs" />
     <Compile Include="Filters\NoiseReduction\NativeNoiseFilters.cs" />
     <Compile Include="Filters\Utilities\Resizer.cs" />

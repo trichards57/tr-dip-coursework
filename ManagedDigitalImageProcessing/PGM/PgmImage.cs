@@ -7,6 +7,17 @@ namespace ManagedDigitalImageProcessing.PGM
     /// </summary>
     public sealed class PgmImage
     {
+        public PgmImage()
+        {
+
+        }
+
+        public PgmImage(PgmHeader header)
+        {
+            Header = new PgmHeader { Height = header.Height, Width = header.Width };
+            Data = new byte[Header.Height * Header.Width];
+        }
+
         /// <summary>
         /// Gets or sets the header of the file.
         /// </summary>

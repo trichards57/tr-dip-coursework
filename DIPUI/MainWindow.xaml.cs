@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using DIPUI.ViewModels;
-using ManagedDigitalImageProcessing.Filters;
 using ManagedDigitalImageProcessing.Filters.NoiseReduction;
 using ManagedDigitalImageProcessing.PGM;
 
@@ -93,9 +91,7 @@ namespace DIPUI
                 Func<object, PgmImage> f = (img =>
                 {
                     var data = getImage(img);
-                    var output = new PgmImage {Header = data.Header, Data = new byte[data.Data.Length]};
-                    NativeNoiseFilters.BitwiseAndFilter(output.Data.Length, data.Data, output.Data, level);
-                    return output;
+                    return NativeNoiseFilters.BitwiseAndFilter(data, level);
                 });
                 filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority++ });
             }

@@ -1,5 +1,4 @@
 ﻿using ManagedDigitalImageProcessing.Filters.NoiseReduction;
-using ManagedDigitalImageProcessing.PGM;
 
 namespace DIPUI.ViewModels
 {
@@ -11,14 +10,7 @@ namespace DIPUI.ViewModels
         public AdaptiveMedianFilter()
             : base("Median Filter", "Window Size")
         {
-            FilterFunction = (img =>
-                                  {
-                                      var output = new PgmImage {Header = img.Header, Data = new byte[img.Data.Length]};
-                                      NativeNoiseFilters.AdaptiveHistogramMedianFilter(img.Data.Length, img.Data, output.Data,
-                                                                                  img.Header.Width, img.Header.Height,
-                                                                                  Parameter, CenterValue, ScalingValue);
-                                      return output;
-                                  });
+            FilterFunction = (img => NativeNoiseFilters.AdaptiveHistogramMedianFilter(img, Parameter, CenterValue, ScalingValue));
         }
 
         public double CenterValue

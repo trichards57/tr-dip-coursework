@@ -7,8 +7,8 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
 {
     class Resizer : FilterBase
     {
-        private int _targetWidth;
-        private int _targetHeight;
+        private readonly int _targetWidth;
+        private readonly int _targetHeight;
 
         public Resizer(int targetWidth, int targetHeight)
         {
@@ -63,10 +63,10 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
 
         private static double Weighting(double x)
         {
-            Func<double, double> P = (i => i > 0 ? i : 0);
+            Func<double, double> p = (i => i > 0 ? i : 0);
 
             return (1.0 / 6) *
-                   (Math.Pow(P(x + 2), 3) - 4 * Math.Pow(P(x + 1), 3) + 6 * Math.Pow(P(x), 3) - 4 * Math.Pow(P(x - 1), 3));
+                   (Math.Pow(p(x + 2), 3) - 4 * Math.Pow(p(x + 1), 3) + 6 * Math.Pow(p(x), 3) - 4 * Math.Pow(p(x - 1), 3));
         }
     }
 }
