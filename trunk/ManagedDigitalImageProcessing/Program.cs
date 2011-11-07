@@ -20,8 +20,7 @@ namespace ManagedDigitalImageProcessing
             var data = PgmLoader.LoadImage(inFile);
 
             var outputData = new byte[data.Data.Length];
-            NativeMorphologicalOperators.Erode(data.Data.Length, data.Data, outputData, data.Header.Width,
-                                                       data.Header.Height, 7, false);
+            NativeMorphologicalOperators.Erode(data);
             //var filter = new Close(15);
 
             var stopwatch = new Stopwatch();
@@ -31,8 +30,7 @@ namespace ManagedDigitalImageProcessing
 
             stopwatch.Start();
             for (var i = 0; i < testNumber; i++)
-                NativeMorphologicalOperators.Open(data.Data.Length, data.Data, outputData, data.Header.Width,
-                                                       data.Header.Height, 15, false);
+                outImage = NativeMorphologicalOperators.Gradient(data);
             stopwatch.Stop();
 
             outImage.Data = outputData;

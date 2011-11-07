@@ -81,5 +81,27 @@ extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT Open(int dataLength, unsigne
 	Erode(dataLength, data, buffer, picWidth, picHeight, orderingFunctionSize, square);
 	Dilate(dataLength, buffer, dataOut, picWidth, picHeight, orderingFunctionSize, square);
 
+	delete[] buffer;
+
+	return 0;
+}
+
+extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT MorphologicalGradient(int dataLength, unsigned char data[], unsigned char dataOut[], int picWidth, int picHeight, int orderingFunctionSize, bool square)
+{
+	unsigned char* erodeBuffer = new unsigned char[dataLength];
+	unsigned char* dilateBuffer = new unsigned char[dataLength];
+
+	Erode(dataLength, data, erodeBuffer, picWidth, picHeight, orderingFunctionSize, square);
+	Dilate(dataLength, data, dilateBuffer, picWidth, picHeight, orderingFunctionSize, square);
+
+	for (int i = 0; i < dataLength - 15; i+= 16)
+	{
+		__m128i	erodeReg = _mm_loadu_si128((__m128i*)(erodeBuffer+i));
+		__m128i	dilateReg = _mm_loadu_si128((__m128i*)(dilateBuffer+i));
+
+		__m128i result = _mm_sub_epi8(dilateReg, erodeReg);
+		_mm_storeu_si128((__m128i*)(dataOut+i), result);
+	}
+
 	return 0;
 }

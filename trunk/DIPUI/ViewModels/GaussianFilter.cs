@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ManagedDigitalImageProcessing.Filters;
-using ManagedDigitalImageProcessing.Filters.NoiseReduction;
+﻿using ManagedDigitalImageProcessing.Filters.NoiseReduction;
 
 namespace DIPUI.ViewModels
 {

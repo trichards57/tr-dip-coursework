@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.FFT;
 using ManagedDigitalImageProcessing.Filters.Utilities;
@@ -11,8 +9,8 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
     class FFTBandStop : FilterBase
     {
-        private int _inner;
-        private int _outer;
+        private readonly int _inner;
+        private readonly int _outer;
 
         public FFTBandStop(int inner, int outer)
         {

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ManagedDigitalImageProcessing.FFT;
 using ManagedDigitalImageProcessing.Filters.Utilities;
@@ -11,9 +9,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
     class FFTSmoothedBandStop : FilterBase
     {
-        private int _inner;
-        private int _outer;
-        private int _rampLength;
+        private readonly int _inner;
+        private readonly int _outer;
+        private readonly int _rampLength;
 
         public FFTSmoothedBandStop(int inner, int outer, int rampLength)
         {
