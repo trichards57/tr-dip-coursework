@@ -1,4 +1,5 @@
 ﻿using ManagedDigitalImageProcessing.Filters.NoiseReduction;
+using ManagedDigitalImageProcessing.PGM;
 
 namespace DIPUI.ViewModels
 {
@@ -12,9 +13,11 @@ namespace DIPUI.ViewModels
         {
             FilterFunction = (img =>
                                   {
-                                      var filter = new AdaptiveHistogramMedianFilter(CenterValue, ScalingValue,
-                                                                                     Parameter);
-                                      return filter.Filter(img);
+                                      var output = new PgmImage {Header = img.Header, Data = new byte[img.Data.Length]};
+                                      NativeNoiseFilters.AdaptiveHistogramMedianFilter(img.Data.Length, img.Data, output.Data,
+                                                                                  img.Header.Width, img.Header.Height,
+                                                                                  Parameter, CenterValue, ScalingValue);
+                                      return output;
                                   });
         }
 

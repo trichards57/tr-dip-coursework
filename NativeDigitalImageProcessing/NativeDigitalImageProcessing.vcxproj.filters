@@ -33,6 +33,9 @@
     <ClInclude Include="NoiseFilters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Morphological.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NoiseFilters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Morphological.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

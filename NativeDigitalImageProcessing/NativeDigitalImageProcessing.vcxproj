@@ -79,6 +79,7 @@
     <None Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Morphological.h" />
     <ClInclude Include="NoiseFilters.h" />
     <ClInclude Include="NativeDigitalImageProcessing.h" />
     <ClInclude Include="stdafx.h" />
@@ -93,6 +94,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Morphological.cpp" />
     <ClCompile Include="NoiseFilters.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
