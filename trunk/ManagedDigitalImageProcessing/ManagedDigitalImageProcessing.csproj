@@ -65,12 +65,8 @@
     <Compile Include="Filters\NoiseReduction\FFTBandStop.cs" />
     <Compile Include="Filters\EdgeDetectors\MorphologicalGradient.cs" />
     <Compile Include="Filters\NoiseReduction\Close.cs" />
-    <Compile Include="Filters\NoiseReduction\Erode.cs" />
-    <Compile Include="Filters\NoiseReduction\Dilate.cs" />
-    <Compile Include="Filters\NoiseReduction\HistogramMedianFilter.cs" />
-    <Compile Include="Filters\NoiseReduction\MedianFilter.cs" />
-    <Compile Include="Filters\NoiseReduction\BitwiseAndFilter.cs" />
-    <Compile Include="Filters\NoiseReduction\NativeFilters.cs" />
+    <Compile Include="Filters\NoiseReduction\NativeMorphologicalOperators.cs" />
+    <Compile Include="Filters\NoiseReduction\NativeNoiseFilters.cs" />
     <Compile Include="Filters\NoiseReduction\Open.cs" />
     <Compile Include="Filters\Utilities\Resizer.cs" />
     <Compile Include="Filters\NoiseReduction\SeperatedGaussianFilter.cs" />
@@ -82,7 +78,6 @@
     <Compile Include="Filters\EdgeDetectors\SobelOperator.cs" />
     <Compile Include="Filters\EdgeDetectors\FilterResult.cs" />
     <Compile Include="Filters\NoiseReduction\GaussianFilter.cs" />
-    <Compile Include="Filters\NoiseReduction\AdaptiveHistogramMedianFilter.cs" />
     <Compile Include="Filters\FilterBase.cs" />
     <Compile Include="PGM\Exceptions\InvalidPgmException.cs" />
     <Compile Include="PGM\Exceptions\InvalidPgmHeaderException.cs" />

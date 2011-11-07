@@ -93,8 +93,9 @@ namespace DIPUI
                 Func<object, PgmImage> f = (img =>
                 {
                     var data = getImage(img);
-                    var filter = new BitwiseAndFilter(level);
-                    return filter.Filter(data);
+                    var output = new PgmImage {Header = data.Header, Data = new byte[data.Data.Length]};
+                    NativeNoiseFilters.BitwiseAndFilter(output.Data.Length, data.Data, output.Data, level);
+                    return output;
                 });
                 filterTasks.Add(new FilterTask { Task = f, Priority = currentPriority++ });
             }

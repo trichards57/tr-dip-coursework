@@ -20,20 +20,20 @@ namespace ManagedDigitalImageProcessing
             var data = PgmLoader.LoadImage(inFile);
 
             var outputData = new byte[data.Data.Length];
-            NativeFilters.MedianFilter(data.Data.Length, data.Data, outputData, data.Header.Width,
-                                                       data.Header.Height, 11);
+            NativeMorphologicalOperators.Erode(data.Data.Length, data.Data, outputData, data.Header.Width,
+                                                       data.Header.Height, 7, false);
+            //var filter = new Dilate(7);
 
-            var histFilter = new AdaptiveHistogramMedianFilter(99, 0.5, 21);
             
             var stopwatch = new Stopwatch();
-            var testNumber = 1;
+            var testNumber = 5;
 
             var outImage = new PgmImage {Header = data.Header};
 
             stopwatch.Start();
             for (var i = 0; i < testNumber; i++)
-                NativeFilters.AdaptiveHistogramMedianFilter(data.Data.Length, data.Data, outputData, data.Header.Width,
-                                                       data.Header.Height, 11, 99, 0.5);
+                NativeMorphologicalOperators.Dilate(data.Data.Length, data.Data, outputData, data.Header.Width,
+                                                       data.Header.Height, 7, false);
             stopwatch.Stop();
 
             outImage.Data = outputData;
@@ -42,8 +42,7 @@ namespace ManagedDigitalImageProcessing
             Console.WriteLine("Unmanaged Histogram : {0}", (double)stopwatch.ElapsedMilliseconds / testNumber);
 
             stopwatch.Restart();
-            for (var i = 0; i < testNumber; i++)
-                outImage = histFilter.Filter(data);
+            //outImage = filter.Filter(data);
             stopwatch.Stop();
 
             //outImage.Data = outputData;

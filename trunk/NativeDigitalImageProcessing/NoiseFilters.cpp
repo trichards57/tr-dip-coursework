@@ -172,12 +172,12 @@ extern "C" NATIVEDIGITALIMAGEPROCESSING_API HRESULT AdaptiveHistogramMedianFilte
 			unsigned int medianPosition = (weightSum / 2) + 1;
 			unsigned int counter = 0;
 
-			for (unsigned char k = 0; k < 256; k++)
+			for (short unsigned int k = 0; k < 256; k++)
 			{
 				counter += histogram[k];
 				if (counter < medianPosition) continue;
 
-				dataOut[CalculateIndex(i,j,picWidth)] = k;
+				dataOut[CalculateIndex(i,j,picWidth)] = (unsigned char)k;
 				break;
 			}
 		}
