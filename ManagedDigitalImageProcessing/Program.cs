@@ -4,6 +4,7 @@ using System.IO;
 using ManagedDigitalImageProcessing.FFT;
 using ManagedDigitalImageProcessing.Filters.NoiseReduction;
 using ManagedDigitalImageProcessing.PGM;
+using System.Drawing;
 
 namespace ManagedDigitalImageProcessing
 {
@@ -20,50 +21,24 @@ namespace ManagedDigitalImageProcessing
             //var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
             //var data = PgmLoader.LoadImage(inFile);
 
-            //var outputData = new byte[data.Data.Length];
-            //NativeMorphologicalOperators.Erode(data);
-            ////var filter = new Close(15);
+            var bitmap = Bitmap.FromFile(@"..\..\..\Base Images\roxySaltAndPepper.png") as Bitmap;
 
-            //var stopwatch = new Stopwatch();
-            //var testNumber = 1;
+            var newData = PgmLoader.LoadBitmap(bitmap);
 
-            //var outImage = new PgmImage {Header = data.Header};
+            var canny = new MorphologicalGradient(7);
+            var gauss = new HistogramMedianFilter(3);
 
-            //stopwatch.Start();
-            //for (var i = 0; i < testNumber; i++)
-            //    outImage = NativeMorphologicalOperators.Gradient(data);
-            //stopwatch.Stop();
+            var output = gauss.Filter(newData);
 
-            //outImage.Data = outputData;
-            //outImage.ToBitmap().Save("Test1.png");
+            output.ToBitmap().Save("testRoxy.png");
 
-            //Console.WriteLine("Unmanaged Histogram : {0}", (double)stopwatch.ElapsedMilliseconds / testNumber);
+            //var fftBandstopFilter = new FFTBandStop(50, 600);
+            //var fftSmFilter = new FFTSmoothedBandStop(50, 600, 70);
+            //var output = fftBandstopFilter.Filter(data);
+            //var output1 = fftSmFilter.Filter(data);
 
-            //stopwatch.Restart();
-            ////outImage = filter.Filter(data);
-            //stopwatch.Stop();
-
-            //outImage.ToBitmap().Save("Test2.png");
-
-            //Console.WriteLine("Managed Histogram   : {0}", (double)stopwatch.ElapsedMilliseconds / testNumber);
-
-            const int val = 8;
-
-            var input = new ComplexNumber[val];
-            for (var i = 0; i < val; i++)
-            {
-                input[i] = new ComplexNumber(Math.Sin(2 * Math.PI * i / val), 0);
-            }
-
-            var out1 = FFT.FFT.DitFFT(input);
-            var out2 = NativeFFT.DitFFT(input);
-
-            for (var i = 0; i < val; i++)
-                if (out1[i] != out2[i])
-                    i = i;
-
-
-            Console.ReadLine();
+            //output.ToBitmap().Save("Test.png");
+            //output1.ToBitmap().Save("Test1.png");
         }
     }
 }
