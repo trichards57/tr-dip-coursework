@@ -1,5 +1,8 @@
 ﻿using System.IO;
 using ManagedDigitalImageProcessing.PGM.Exceptions;
+using System.Drawing;
+using System;
+using System.Runtime.InteropServices;
 
 namespace ManagedDigitalImageProcessing.PGM
 {
@@ -30,7 +33,7 @@ namespace ManagedDigitalImageProcessing.PGM
             if (data.Length < header.Height * header.Width)
                 throw new InvalidPgmHeaderException(string.Format("Not enough data in the file. {0} bytes read.", data.Length));
 
-            return new PgmImage { Data = data, Header = header };   
+            return new PgmImage { Data = data, Header = header };
         }
 
         /// <summary>
@@ -66,6 +69,19 @@ namespace ManagedDigitalImageProcessing.PGM
                 throw new InvalidPgmHeaderException(string.Format("Maximum grey value too large : {0}", maxGrey));
 
             return header;
+        }
+
+        public static PgmImage LoadBitmap(Bitmap file)
+        {
+            var info = file.LockBits(new Rectangle(0, 0, file.Width, file.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, file.PixelFormat);
+            var bytes = Math.Abs(info.Stride) * file.Height;
+            var values = new byte[bytes];
+            var header = new PgmHeader { Height = file.Height, Width = info.Stride };
+
+            Marshal.Copy(info.Scan0, values, 0, bytes);
+            file.UnlockBits(info);
+
+            return new PgmImage { Data = values, Header = header };
         }
     }
 }
