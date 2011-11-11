@@ -23,6 +23,8 @@ namespace TimingTest
             var data = PgmLoader.LoadImage(inFile);
             var gausFilter = new GaussianFilter(2);
             var sepGausFilter = new SeperatedGaussianFilter(2);
+            var median = new MedianFilter(21);
+            var histogramMedian = new HistogramMedianFilter(21);
 
             stopwatch.Start();
             for (var i = 0; i < cycleCount; i++)

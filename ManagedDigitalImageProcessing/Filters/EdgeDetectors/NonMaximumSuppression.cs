@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ManagedDigitalImageProcessing.PGM;
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
