@@ -10,7 +10,12 @@ namespace DIPUI.ViewModels
         public AdaptiveMedianFilter()
             : base("Median Filter", "Window Size")
         {
-            FilterFunction = (img => NativeNoiseFilters.AdaptiveHistogramMedianFilter(img, Parameter, CenterValue, ScalingValue));
+            FilterFunction = (img =>
+                                  {
+                                      var filter = new AdaptiveHistogramMedianFilter(CenterValue, ScalingValue,
+                                                                                     Parameter);
+                                      return filter.Filter(img);
+                                  });
         }
 
         public double CenterValue

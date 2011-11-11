@@ -2,17 +2,13 @@
 
 namespace ManagedDigitalImageProcessing.FFT
 {
-    public  sealed class ComplexNumber
+    internal sealed class ComplexNumber
     {
         public double Real { get; set; }
         public double Imaginary { get; set; }
 
         public ComplexNumber(double real, double imaginary)
         {
-            if (real < 1e-15)
-                real = 0;
-            if (imaginary < 1e-15)
-                imaginary = 0;
             Real = real;
             Imaginary = imaginary;
         }
@@ -53,7 +49,7 @@ namespace ManagedDigitalImageProcessing.FFT
             return new ComplexNumber(value, 0);
         }
 
-        public static implicit operator ComplexNumber(byte value)
+        public static explicit operator ComplexNumber(byte value)
         {
             return new ComplexNumber(value, 0);
         }

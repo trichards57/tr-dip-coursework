@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using ManagedDigitalImageProcessing.FFT;
+using ManagedDigitalImageProcessing.Filters;
 using ManagedDigitalImageProcessing.Filters.NoiseReduction;
+using ManagedDigitalImageProcessing.Filters.Utilities;
 using ManagedDigitalImageProcessing.PGM;
-using System.Drawing;
+using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
 
 namespace ManagedDigitalImageProcessing
 {
@@ -18,27 +21,8 @@ namespace ManagedDigitalImageProcessing
         /// </summary>
         static void Main()
         {
-            //var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
-            //var data = PgmLoader.LoadImage(inFile);
-
-            var bitmap = Bitmap.FromFile(@"..\..\..\Base Images\roxySaltAndPepper.png") as Bitmap;
-
-            var newData = PgmLoader.LoadBitmap(bitmap);
-
-            var canny = new MorphologicalGradient(7);
-            var gauss = new HistogramMedianFilter(3);
-
-            var output = gauss.Filter(newData);
-
-            output.ToBitmap().Save("testRoxy.png");
-
-            //var fftBandstopFilter = new FFTBandStop(50, 600);
-            //var fftSmFilter = new FFTSmoothedBandStop(50, 600, 70);
-            //var output = fftBandstopFilter.Filter(data);
-            //var output1 = fftSmFilter.Filter(data);
-
-            //output.ToBitmap().Save("Test.png");
-            //output1.ToBitmap().Save("Test1.png");
+            var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
+            var data = PgmLoader.LoadImage(inFile);
         }
     }
 }
