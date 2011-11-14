@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Diagnostics;
+
 
 namespace ManagedDigitalImageProcessing.Filters
 {
@@ -40,7 +43,7 @@ namespace ManagedDigitalImageProcessing.Filters
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
 
-            var output = new byte[data.Length];
+            var output = new int[data.Length];
             var xOffset = inputSize.Width / 2;
             var yOffset = inputSize.Height / 2;
 
@@ -56,11 +59,24 @@ namespace ManagedDigitalImageProcessing.Filters
                             sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
                         }
                     }
-                    output[calculateDataIndex(i, j)] = (byte)sum;
+                    output[calculateDataIndex(i, j)] = sum;
                 }
             });
 
-            return output;
+            var maxValue = output.AsParallel().Max();
+            var minValue = output.AsParallel().Min();
+
+            var byteOutput = new byte[data.Length];
+
+            Parallel.For(0, output.Length, i =>
+            {
+                checked
+                {
+                    byteOutput[i] = (byte)((output[i] - minValue) * (255 / maxValue));
+                }
+            });
+
+            return byteOutput;
         }
 
         protected static int[] Convolve(double[] input, int[] data, Size inputSize, Size dataSize)
@@ -84,11 +100,11 @@ namespace ManagedDigitalImageProcessing.Filters
                                                                 sum +=
                                                                     data[
                                                                         calculateDataIndex(i + k - xOffset,
-                                                                                           j + l - yOffset)]*
+                                                                                           j + l - yOffset)] *
                                                                     input[calculateInputIndex(k, l)];
                                                             }
                                                         }
-                                                        output[calculateDataIndex(i, j)] = (int) Math.Floor(sum);
+                                                        output[calculateDataIndex(i, j)] = (int)Math.Floor(sum);
                                                     }
                                                 });
 
@@ -101,7 +117,7 @@ namespace ManagedDigitalImageProcessing.Filters
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
 
-            var output = new byte[data.Length];
+            var output = new int[data.Length];
             var xOffset = inputSize.Width / 2;
             var yOffset = inputSize.Height / 2;
 
@@ -117,11 +133,37 @@ namespace ManagedDigitalImageProcessing.Filters
                             sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
                         }
                     }
-                    output[calculateDataIndex(i, j)] = (byte)Math.Floor(sum);
+                    output[calculateDataIndex(i, j)] = (int)Math.Floor(sum);
                 }
             });
 
-            return output;
+            var maxValue = output.AsParallel().Max();
+            var minValue = output.AsParallel().Min();
+
+            var byteOutput = new byte[data.Length];
+
+            if (minValue >= 0 && maxValue < 256)
+            {
+                for (var i = 0; i < output.Length;  i++)
+                {
+                    checked
+                    {
+                        byteOutput[i] = (byte)(output[i]);
+                    }
+                }
+            }
+            else
+            {
+                for (var i = 0; i < output.Length; i++)
+                {
+                    checked
+                    {
+                        byteOutput[i] = (byte)((output[i]) * (255 / maxValue));
+                    }
+                }
+            }
+
+            return byteOutput;
         }
     }
 }
