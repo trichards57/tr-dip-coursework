@@ -55,5 +55,10 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         {
             return string.Format("Gauss {0}", _sigma);
         }
+
+
+        public int Size { get { return _size; } }
+
+        public double Sigma { get { return _sigma; } }
     }
 }
