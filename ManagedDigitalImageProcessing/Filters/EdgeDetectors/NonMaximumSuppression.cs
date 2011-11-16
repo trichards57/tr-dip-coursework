@@ -45,10 +45,10 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// </remarks>
         public NonMaximumResult Filter(SobelOperatorResult input)
         {
-            var result = new NonMaximumResult { XData = input.XData, YData = input.YData, Peak = new byte[input.XData.Length], Header = input.Header };
+            var result = new NonMaximumResult { XData = input.XData, YData = input.YData, Peak = new byte[input.XData.Length], Width = input.Width, Height = input.Height };
 
             // Convenience function to calculate the index of an entry
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
+            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
             
             // Convenience function to calculate the magnitude of a vector
             Func<double, double, double> magnitude = (x, y) => Math.Sqrt((x * x) + (y * y));
@@ -61,10 +61,10 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 
             Parallel.For(
                 0, 
-                input.Header.Width, 
+                input.Width, 
                 i =>
             {
-                for (var j = 0; j < input.Header.Height; j++)
+                for (var j = 0; j < input.Height; j++)
                 {
                     // Moving through every row and column
                     // Keep the data in local variables to clean up the code

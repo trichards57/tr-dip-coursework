@@ -26,7 +26,7 @@ namespace TimingTest
 
             var inFile = File.Open(@"..\..\..\Base Images\foetus.pgm", FileMode.Open, FileAccess.Read, FileShare.Read);
 
-            var data = PgmLoader.LoadImage(inFile);
+            var data = ImageLoader.LoadPgmImage(inFile);
             var gausFilter = new GaussianFilter(2);
             var sepGausFilter = new SeperatedGaussianFilter(2);
             var median = new MedianFilter(21);

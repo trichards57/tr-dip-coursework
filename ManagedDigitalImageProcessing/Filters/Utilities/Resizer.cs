@@ -66,8 +66,8 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
         /// </remarks>
         public ImageData Filter(ImageData input)
         {
-            var width = input.Header.Width;
-            var height = input.Header.Height;
+            var width = input.Width;
+            var height = input.Height;
 
             // Convenience functions to ease the calculation of array indexes
             Func<int, int, int> originalIndex = (x, y) => CalculateIndex(x, y, width, height);
@@ -110,7 +110,7 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
                 }
             }
 
-            return new ImageData { Data = output, Header = new ImageHeader { Height = targetHeight, Width = targetWidth } };
+            return new ImageData { Data = output, Width = targetWidth, Height = targetHeight };
         }
 
         /// <summary>

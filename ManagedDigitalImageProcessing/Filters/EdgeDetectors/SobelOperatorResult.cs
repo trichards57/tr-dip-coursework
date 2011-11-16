@@ -35,12 +35,20 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     public sealed class SobelOperatorResult
     {
         /// <summary>
-        /// Gets or sets the header describing the image.
+        /// Gets or sets the width of the image.
         /// </summary>
         /// <value>
-        /// The iamge header.
+        /// The width of the image.
         /// </value>
-        public ImageHeader Header { get; set; }
+        public int Width { get; set; }
+
+        /// <summary>
+        /// Gets or sets the height of the image.
+        /// </summary>
+        /// <value>
+        /// The height of the image.
+        /// </value>
+        public int Height { get; set; }
 
         /// <summary>
         /// Gets or sets the X  data.

@@ -38,12 +38,20 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     public sealed class NonMaximumResult
     {
         /// <summary>
-        /// Gets or sets the header describing the image.
+        /// Gets or sets the width of the image.
         /// </summary>
         /// <value>
-        /// The image header.
+        /// The width of the image.
         /// </value>
-        public ImageHeader Header { get; set; }
+        public int Width { get; set; }
+
+        /// <summary>
+        /// Gets or sets the height of the image.
+        /// </summary>
+        /// <value>
+        /// The height of the image.
+        /// </value>
+        public int Height { get; set; }
 
         /// <summary>
         /// Gets or sets the X data.
@@ -75,22 +83,22 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <returns>A PgmImage representing this result</returns>
         public ImageData ToPgmImage()
         {
-            var output = new ImageData { Data = new byte[Header.Height * Header.Width], Header = Header };
+            var output = new ImageData { Data = new byte[Height * Width], Width = Width, Height = Height };
 
             Parallel.For(
                 0, 
-                Header.Width,
+                Width,
                 i =>
             {
-                for (var j = 0; j < Header.Height; j++)
+                for (var j = 0; j < Height; j++)
                 {
-                    if (Peak[i + (j * Header.Width)] > 0)
+                    if (Peak[i + (j * Width)] > 0)
                     {
-                        output.Data[i + (j * Header.Width)] = Peak[i + (j * Header.Width)];
+                        output.Data[i + (j * Width)] = Peak[i + (j * Width)];
                     }
                     else
                     {
-                        output.Data[i + (j * Header.Width)] = 0;
+                        output.Data[i + (j * Width)] = 0;
                     }
                 }
             });

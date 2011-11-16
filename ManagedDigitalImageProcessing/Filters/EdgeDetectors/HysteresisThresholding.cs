@@ -66,20 +66,20 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <returns>The thresholded image.</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new bool[input.Header.Height * input.Header.Width];
+            var output = new bool[input.Height * input.Width];
 
-            var outImage = new ImageData { Header = input.Header, Data = new byte[input.Header.Height * input.Header.Width] };
+            var outImage = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Height * input.Width] };
 
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
+            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
 
             // Run through the image, searching for unprocessing pixels that are higher than the upper threshold, and so the
             // start of an edge
             Parallel.For(
                 0,
-                input.Header.Width,
+                input.Width,
                 i =>
                     {
-                        for (var j = 0; j < input.Header.Height; j++)
+                        for (var j = 0; j < input.Height; j++)
                         {
                             // If the pixel is below the higher threshold or has already been processed, skip it.
                             if (input.Data[calculateIndex(i, j)] <= highT || output[calculateIndex(i, j)])

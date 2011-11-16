@@ -69,20 +69,20 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         public ImageData Filter(ImageData input)
         {
             // Partial function application to simplify index calculation.
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
+            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
 
-            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
 
             var offset = windowSize / 2;
 
             // Iterate through each column.
             Parallel.For(
                 0, 
-                output.Header.Width, 
+                output.Width, 
                 i =>
             {
                 // Iterate through each point in the column.
-                for (var j = 0; j < output.Header.Height; j++)
+                for (var j = 0; j < output.Height; j++)
                 {
                     byte min = 255;
 
