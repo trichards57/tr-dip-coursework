@@ -576,7 +576,7 @@ LAYOUT_FILE            =
 # http://en.wikipedia.org/wiki/BibTeX for more info. For LaTeX the style 
 # of the bibliography can be controlled using LATEX_BIB_STYLE.
 
-CITE_BIB_FILES         = 
+CITE_BIB_FILES         = references.bib
 
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
@@ -1306,7 +1306,7 @@ LATEX_HIDE_INDICES     = NO
 # Note that which sources are shown also depends on other settings 
 # such as SOURCE_BROWSER.
 
-LATEX_SOURCE_CODE      = NO
+LATEX_SOURCE_CODE      = YES
 
 # The LATEX_BIB_STYLE tag can be used to specify the style to use for the 
 # bibliography, e.g. plainnat, or ieeetr. The default style is "plain". See 

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Close.cs" company="Tony Richards">
+// <copyright file="SobelOperatorResult.cs" company="Tony Richards">
 //   Copyright (c) 2011, Tony Richards
 //   All rights reserved.
 //
@@ -21,64 +21,41 @@
 //   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // </copyright>
 // <summary>
-//   Defines the Close type.
+//   Defines the SobelOperatorResult type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
+namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     using ManagedDigitalImageProcessing.PGM;
 
     /// <summary>
-    /// A filter class to apply the close morphological operator to an image.
+    /// A class to hold the vector data returned by the Sobel operator.
     /// </summary>
-    internal class Close
+    internal sealed class SobelOperatorResult
     {
         /// <summary>
-        /// The size of the erosion structuring object
+        /// Gets or sets the header describing the image.
         /// </summary>
-        private readonly int erodeSize;
+        /// <value>
+        /// The iamge header.
+        /// </value>
+        public PgmHeader Header { get; set; }
+
+        /// <summary>
+        /// Gets or sets the X  data.
+        /// </summary>
+        /// <value>
+        /// The X data.
+        /// </value>
+        public byte[] XData { get; set; }
         
         /// <summary>
-        /// The size of the dilation structuring object
+        /// Gets or sets the Y data.
         /// </summary>
-        private readonly int dilateSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Close"/> class.
-        /// </summary>
-        /// <param name="erodeSize">Size of the erosion structuring object.</param>
-        /// <param name="dilateSize">Size of the dilate structuring object.</param>
-        public Close(int erodeSize, int dilateSize)
-        {
-            this.erodeSize = erodeSize;
-            this.dilateSize = dilateSize;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Close"/> class.
-        /// </summary>
-        /// <param name="filterSize">Size of the structuring objects.</param>
-        public Close(int filterSize)
-            : this(filterSize, filterSize)
-        {
-        }
-
-        /// <summary>
-        /// Applies the close operator to the input image.
-        /// </summary>
-        /// <param name="image">The input image.</param>
-        /// <returns>The closed image</returns>
-        /// <remarks>
-        /// Algorithm taken from @cite imageProcessingBook
-        /// </remarks>
-        public PgmImage Filter(PgmImage image)
-        {
-            var erodeFilter = new Erode(erodeSize);
-            var dilateFilter = new Dilate(dilateSize);
-
-            // Closing is a dilation followed by an erosion
-            return erodeFilter.Filter(dilateFilter.Filter(image));
-        }
+        /// <value>
+        /// The Y data.
+        /// </value>
+        public byte[] YData { get; set; }
     }
 }
