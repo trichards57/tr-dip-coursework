@@ -35,7 +35,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <remarks>
     /// This code skips the intial smoothing/filtering step, which should be performed on the data before it is passed in.
     /// </remarks>
-    public sealed class CannyFilter : FilterBase
+    public sealed class CannyFilter
     {
         /// <summary>
         /// The hysteresis thresholding filter used by the process.

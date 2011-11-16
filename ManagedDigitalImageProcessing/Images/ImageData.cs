@@ -21,7 +21,7 @@
 //   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // </copyright>
 // <summary>
-//   An image loaded from a %PGM file.
+//   An image loaded from a file and kept in a 1D array.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -34,6 +34,17 @@ namespace ManagedDigitalImageProcessing.Images
     /// </summary>
     public sealed class ImageData
     {
+        public ImageData()
+        {
+        }
+
+        public ImageData(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Data = new byte[width * height];
+        }
+
         /// <summary>
         /// Gets or sets the width of the image.
         /// </summary>

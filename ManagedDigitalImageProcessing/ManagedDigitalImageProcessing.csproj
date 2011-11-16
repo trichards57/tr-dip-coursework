@@ -81,11 +81,10 @@
     <Compile Include="Filters\EdgeDetectors\SobelOperatorResult.cs" />
     <Compile Include="Filters\NoiseReduction\GaussianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\AdaptiveHistogramMedianFilter.cs" />
-    <Compile Include="Filters\FilterBase.cs" />
-    <Compile Include="PGM\Exceptions\InvalidPgmHeaderException.cs" />
-    <Compile Include="PGM\PgmHeader.cs" />
-    <Compile Include="PGM\PgmImage.cs" />
-    <Compile Include="PGM\PgmLoader.cs" />
+    <Compile Include="Images\ImageUtilities.cs" />
+    <Compile Include="Images\Exceptions\InvalidPgmHeaderException.cs" />
+    <Compile Include="Images\ImageData.cs" />
+    <Compile Include="Images\ImageLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

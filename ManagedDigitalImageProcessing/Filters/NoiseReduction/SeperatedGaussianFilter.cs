@@ -36,7 +36,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class to apply a Gaussian filter to an image (using a seperated template)
     /// </summary>
-    public sealed class SeperatedGaussianFilter : FilterBase
+    public sealed class SeperatedGaussianFilter
     {
         /// <summary>
         /// The template to apply to the image
@@ -97,11 +97,11 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The filtered image</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
+            var output = new ImageData(input.Width, input.Height);
 
-            var tempData = Convolve(
+            var tempData = ImageUtilities.Convolve(
                 template, input.Data, new Size(1, size), new Size(input.Width, input.Height));
-            output.Data = Convolve(
+            output.Data = ImageUtilities.Convolve(
                 template, tempData, new Size(size, 1), new Size(input.Width, input.Height));
 
             return output;

@@ -36,7 +36,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// Apply an adaptive median filter to the input, using a histogram to optimise the median operation.
     /// </summary>
     /// From 'An Adaptive Weighted Median Filter for Speckle Suppression in Medical Ultrasonic Images'
-    public sealed class AdaptiveHistogramMedianFilter : FilterBase
+    public sealed class AdaptiveHistogramMedianFilter
     {
         /// <summary>
         /// The size of the filter window.
@@ -80,10 +80,10 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
+            var output = new ImageData(input.Width, input.Height);
 
             // Convenience function to simplify index calculation.
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
 
             var offset = windowSize / 2;
             var itemCount = windowSize * windowSize;

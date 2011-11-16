@@ -30,10 +30,12 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     using System;
     using System.Threading.Tasks;
 
+    using ManagedDigitalImageProcessing.Images;
+
     /// <summary>
     /// Filter class to remove any non-maximum edges in the input data.
     /// </summary>
-    public sealed class NonMaximumSuppression : FilterBase
+    public sealed class NonMaximumSuppression
     {
         /// <summary>
         /// Applies non-maximum suppression to the specified input.
@@ -48,7 +50,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var result = new NonMaximumResult { XData = input.XData, YData = input.YData, Peak = new byte[input.XData.Length], Width = input.Width, Height = input.Height };
 
             // Convenience function to calculate the index of an entry
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
             
             // Convenience function to calculate the magnitude of a vector
             Func<double, double, double> magnitude = (x, y) => Math.Sqrt((x * x) + (y * y));

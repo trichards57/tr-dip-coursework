@@ -82,7 +82,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var er = erodeFilter.Filter(image);
             var di = dilateFilter.Filter(image);
 
-            var output = new ImageData { Width = image.Width, Height = image.Height, Data = new byte[er.Data.Length] };
+            var output = new ImageData(image.Width, image.Height);
 
             var buffer = new int[er.Data.Length];
             var max = 0;

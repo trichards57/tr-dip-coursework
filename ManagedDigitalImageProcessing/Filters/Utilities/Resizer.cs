@@ -33,7 +33,7 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
     /// <summary>
     /// A filter class that resizes the image using bicubic interpolation
     /// </summary>
-    public sealed class Resizer : FilterBase
+    public sealed class Resizer
     {
         /// <summary>
         /// The final width of the output image.
@@ -70,8 +70,8 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
             var height = input.Height;
 
             // Convenience functions to ease the calculation of array indexes
-            Func<int, int, int> originalIndex = (x, y) => CalculateIndex(x, y, width, height);
-            Func<int, int, int> newIndex = (x, y) => CalculateIndex(x, y, targetWidth, targetHeight);
+            Func<int, int, int> originalIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, width, height);
+            Func<int, int, int> newIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, targetWidth, targetHeight);
 
             if (targetWidth == width && targetHeight == height)
             {

@@ -36,7 +36,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <summary>
     /// A filter object that applies Hysteresis Thresholding to the edges in an edge detected image.
     /// </summary>
-    public sealed class HysteresisThresholding : FilterBase
+    public sealed class HysteresisThresholding
     {
         /// <summary>
         /// The high threshold for the hysteresis
@@ -68,9 +68,9 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         {
             var output = new bool[input.Height * input.Width];
 
-            var outImage = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Height * input.Width] };
+            var outImage = new ImageData(input.Width, input.Height);
 
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
 
             // Run through the image, searching for unprocessing pixels that are higher than the upper threshold, and so the
             // start of an edge

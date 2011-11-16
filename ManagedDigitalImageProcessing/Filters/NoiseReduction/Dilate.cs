@@ -35,7 +35,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filer class that applies the dilate morphological operator to an image.
     /// </summary>
-    public sealed class Dilate : FilterBase
+    public sealed class Dilate
     {
         /// <summary>
         /// The size of the structuring element.
@@ -69,9 +69,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         public ImageData Filter(ImageData input)
         {
             // Partial function application to simplify index calculation.
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
 
-            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
+            var output = new ImageData(input.Width, input.Height);
 
             var offset = windowSize / 2;
 
