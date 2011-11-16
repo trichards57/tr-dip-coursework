@@ -80,7 +80,7 @@ namespace ManagedDigitalImageProcessing.Images
         /// <param name="inputSize">Size of the input array.</param>
         /// <param name="dataSize">Size of the data array.</param>
         /// <returns>The result of the convolution</returns>
-        public static byte[] Convolve(int[] input, byte[] data, Size inputSize, Size dataSize)
+        public static int[] Convolve(int[] input, int[] data, Size inputSize, Size dataSize)
         {
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
@@ -93,39 +93,24 @@ namespace ManagedDigitalImageProcessing.Images
                 0,
                 dataSize.Width,
                 i =>
-                {
-                    for (var j = 0; j < dataSize.Height; j++)
                     {
-                        var sum = 0;
-                        for (var k = 0; k < inputSize.Width; k++)
+                        for (var j = 0; j < dataSize.Height; j++)
                         {
-                            for (var l = 0; l < inputSize.Height; l++)
+                            var sum = 0;
+                            for (var k = 0; k < inputSize.Width; k++)
                             {
-                                sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
+                                for (var l = 0; l < inputSize.Height; l++)
+                                {
+                                    sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)]
+                                           * input[calculateInputIndex(k, l)];
+                                }
                             }
+
+                            output[calculateDataIndex(i, j)] = sum;
                         }
+                    });
 
-                        output[calculateDataIndex(i, j)] = sum;
-                    }
-                });
-
-            var maxValue = output.AsParallel().Max();
-            var minValue = output.AsParallel().Min();
-
-            var byteOutput = new byte[data.Length];
-
-            Parallel.For(
-                0,
-                output.Length,
-                i =>
-                {
-                    checked
-                    {
-                        byteOutput[i] = (byte)((output[i] - minValue) * (255 / maxValue));
-                    }
-                });
-
-            return byteOutput;
+            return output;
         }
 
         /// <summary>
@@ -166,71 +151,6 @@ namespace ManagedDigitalImageProcessing.Images
                     }
                 });
             return output;
-        }
-
-        /// <summary>
-        /// Convolves the specified input array with the specified data.
-        /// </summary>
-        /// <param name="input">The input array.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="inputSize">Size of the input array.</param>
-        /// <param name="dataSize">Size of the data array.</param>
-        /// <returns>The result of the convolution</returns>
-        public static byte[] Convolve(double[] input, byte[] data, Size inputSize, Size dataSize)
-        {
-            Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
-            Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
-
-            var output = new int[data.Length];
-            var xOffset = inputSize.Width / 2;
-            var yOffset = inputSize.Height / 2;
-
-            Parallel.For(
-                0,
-                dataSize.Width,
-                i =>
-                {
-                    for (var j = 0; j < dataSize.Height; j++)
-                    {
-                        double sum = 0;
-                        for (var k = 0; k < inputSize.Width; k++)
-                        {
-                            for (var l = 0; l < inputSize.Height; l++)
-                            {
-                                sum += data[calculateDataIndex(i + k - xOffset, j + l - yOffset)] * input[calculateInputIndex(k, l)];
-                            }
-                        }
-                        output[calculateDataIndex(i, j)] = (int)Math.Floor(sum);
-                    }
-                });
-
-            var maxValue = output.AsParallel().Max();
-            var minValue = output.AsParallel().Min();
-
-            var byteOutput = new byte[data.Length];
-
-            if (minValue >= 0 && maxValue < 256)
-            {
-                for (var i = 0; i < output.Length; i++)
-                {
-                    checked
-                    {
-                        byteOutput[i] = (byte)output[i];
-                    }
-                }
-            }
-            else
-            {
-                for (var i = 0; i < output.Length; i++)
-                {
-                    checked
-                    {
-                        byteOutput[i] = (byte)(output[i] * (255 / maxValue));
-                    }
-                }
-            }
-
-            return byteOutput;
         }
     }
 }

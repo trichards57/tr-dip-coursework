@@ -156,7 +156,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 
                                 // We've reached the histogram item that contains the median value.
                                 // Return it.
-                                output.Data[calculateIndex(i, j)] = (byte)k;
+                                output.Data[calculateIndex(i, j)] = k;
                                 break;
                             }
                         }

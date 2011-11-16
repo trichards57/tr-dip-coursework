@@ -41,19 +41,19 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <summary>
         /// The high threshold for the hysteresis
         /// </summary>
-        private readonly byte highT;
+        private readonly int highT;
 
         /// <summary>
         /// The low threshold for the hysteresis
         /// </summary>
-        private readonly byte lowT;
+        private readonly int lowT;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HysteresisThresholding"/> class.
         /// </summary>
         /// <param name="highThreshold">The high hysteresis threshold.</param>
         /// <param name="lowThreshold">The low hysteresis threshold.</param>
-        public HysteresisThresholding(byte highThreshold, byte lowThreshold)
+        public HysteresisThresholding(int highThreshold, int lowThreshold)
         {
             highT = highThreshold;
             lowT = lowThreshold;
@@ -96,7 +96,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                     });
 
             // Convert the boolean output back in to a displayable image.
-            Parallel.For(0, output.Length, i => { outImage.Data[i] = (byte)(output[i] ? 255 : 0); });
+            Parallel.For(0, output.Length, i => { outImage.Data[i] = output[i] ? 255 : 0; });
 
             return outImage;
         }
@@ -114,7 +114,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        private static bool[] Connect(int x, int y, bool[] output, IList<byte> input, byte lowThreshold, Func<int, int, int> calculateIndex)
+        private static bool[] Connect(int x, int y, bool[] output, IList<int> input, int lowThreshold, Func<int, int, int> calculateIndex)
         {
             // Iterate through each pixel neighbouring the input pixel
             for (var i = x - 1; i < x + 2; i++)

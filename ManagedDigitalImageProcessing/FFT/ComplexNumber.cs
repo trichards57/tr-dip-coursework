@@ -113,18 +113,6 @@ namespace ManagedDigitalImageProcessing.FFT
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Byte"/> to <see cref="ManagedDigitalImageProcessing.FFT.ComplexNumber"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static explicit operator ComplexNumber(byte value)
-        {
-            return new ComplexNumber(value, 0);
-        }
-
-        /// <summary>
         /// Performs an implicit conversion from <see cref="System.Double"/> to <see cref="ManagedDigitalImageProcessing.FFT.ComplexNumber"/>.
         /// </summary>
         /// <param name="value">The value.</param>

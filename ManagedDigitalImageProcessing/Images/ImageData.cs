@@ -27,22 +27,32 @@
 
 namespace ManagedDigitalImageProcessing.Images
 {
+    using System;
     using System.Drawing;
+    using System.Linq;
 
     /// <summary>
     /// An image loaded from a file and kept in a 1D array.
     /// </summary>
     public sealed class ImageData
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageData"/> class.
+        /// </summary>
         public ImageData()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageData"/> class.
+        /// </summary>
+        /// <param name="width">The width of the image.</param>
+        /// <param name="height">The height of the image.</param>
         public ImageData(int width, int height)
         {
             Width = width;
             Height = height;
-            Data = new byte[width * height];
+            Data = new int[width * height];
         }
 
         /// <summary>
@@ -67,7 +77,7 @@ namespace ManagedDigitalImageProcessing.Images
         /// <value>
         /// The image data.
         /// </value>
-        public byte[] Data { get; set; }
+        public int[] Data { get; set; }
 
         /// <summary>
         /// Converts the image to a Bitmap.
@@ -77,11 +87,25 @@ namespace ManagedDigitalImageProcessing.Images
         {
             var output = new Bitmap(Width, Height);
 
+            var maxElement = Data.AsParallel().Max();
+            var minElement = Data.AsParallel().Min();
+
             for (var i = 0; i < Height; i++)
             {
                 for (var j = 0; j < Width; j++)
                 {
-                    output.SetPixel(j, i, Color.FromArgb(Data[(i * Width) + j], Data[(i * Width) + j], Data[(i * Width) + j]));
+                    // We've been working with int values until now.
+                    // Normalise and scale them so that the full range is shown in the image.
+                    double val = Data[ImageUtilities.CalculateIndex(i, j, Width, Height)];
+                    val -= minElement;
+                    val *= 255.0 / (maxElement - minElement);
+                    
+                    // This shouldn't ever throw an exception, but this will prevent odd images being produced if the integer overflows.
+                    checked
+                    {
+                        var pixValue = (byte)Math.Floor(val);
+                        output.SetPixel(j, i, Color.FromArgb(pixValue, pixValue, pixValue));
+                    }  
                 }
             }
 

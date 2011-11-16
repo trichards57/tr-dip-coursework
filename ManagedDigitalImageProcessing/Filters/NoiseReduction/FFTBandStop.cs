@@ -110,7 +110,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var magnitudes = ifftOutput.Select(n => n.Magnitude()).ToList();
             var max = magnitudes.Max();
 
-            var output = new ImageData { Data = magnitudes.Select(n => (byte)(255 * n / max)).ToArray(), Width = newWidth, Height = newHeight };
+            var output = new ImageData { Data = magnitudes.Cast<int>().ToArray(), Width = newWidth, Height = newHeight };
 
             return output;
         }

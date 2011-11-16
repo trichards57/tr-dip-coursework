@@ -82,8 +82,6 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var er = erodeFilter.Filter(image);
             var di = dilateFilter.Filter(image);
 
-            var output = new ImageData(image.Width, image.Height);
-
             var buffer = new int[er.Data.Length];
             var max = 0;
 
@@ -105,15 +103,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                 }
             }
 
-            // Normalise the results to ensure they fit in to a byte array
-            for (var i = 0; i < er.Data.Length; i++)
-            {
-                var scale = 255.0 / max;
-
-                output.Data[i] = (byte)(scale * buffer[i]);
-            }
-
-            return output;
+            return new ImageData { Width = image.Width, Height = image.Height, Data = buffer };
         }
     }
 }
