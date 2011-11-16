@@ -26,6 +26,8 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             _windowSize = size;
         }
 
+        public int Size { get { return _windowSize; } }
+
         /// <summary>
         /// Filters the specified input.
         /// </summary>

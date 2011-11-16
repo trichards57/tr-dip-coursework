@@ -18,6 +18,8 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </summary>
         private readonly int _windowSize;
 
+        public int Size { get { return _windowSize; } }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HistogramMedianFilter"/> class.
         /// </summary>
