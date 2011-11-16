@@ -27,12 +27,12 @@
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// A class to hold the vector data returned by the Sobel operator.
     /// </summary>
-    internal sealed class SobelOperatorResult
+    public sealed class SobelOperatorResult
     {
         /// <summary>
         /// Gets or sets the header describing the image.
@@ -40,7 +40,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <value>
         /// The iamge header.
         /// </value>
-        public PgmHeader Header { get; set; }
+        public ImageHeader Header { get; set; }
 
         /// <summary>
         /// Gets or sets the X  data.

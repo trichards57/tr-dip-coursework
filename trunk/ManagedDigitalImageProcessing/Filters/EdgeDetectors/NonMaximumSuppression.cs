@@ -33,7 +33,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <summary>
     /// Filter class to remove any non-maximum edges in the input data.
     /// </summary>
-    internal sealed class NonMaximumSuppression : FilterBase
+    public sealed class NonMaximumSuppression : FilterBase
     {
         /// <summary>
         /// Applies non-maximum suppression to the specified input.

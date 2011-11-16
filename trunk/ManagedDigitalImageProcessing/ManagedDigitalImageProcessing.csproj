@@ -82,7 +82,6 @@
     <Compile Include="Filters\NoiseReduction\GaussianFilter.cs" />
     <Compile Include="Filters\NoiseReduction\AdaptiveHistogramMedianFilter.cs" />
     <Compile Include="Filters\FilterBase.cs" />
-    <Compile Include="PGM\Exceptions\InvalidPgmException.cs" />
     <Compile Include="PGM\Exceptions\InvalidPgmHeaderException.cs" />
     <Compile Include="PGM\PgmHeader.cs" />
     <Compile Include="PGM\PgmImage.cs" />

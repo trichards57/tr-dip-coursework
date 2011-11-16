@@ -30,12 +30,12 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     using System.Drawing;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// A class to hold the results of the <see cref="NonMaximumSuppression.Filter"/> function.
     /// </summary>
-    internal sealed class NonMaximumResult
+    public sealed class NonMaximumResult
     {
         /// <summary>
         /// Gets or sets the header describing the image.
@@ -43,7 +43,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <value>
         /// The image header.
         /// </value>
-        public PgmHeader Header { get; set; }
+        public ImageHeader Header { get; set; }
 
         /// <summary>
         /// Gets or sets the X data.
@@ -73,9 +73,9 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// Converts this class to a PgmImage (allowing it to be converted to a bitmap easily).
         /// </summary>
         /// <returns>A PgmImage representing this result</returns>
-        public PgmImage ToPgmImage()
+        public ImageData ToPgmImage()
         {
-            var output = new PgmImage { Data = new byte[Header.Height * Header.Width], Header = Header };
+            var output = new ImageData { Data = new byte[Header.Height * Header.Width], Header = Header };
 
             Parallel.For(
                 0, 

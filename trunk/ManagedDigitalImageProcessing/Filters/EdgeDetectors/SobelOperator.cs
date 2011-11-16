@@ -31,21 +31,21 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     using System.Linq;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// Filter class, used to run the Sobel operator on an image.
     /// </summary>
-    internal sealed class SobelOperator : FilterBase
+    public sealed class SobelOperator : FilterBase
     {
         /// <summary>
         /// Applies the Sobel operator to the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The filtered image.</returns>
-        public PgmImage Filter(PgmImage input)
+        public ImageData Filter(ImageData input)
         {
-            var output = new PgmImage { Header = input.Header, Data = new byte[input.Header.Width * input.Header.Height] };
+            var output = new ImageData { Header = input.Header, Data = new byte[input.Header.Width * input.Header.Height] };
 
             var outputTemp = FilterSplit(input);
 
@@ -64,7 +64,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The edge vectors from the filtered image.</returns>
-        public SobelOperatorResult FilterSplit(PgmImage input)
+        public SobelOperatorResult FilterSplit(ImageData input)
         {
             var output = new SobelOperatorResult { Header = input.Header };
 

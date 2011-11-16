@@ -31,12 +31,12 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// A filter object that applies Hysteresis Thresholding to the edges in an edge detected image.
     /// </summary>
-    internal sealed class HysteresisThresholding : FilterBase
+    public sealed class HysteresisThresholding : FilterBase
     {
         /// <summary>
         /// The high threshold for the hysteresis
@@ -64,11 +64,11 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// </summary>
         /// <param name="input">The input image.</param>
         /// <returns>The thresholded image.</returns>
-        public PgmImage Filter(PgmImage input)
+        public ImageData Filter(ImageData input)
         {
             var output = new bool[input.Header.Height * input.Header.Width];
 
-            var outImage = new PgmImage { Header = input.Header, Data = new byte[input.Header.Height * input.Header.Width] };
+            var outImage = new ImageData { Header = input.Header, Data = new byte[input.Header.Height * input.Header.Width] };
 
             Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
 

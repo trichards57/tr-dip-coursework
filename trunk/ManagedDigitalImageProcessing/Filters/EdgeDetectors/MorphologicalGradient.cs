@@ -28,12 +28,12 @@
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     using ManagedDigitalImageProcessing.Filters.NoiseReduction;
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// Filter class to apply a morpholgical gradient operation to an image, highlighting the edges.
     /// </summary>
-    internal class MorphologicalGradient
+    public class MorphologicalGradient
     {
         /// <summary>
         /// The size of the erosion operator structuring element.
@@ -73,7 +73,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public PgmImage Filter(PgmImage image)
+        public ImageData Filter(ImageData image)
         {
             var dilateFilter = new Dilate(dilateSize);
             var erodeFilter = new Erode(erodeSize);
@@ -82,7 +82,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var er = erodeFilter.Filter(image);
             var di = dilateFilter.Filter(image);
 
-            var output = new PgmImage { Header = image.Header, Data = new byte[er.Data.Length] };
+            var output = new ImageData { Header = image.Header, Data = new byte[er.Data.Length] };
 
             var buffer = new int[er.Data.Length];
             var max = 0;

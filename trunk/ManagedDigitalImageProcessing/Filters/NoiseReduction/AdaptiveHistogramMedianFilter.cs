@@ -30,13 +30,13 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// Apply an adaptive median filter to the input, using a histogram to optimise the median operation.
     /// </summary>
     /// From 'An Adaptive Weighted Median Filter for Speckle Suppression in Medical Ultrasonic Images'
-    internal sealed class AdaptiveHistogramMedianFilter : FilterBase
+    public sealed class AdaptiveHistogramMedianFilter : FilterBase
     {
         /// <summary>
         /// The size of the filter window.
@@ -78,9 +78,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>
         /// The filtered image.
         /// </returns>
-        public PgmImage Filter(PgmImage input)
+        public ImageData Filter(ImageData input)
         {
-            var output = new PgmImage { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
 
             // Convenience function to simplify index calculation.
             Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);

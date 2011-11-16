@@ -27,7 +27,7 @@
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// Filter class, used to perform the canny edge detection on an image in one step.
@@ -35,7 +35,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <remarks>
     /// This code skips the intial smoothing/filtering step, which should be performed on the data before it is passed in.
     /// </remarks>
-    internal sealed class CannyFilter : FilterBase
+    public sealed class CannyFilter : FilterBase
     {
         /// <summary>
         /// The hysteresis thresholding filter used by the process.
@@ -82,7 +82,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <param name="input">The input.</param>
         /// <returns>The edge detected output.</returns>
         /// <remarks>Algorithm taken from @cite imageProcessingBook</remarks>
-        public PgmImage Filter(PgmImage input)
+        public ImageData Filter(ImageData input)
         {
             return hysteresis.Filter(nonMaximal.Filter(edgeFilter.FilterSplit(input)).ToPgmImage());
         }
