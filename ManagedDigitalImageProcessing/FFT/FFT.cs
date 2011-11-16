@@ -32,7 +32,7 @@ namespace ManagedDigitalImageProcessing.FFT
     /// <summary>
     /// Static class, used to perform an Fast Fourier Transform or Inverse Fast Fourier Transform on data.
     /// </summary>
-    internal static class FFT
+    public static class FFT
     {
         /// <summary>
         /// Performs the 2D Fast Fourier Transform on a set of complex number data.
@@ -116,7 +116,9 @@ namespace ManagedDigitalImageProcessing.FFT
         /// </summary>
         /// <param name="x">The data to perform the transform on.</param>
         /// <returns>The IFFT transformed data.</returns>
-        /// @todo Find the citation for this...
+        /// <remarks>
+        /// Algorithm taken from @cite dftWikipedia
+        /// </remarks>
         private static ComplexNumber[] InverseDitFFT(ComplexNumber[] x)
         {
             var swappedList = new ComplexNumber[x.Length];

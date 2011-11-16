@@ -33,12 +33,12 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 
     using ManagedDigitalImageProcessing.FFT;
     using ManagedDigitalImageProcessing.Filters.Utilities;
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     ///  Filter class which applies a band stop filter (with ramped edges) using FFT techniques.
     /// </summary>
-    internal class FFTSmoothedBandStop : FilterBase
+    public class FFTSmoothedBandStop : FilterBase
     {
         /// <summary>
         /// The inner position of the stop band
@@ -73,9 +73,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </summary>
         /// <param name="input">The input iamge.</param>
         /// <returns>The band-stop filtered image</returns>
-        public PgmImage Filter(PgmImage input)
+        public ImageData Filter(ImageData input)
         {
-            var output = new PgmImage { Header = input.Header };
+            var output = new ImageData { Header = input.Header };
             var width = input.Header.Width;
             var height = input.Header.Height;
 
@@ -124,7 +124,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var max = magnitudes.Max();
 
             output.Data = magnitudes.Select(n => (byte)(255 * n / max)).ToArray();
-            output.Header = new PgmHeader { Height = newHeight, Width = newWidth };
+            output.Header = new ImageHeader { Height = newHeight, Width = newWidth };
 
             return output;
         }

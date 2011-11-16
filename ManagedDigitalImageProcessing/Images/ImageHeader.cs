@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LaplacianOperator.cs" company="Tony Richards">
+// <copyright file="PgmHeader.cs" company="Tony Richards">
 //   Copyright (c) 2011, Tony Richards
 //   All rights reserved.
 //
@@ -21,47 +21,31 @@
 //   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // </copyright>
 // <summary>
-//   Defines the LaplacianOperator type.
+//   The header of an image file.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
+namespace ManagedDigitalImageProcessing.Images
 {
-    using ManagedDigitalImageProcessing.Images;
-
     /// <summary>
-    /// A filter object to apply the Laplacian Operator to an image.
+    /// The header of a image.
     /// </summary>
-    public sealed class LaplacianOperator : FilterBase
+    public sealed class ImageHeader
     {
         /// <summary>
-        /// Applies the Laplacian Operator to the given image.
+        /// Gets or sets the height of the file.
         /// </summary>
-        /// <param name="input">The input image.</param>
-        /// <returns>The processed image</returns>
-        /// <remarks>
-        /// Algorithm taken from @cite imageProcessingBook
-        /// </remarks>
-        public ImageData Filter(ImageData input)
-        {
-            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
-
-            var template = new[] { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
-
-            output.Data = Convolve(template, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
-
-            return output;
-        }
-
+        /// <value>
+        /// The height.
+        /// </value>
+        public int Height { get; set; }
+        
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Gets or sets the width of the file.
         /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return "Laplace";
-        }
+        /// <value>
+        /// The width.
+        /// </value>
+        public int Width { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace ManagedDigitalImageProcessing.FFT
     /// <summary>
     /// Represents a complex number, used by the FFT functions.
     /// </summary>
-    internal sealed class ComplexNumber
+    public sealed class ComplexNumber
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ComplexNumber"/> class.

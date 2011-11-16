@@ -7,7 +7,7 @@ using ManagedDigitalImageProcessing.FFT;
 using ManagedDigitalImageProcessing.Filters;
 using ManagedDigitalImageProcessing.Filters.NoiseReduction;
 using ManagedDigitalImageProcessing.Filters.Utilities;
-using ManagedDigitalImageProcessing.PGM;
+using ManagedDigitalImageProcessing.Images;
 using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
 
 namespace ManagedDigitalImageProcessing

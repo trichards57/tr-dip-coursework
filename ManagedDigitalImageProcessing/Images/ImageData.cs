@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Close.cs" company="Tony Richards">
+// <copyright file="PgmImage.cs" company="Tony Richards">
 //   Copyright (c) 2011, Tony Richards
 //   All rights reserved.
 //
@@ -21,64 +21,90 @@
 //   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // </copyright>
 // <summary>
-//   Defines the Close type.
+//   An image loaded from a %PGM file.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
+namespace ManagedDigitalImageProcessing.Images
 {
-    using ManagedDigitalImageProcessing.Images;
+    using System.Drawing;
 
     /// <summary>
-    /// A filter class to apply the close morphological operator to an image.
+    /// An image loaded from a file and kept in a 1D array.
     /// </summary>
-    public class Close
+    public sealed class ImageData
     {
         /// <summary>
-        /// The size of the erosion structuring object
+        /// Gets or sets the width of the image.
         /// </summary>
-        private readonly int erodeSize;
-        
-        /// <summary>
-        /// The size of the dilation structuring object
-        /// </summary>
-        private readonly int dilateSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Close"/> class.
-        /// </summary>
-        /// <param name="erodeSize">Size of the erosion structuring object.</param>
-        /// <param name="dilateSize">Size of the dilate structuring object.</param>
-        public Close(int erodeSize, int dilateSize)
+        /// <value>
+        /// The width.
+        /// </value>
+        public int Width
         {
-            this.erodeSize = erodeSize;
-            this.dilateSize = dilateSize;
+            get
+            {
+                return Header.Width;
+            }
+
+            set
+            {
+                Header.Width = value;
+            }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Close"/> class.
+        /// Gets or sets the height of the image.
         /// </summary>
-        /// <param name="filterSize">Size of the structuring objects.</param>
-        public Close(int filterSize)
-            : this(filterSize, filterSize)
+        /// <value>
+        /// The height.
+        /// </value>
+        public int Height
         {
+            get
+            {
+                return Header.Height;
+            }
+
+            set
+            {
+                Header.Height = value;
+            }
         }
 
         /// <summary>
-        /// Applies the close operator to the input image.
+        /// Gets or sets the header of the file.
         /// </summary>
-        /// <param name="image">The input image.</param>
-        /// <returns>The closed image</returns>
-        /// <remarks>
-        /// Algorithm taken from @cite imageProcessingBook
-        /// </remarks>
-        public ImageData Filter(ImageData image)
-        {
-            var erodeFilter = new Erode(erodeSize);
-            var dilateFilter = new Dilate(dilateSize);
+        /// <value>
+        /// The header of the file.
+        /// </value>
+        private ImageHeader Header { get; set; }
 
-            // Closing is a dilation followed by an erosion
-            return erodeFilter.Filter(dilateFilter.Filter(image));
+        /// <summary>
+        /// Gets or sets the image data.
+        /// </summary>
+        /// <value>
+        /// The image data.
+        /// </value>
+        public byte[] Data { get; set; }
+
+        /// <summary>
+        /// Converts the image to a Bitmap.
+        /// </summary>
+        /// <returns>The image, rendered as a bitmap</returns>
+        public Bitmap ToBitmap()
+        {
+            var output = new Bitmap(Header.Width, Header.Height);
+
+            for (var i = 0; i < Header.Height; i++)
+            {
+                for (var j = 0; j < Header.Width; j++)
+                {
+                    output.SetPixel(j, i, Color.FromArgb(Data[(i * Header.Width) + j], Data[(i * Header.Width) + j], Data[(i * Header.Width) + j]));
+                }
+            }
+
+            return output;
         }
     }
 }

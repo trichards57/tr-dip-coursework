@@ -30,12 +30,12 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.PGM;
+    using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// Filer class that applies the dilate morphological operator to an image.
     /// </summary>
-    internal sealed class Dilate : FilterBase
+    public sealed class Dilate : FilterBase
     {
         /// <summary>
         /// The size of the structuring element.
@@ -66,12 +66,12 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public PgmImage Filter(PgmImage input)
+        public ImageData Filter(ImageData input)
         {
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
 
-            var output = new PgmImage { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
 
             var offset = windowSize / 2;
 
