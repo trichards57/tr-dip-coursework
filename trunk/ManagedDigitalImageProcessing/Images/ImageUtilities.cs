@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FilterBase.cs" company="Tony Richards">
+// <copyright file="ImageUtilities.cs" company="Tony Richards">
 //   Copyright (c) 2011, Tony Richards
 //   All rights reserved.
 //
@@ -25,7 +25,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace ManagedDigitalImageProcessing.Filters
+namespace ManagedDigitalImageProcessing.Images
 {
     using System;
     using System.Drawing;
@@ -35,7 +35,7 @@ namespace ManagedDigitalImageProcessing.Filters
     /// <summary>
     /// A base class to allow the CalculateIndex function to be reused.
     /// </summary>
-    public abstract class FilterBase
+    public static class ImageUtilities
     {
         /// <summary>
         /// Calculates the index of a point at given coordinates.  Points that fall out of the range of the
@@ -47,7 +47,7 @@ namespace ManagedDigitalImageProcessing.Filters
         /// <param name="width">The width of the image.</param>
         /// <param name="height">The height of the image.</param>
         /// <returns>An index to access the given point in a 1D array.</returns>
-        protected static int CalculateIndex(int x, int y, int width, int height)
+        public static int CalculateIndex(int x, int y, int width, int height)
         {
             if (x < 0)
             {
@@ -80,7 +80,7 @@ namespace ManagedDigitalImageProcessing.Filters
         /// <param name="inputSize">Size of the input array.</param>
         /// <param name="dataSize">Size of the data array.</param>
         /// <returns>The result of the convolution</returns>
-        protected static byte[] Convolve(int[] input, byte[] data, Size inputSize, Size dataSize)
+        public static byte[] Convolve(int[] input, byte[] data, Size inputSize, Size dataSize)
         {
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
@@ -136,7 +136,7 @@ namespace ManagedDigitalImageProcessing.Filters
         /// <param name="inputSize">Size of the input array.</param>
         /// <param name="dataSize">Size of the data array.</param>
         /// <returns>The result of the convolution</returns>
-        protected static int[] Convolve(double[] input, int[] data, Size inputSize, Size dataSize)
+        public static int[] Convolve(double[] input, int[] data, Size inputSize, Size dataSize)
         {
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);
@@ -176,7 +176,7 @@ namespace ManagedDigitalImageProcessing.Filters
         /// <param name="inputSize">Size of the input array.</param>
         /// <param name="dataSize">Size of the data array.</param>
         /// <returns>The result of the convolution</returns>
-        protected static byte[] Convolve(double[] input, byte[] data, Size inputSize, Size dataSize)
+        public static byte[] Convolve(double[] input, byte[] data, Size inputSize, Size dataSize)
         {
             Func<int, int, int> calculateInputIndex = (x, y) => CalculateIndex(x, y, inputSize.Width, inputSize.Height);
             Func<int, int, int> calculateDataIndex = (x, y) => CalculateIndex(x, y, dataSize.Width, dataSize.Height);

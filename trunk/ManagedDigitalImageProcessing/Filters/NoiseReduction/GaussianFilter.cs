@@ -36,7 +36,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class to apply a Gaussian smoothing filter to an image.
     /// </summary>
-    public sealed class GaussianFilter : FilterBase
+    public sealed class GaussianFilter
     {
         /// <summary>
         /// The filter template
@@ -80,7 +80,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var templateTemp = new double[size * size];
             double sum = 0;
 
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, size, size);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, size, size);
 
             var centre = size / 2;
 
@@ -109,9 +109,15 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The filtered image.</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
+            var output = new ImageData
+                {
+                    Width = input.Width,
+                    Height = input.Height,
+                    Data =
+                        ImageUtilities.Convolve(
+                            this.template, input.Data, new Size(this.size, this.size), new Size(input.Width, input.Height))
+                };
 
-            output.Data = Convolve(template, input.Data, new Size(size, size), new Size(input.Width, input.Height));
 
             return output;
         }

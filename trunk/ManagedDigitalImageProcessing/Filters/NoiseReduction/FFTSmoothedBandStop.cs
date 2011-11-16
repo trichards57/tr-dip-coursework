@@ -38,7 +38,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     ///  Filter class which applies a band stop filter (with ramped edges) using FFT techniques.
     /// </summary>
-    public class FFTSmoothedBandStop : FilterBase
+    public class FFTSmoothedBandStop
     {
         /// <summary>
         /// The inner position of the stop band
@@ -75,7 +75,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The band-stop filtered image</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData();
+
             var width = input.Width;
             var height = input.Height;
 
@@ -105,15 +105,15 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                         var dist = Math.Sqrt((distX * distX) + (distY * distY));
                         if (dist < inner && dist > inner - rampLength)
                         {
-                            fftOutput[CalculateIndex(i, j, newWidth, newHeight)] *= Math.Abs(dist - inner) / rampLength;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] *= Math.Abs(dist - inner) / rampLength;
                         }
                         else if (dist > inner && dist < outer)
                         {
-                            fftOutput[CalculateIndex(i, j, newWidth, newHeight)] = 0;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] = 0;
                         }
                         else if (dist > outer && dist < outer + rampLength)
                         {
-                            fftOutput[CalculateIndex(i, j, newWidth, newHeight)] *= Math.Abs(dist - outer) / rampLength;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] *= Math.Abs(dist - outer) / rampLength;
                         }
                     }
                 });
@@ -123,9 +123,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var magnitudes = ifftOutput.Select(n => n.Magnitude()).ToList();
             var max = magnitudes.Max();
 
-            output.Data = magnitudes.Select(n => (byte)(255 * n / max)).ToArray();
-            output.Height = newHeight;
-            output.Width = newWidth;
+            var output = new ImageData { Data = magnitudes.Select(n => (byte)(255 * n / max)).ToArray(), Height = newHeight, Width = newWidth };
 
             return output;
         }

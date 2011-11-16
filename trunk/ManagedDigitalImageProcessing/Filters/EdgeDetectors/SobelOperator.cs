@@ -36,7 +36,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <summary>
     /// Filter class, used to run the Sobel operator on an image.
     /// </summary>
-    public sealed class SobelOperator : FilterBase
+    public sealed class SobelOperator
     {
         /// <summary>
         /// Applies the Sobel operator to the specified input.
@@ -45,7 +45,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <returns>The filtered image.</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Width * input.Height] };
+            var output = new ImageData(input.Width, input.Height);
 
             var outputTemp = FilterSplit(input);
 
@@ -75,7 +75,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var intData = Array.ConvertAll(input.Data, t => (int)t);
 
             // Convolve the first template across the image.
-            var data = Convolve(template1, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
+            var data = ImageUtilities.Convolve(template1, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
             var absData = new int[data.Length];
 
             // Normalise the output so that it will fit back in to a byte array, and then copy it in to the output array
@@ -91,7 +91,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             }
 
             // Do the same again for the second template.
-            data = Convolve(template2, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
+            data = ImageUtilities.Convolve(template2, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
             Parallel.For(0, data.Length, i => absData[i] = Math.Abs(data[i]));
             checked
             {

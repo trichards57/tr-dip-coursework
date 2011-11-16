@@ -35,7 +35,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class to apply a median filter to the input.
     /// </summary>
-    public sealed class MedianFilter : FilterBase
+    public sealed class MedianFilter
     {
         /// <summary>
         /// The size of the filter window.
@@ -65,10 +65,11 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
+            var output = new ImageData(input.Width, input.Height);
+            
 
             // Partial function application to simplify index calculation.
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
 
             var offset = windowSize / 2;
 

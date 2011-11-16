@@ -38,7 +38,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class to apply a bandstop filter using FFT techinques.
     /// </summary>
-    public class FFTBandStop : FilterBase
+    public class FFTBandStop
     {
         /// <summary>
         /// The inner position of the stop band
@@ -68,7 +68,6 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The band-stop filtered image</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData();
             var width = input.Width;
             var height = input.Height;
 
@@ -101,7 +100,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                         var distSquared = (distX * distX) + (distY * distY);
                         if (distSquared > innerSquared && distSquared < outerSquared)
                         {
-                            fftOutput[CalculateIndex(i, j, newWidth, newHeight)] = 0;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] = 0;
                         }
                     }
                 });
@@ -111,9 +110,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var magnitudes = ifftOutput.Select(n => n.Magnitude()).ToList();
             var max = magnitudes.Max();
 
-            output.Data = magnitudes.Select(n => (byte)(255 * n / max)).ToArray();
-            output.Width = newWidth;
-            output.Height = newHeight;
+            var output = new ImageData { Data = magnitudes.Select(n => (byte)(255 * n / max)).ToArray(), Width = newWidth, Height = newHeight };
 
             return output;
         }

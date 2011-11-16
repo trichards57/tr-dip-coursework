@@ -83,7 +83,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <returns>A PgmImage representing this result</returns>
         public ImageData ToPgmImage()
         {
-            var output = new ImageData { Data = new byte[Height * Width], Width = Width, Height = Height };
+            var output = new ImageData(Width, Height);
 
             Parallel.For(
                 0, 
