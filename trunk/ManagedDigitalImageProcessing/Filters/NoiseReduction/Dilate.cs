@@ -69,45 +69,45 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         public ImageData Filter(ImageData input)
         {
             // Partial function application to simplify index calculation.
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
+            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
 
-            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
 
             var offset = windowSize / 2;
 
             // Iterate through each column.
             Parallel.For(
                 0,
-                output.Header.Width, 
+                output.Width,
                 i =>
-            {
-                // Iterate through each point in the column.
-                for (var j = 0; j < output.Header.Height; j++)
                 {
-                    byte max = 0;
-
-                    // Iterate through each of the items in the window, searching for the maximum value
-                    for (var k = -offset; k <= offset; k++)
+                    // Iterate through each point in the column.
+                    for (var j = 0; j < output.Height; j++)
                     {
-                        for (var l = -offset; l <= offset; l++)
-                        {
-                            if (!this.square && Math.Sqrt((k * k) + (l * l)) >= offset)
-                            {
-                                continue;
-                            }
+                        byte max = 0;
 
-                            var value = input.Data[calculateIndex(i + k, j + l)];
-                            if (value > max)
+                        // Iterate through each of the items in the window, searching for the maximum value
+                        for (var k = -offset; k <= offset; k++)
+                        {
+                            for (var l = -offset; l <= offset; l++)
                             {
-                                max = value;
+                                if (!this.square && Math.Sqrt((k * k) + (l * l)) >= offset)
+                                {
+                                    continue;
+                                }
+
+                                var value = input.Data[calculateIndex(i + k, j + l)];
+                                if (value > max)
+                                {
+                                    max = value;
+                                }
                             }
                         }
+
+                        // Set the output image's pixel value to the maximum value.
+                        output.Data[calculateIndex(i, j)] = max;
                     }
-                    
-                    // Set the output image's pixel value to the maximum value.
-                    output.Data[calculateIndex(i, j)] = max;
-                }
-            });
+                });
 
             return output;
         }

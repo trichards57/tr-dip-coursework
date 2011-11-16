@@ -109,9 +109,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The filtered image.</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
 
-            output.Data = Convolve(template, input.Data, new Size(size, size), new Size(input.Header.Width, input.Header.Height));
+            output.Data = Convolve(template, input.Data, new Size(size, size), new Size(input.Width, input.Height));
 
             return output;
         }

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PgmLoader.cs" company="Tony Richards">
+// <copyright file="ImageLoader.cs" company="Tony Richards">
 //   Copyright (c) 2011, Tony Richards
 //   All rights reserved.
 //
@@ -21,7 +21,7 @@
 //   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // </copyright>
 // <summary>
-//   Loads an image out of a %PGM file.
+//   Loads pixel data out of an image file.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -35,21 +35,26 @@ namespace ManagedDigitalImageProcessing.Images
     using ManagedDigitalImageProcessing.Images.Exceptions;
 
     /// <summary>
-    /// Loads an image out of a %PGM file.
+    /// Loads pixel data out of an image file.
     /// </summary>
-    public static class PgmLoader
+    public static class ImageLoader
     {
         /// <summary>
-        /// Loads a %PGM image.
+        /// Loads a PGM image.
         /// </summary>
         /// <param name="instream">The stream to load the image from.</param>
         /// <returns>A PgmImage containing the loaded image.</returns>
-        /// <exception cref="InvalidPgmHeaderException">Thrown if there isn't enough data in the file to fill the image defined in the header.</exception>
-        /// <remarks>Not particularly safe.  Falls down if the entire file is long enough to fill the image but the actual data section (i.e. the section after the header) isn't (it will load the header in to the image).</remarks>
-        public static ImageData LoadImage(Stream instream)
+        /// <exception cref="InvalidPgmHeaderException">
+        /// Thrown if there isn't enough data in the file to fill the image defined in the  header.
+        /// </exception>
+        /// <remarks>
+        /// Not particularly safe.  Falls down if the entire file is long enough to fill the image but the actual data section 
+        /// (i.e. the section after the header) isn't (it will load the header in to the image).
+        /// </remarks>
+        public static ImageData LoadPgmImage(Stream instream)
         {
             var reader = new StreamReader(instream);
-            var header = ReadHeader(reader);
+            var header = ReadPGMHeader(reader);
 
             var length = header.Height * header.Width;
 
@@ -68,7 +73,7 @@ namespace ManagedDigitalImageProcessing.Images
         }
 
         /// <summary>
-        /// Loads the a PGMImage from a Bitmap.
+        /// Converts a .Net Bitmap to a an ImageData, giving easier access to the pixel data.
         /// </summary>
         /// <param name="file">The bitmap to read.</param>
         /// <returns>A PGMImage representation of the bitmap</returns>
@@ -85,11 +90,14 @@ namespace ManagedDigitalImageProcessing.Images
         }
 
         /// <summary>
-        /// Reads the header from a %PGM image.
+        /// Reads the header from a PGM image.
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
         /// <returns>A PgmHeader loaded from <paramref name="reader"/>.</returns>
-        private static ImageHeader ReadHeader(TextReader reader)
+        /// <remarks>
+        /// Falls down when the header contains a comment.
+        /// </remarks>
+        private static ImageHeader ReadPGMHeader(TextReader reader)
         {
             var header = new ImageHeader();
             var line = reader.ReadLine();
@@ -127,6 +135,28 @@ namespace ManagedDigitalImageProcessing.Images
             }
 
             return header;
+        }
+
+        /// <summary>
+        /// The header of a image.
+        /// </summary>
+        private sealed class ImageHeader
+        {
+            /// <summary>
+            /// Gets or sets the height of the file.
+            /// </summary>
+            /// <value>
+            /// The height.
+            /// </value>
+            public int Height { get; set; }
+
+            /// <summary>
+            /// Gets or sets the width of the file.
+            /// </summary>
+            /// <value>
+            /// The width.
+            /// </value>
+            public int Width { get; set; }
         }
     }
 }

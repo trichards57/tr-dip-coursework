@@ -97,12 +97,12 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The filtered image</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
 
             var tempData = Convolve(
-                template, input.Data, new Size(1, size), new Size(input.Header.Width, input.Header.Height));
+                template, input.Data, new Size(1, size), new Size(input.Width, input.Height));
             output.Data = Convolve(
-                template, tempData, new Size(size, 1), new Size(input.Header.Width, input.Header.Height));
+                template, tempData, new Size(size, 1), new Size(input.Width, input.Height));
 
             return output;
         }

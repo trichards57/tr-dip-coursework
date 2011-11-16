@@ -44,11 +44,11 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// </remarks>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
 
             var template = new[] { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
 
-            output.Data = Convolve(template, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Header.Width, input.Header.Height));
+            output.Data = Convolve(template, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
 
             return output;
         }

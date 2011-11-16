@@ -68,9 +68,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The band-stop filtered image</returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Header = input.Header };
-            var width = input.Header.Width;
-            var height = input.Header.Height;
+            var output = new ImageData();
+            var width = input.Width;
+            var height = input.Height;
 
             var newWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log(width, 2)));
             var newHeight = (int)Math.Pow(2, Math.Ceiling(Math.Log(height, 2)));
@@ -112,7 +112,8 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var max = magnitudes.Max();
 
             output.Data = magnitudes.Select(n => (byte)(255 * n / max)).ToArray();
-            output.Header = new ImageHeader { Height = newHeight, Width = newWidth };
+            output.Width = newWidth;
+            output.Height = newHeight;
 
             return output;
         }

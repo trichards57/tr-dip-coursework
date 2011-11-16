@@ -70,10 +70,10 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </returns>
         public ImageData Filter(ImageData input)
         {
-            var output = new ImageData { Header = input.Header, Data = new byte[input.Data.Length] };
+            var output = new ImageData { Width = input.Width, Height = input.Height, Data = new byte[input.Data.Length] };
 
             // Partial function application to simplify index calculation.
-            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Header.Width, input.Header.Height);
+            Func<int, int, int> calculateIndex = (x, y) => CalculateIndex(x, y, input.Width, input.Height);
 
             var offset = windowSize / 2;
             var medianPosition = ((windowSize * windowSize) / 2) + 1;
@@ -81,7 +81,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             // Iterate through each column.
             Parallel.For(
                 0,
-                output.Header.Width,
+                output.Width,
                 i =>
                 {
                     // Histogram must be reset at the start of each column.
@@ -89,7 +89,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                     var histogram = new uint[256];
 
                     // Iterate through each point in the column.
-                    for (var j = 0; j < output.Header.Height; j++)
+                    for (var j = 0; j < output.Height; j++)
                     {
                         if (j == 0)
                         {

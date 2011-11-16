@@ -27,7 +27,7 @@ namespace ManagedDigitalImageProcessing
 
             using (var inFile = Image.FromFile(@"..\..\..\Base Images\roxy.png") as Bitmap)
             {
-                var data = PgmLoader.LoadBitmap(inFile);
+                var data = ImageLoader.LoadBitmap(inFile);
                 var output = sobel.Filter(median.Filter(data));
                 output.ToBitmap().Save("Roxy Sobel.png");
 
@@ -49,7 +49,7 @@ namespace ManagedDigitalImageProcessing
             }
             using (var inFile = File.OpenRead(@"..\..\..\Base Images\foetus.pgm"))
             {
-                var data = PgmLoader.LoadImage(inFile);
+                var data = ImageLoader.LoadPgmImage(inFile);
                 var output = sobel.Filter(median.Filter(data));
                 output.ToBitmap().Save("Foetus Sobel.png");
                 
@@ -71,7 +71,7 @@ namespace ManagedDigitalImageProcessing
             }
             using (var inFile = File.OpenRead(@"..\..\..\Base Images\NZjers1.pgm"))
             {
-                var data = PgmLoader.LoadImage(inFile);
+                var data = ImageLoader.LoadPgmImage(inFile);
                 var output = sobel.Filter(median.Filter(data));
                 output.ToBitmap().Save("SAR Sobel.png");
 

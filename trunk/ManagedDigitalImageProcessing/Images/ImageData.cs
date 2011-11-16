@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PgmImage.cs" company="Tony Richards">
+// <copyright file="ImageData.cs" company="Tony Richards">
 //   Copyright (c) 2011, Tony Richards
 //   All rights reserved.
 //
@@ -40,18 +40,7 @@ namespace ManagedDigitalImageProcessing.Images
         /// <value>
         /// The width.
         /// </value>
-        public int Width
-        {
-            get
-            {
-                return Header.Width;
-            }
-
-            set
-            {
-                Header.Width = value;
-            }
-        }
+        public int Width { get; set; }
 
         /// <summary>
         /// Gets or sets the height of the image.
@@ -59,26 +48,7 @@ namespace ManagedDigitalImageProcessing.Images
         /// <value>
         /// The height.
         /// </value>
-        public int Height
-        {
-            get
-            {
-                return Header.Height;
-            }
-
-            set
-            {
-                Header.Height = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the header of the file.
-        /// </summary>
-        /// <value>
-        /// The header of the file.
-        /// </value>
-        private ImageHeader Header { get; set; }
+        public int Height { get; set; }
 
         /// <summary>
         /// Gets or sets the image data.
@@ -94,13 +64,13 @@ namespace ManagedDigitalImageProcessing.Images
         /// <returns>The image, rendered as a bitmap</returns>
         public Bitmap ToBitmap()
         {
-            var output = new Bitmap(Header.Width, Header.Height);
+            var output = new Bitmap(Width, Height);
 
-            for (var i = 0; i < Header.Height; i++)
+            for (var i = 0; i < Height; i++)
             {
-                for (var j = 0; j < Header.Width; j++)
+                for (var j = 0; j < Width; j++)
                 {
-                    output.SetPixel(j, i, Color.FromArgb(Data[(i * Header.Width) + j], Data[(i * Header.Width) + j], Data[(i * Header.Width) + j]));
+                    output.SetPixel(j, i, Color.FromArgb(Data[(i * Width) + j], Data[(i * Width) + j], Data[(i * Width) + j]));
                 }
             }
 
