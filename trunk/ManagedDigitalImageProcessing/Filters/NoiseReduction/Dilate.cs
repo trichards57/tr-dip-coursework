@@ -84,7 +84,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                     // Iterate through each point in the column.
                     for (var j = 0; j < output.Height; j++)
                     {
-                        byte max = 0;
+                        var max = int.MinValue;
 
                         // Iterate through each of the items in the window, searching for the maximum value
                         for (var k = -offset; k <= offset; k++)

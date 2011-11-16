@@ -59,7 +59,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <value>
         /// The X data.
         /// </value>
-        public byte[] XData { get; set; }
+        public int[] XData { get; set; }
 
         /// <summary>
         /// Gets or sets the Y data.
@@ -67,7 +67,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <value>
         /// The Y data.
         /// </value>
-        public byte[] YData { get; set; }
+        public int[] YData { get; set; }
 
         /// <summary>
         /// Gets or sets the non-maximum suppressed values.
@@ -75,7 +75,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <value>
         /// The peak.
         /// </value>
-        public byte[] Peak { get; set; }
+        public int[] Peak { get; set; }
 
         /// <summary>
         /// Converts this class to a PgmImage (allowing it to be converted to a bitmap easily).

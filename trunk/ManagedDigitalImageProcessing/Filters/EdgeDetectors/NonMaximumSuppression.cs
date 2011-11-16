@@ -47,7 +47,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// </remarks>
         public NonMaximumResult Filter(SobelOperatorResult input)
         {
-            var result = new NonMaximumResult { XData = input.XData, YData = input.YData, Peak = new byte[input.XData.Length], Width = input.Width, Height = input.Height };
+            var result = new NonMaximumResult { XData = input.XData, YData = input.YData, Peak = new int[input.XData.Length], Width = input.Width, Height = input.Height };
 
             // Convenience function to calculate the index of an entry
             Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
@@ -97,28 +97,13 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                     coords = GetCoordinates(angle + Math.PI);
                     var m2 = (my * pointMagnitude(i + coords.X1, j + coords.Y1)) + ((mx - my) * pointMagnitude(i + coords.X2, j + coords.Y2));
 
-                    // Convenience function to truncate a number to between 0 and 255 to fit in one byte
-                    Func<double, byte> limit = x =>
-                                                    {
-                                                        if (x > 255)
-                                                        {
-                                                            return 255;
-                                                        }
-
-                                                        if (x < 0)
-                                                        {
-                                                            return 0;
-                                                        }
-
-                                                        return (byte)x;
-                                                    };
 
                     // If the point is at the maximum of it's edge, set the pixel to it's value
                     if ((mx * magnitude(mx, my) > m1 && mx * magnitude(mx, my) >= m2) || (mx * magnitude(mx, my) < m1 && mx * magnitude(mx, my) <= m2))
                     {
                         checked
                         {
-                            result.Peak[calculateIndex(i, j)] = limit(magnitude(mx, my));
+                            result.Peak[calculateIndex(i, j)] = (int)Math.Round(magnitude(mx, my));
                         }
                     }
 

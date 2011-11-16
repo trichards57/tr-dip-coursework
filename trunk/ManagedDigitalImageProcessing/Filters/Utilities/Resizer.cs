@@ -78,7 +78,7 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
                 return input;
             }
 
-            var output = new byte[targetHeight * targetWidth];
+            var output = new int[targetHeight * targetWidth];
 
             for (var i = 0; i < targetWidth; i++)
             {
@@ -105,7 +105,7 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
 
                     checked
                     {
-                        output[newIndex(i, j)] = (byte)sum;
+                        output[newIndex(i, j)] = (int)sum;
                     }
                 }
             }

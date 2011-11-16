@@ -54,7 +54,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                 0,
                 input.Data.Length,
                 i =>
-                output.Data[i] = (byte)Math.Sqrt((outputTemp.XData[i] * outputTemp.XData[i]) + (outputTemp.YData[i] * outputTemp.YData[i])));
+                output.Data[i] = (int)Math.Round(Math.Sqrt((outputTemp.XData[i] * outputTemp.XData[i]) + (outputTemp.YData[i] * outputTemp.YData[i]))));
 
             return output;
         }
@@ -69,37 +69,18 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var output = new SobelOperatorResult { Width = input.Width, Height = input.Height };
 
             // Define the templates.
-            var template1 = new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
-            var template2 = new double[] { 1, 2, 1, 0, 0, 0, -1, -2, -1 };
+            var template1 = new[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+            var template2 = new[] { 1, 2, 1, 0, 0, 0, -1, -2, -1 };
 
-            var intData = Array.ConvertAll(input.Data, t => (int)t);
+            var intData = input.Data;
 
-            // Convolve the first template across the image.
+            // Convolve the first template across the image, using the absolute value to ensure edges in both direction are treated equally
             var data = ImageUtilities.Convolve(template1, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
-            var absData = new int[data.Length];
-
-            // Normalise the output so that it will fit back in to a byte array, and then copy it in to the output array
-            var data2 = data;
-            Parallel.For(0, data2.Length, i => absData[i] = Math.Abs(data2[i]));
-
-            checked
-            {
-                var max = absData.AsParallel().Max();
-                var data1 = new byte[absData.Length];
-                Parallel.For(0, absData.Length, i => { data1[i] = (byte)(absData[i] * 255 / max); });
-                output.XData = data1;
-            }
+            output.XData = data.AsParallel().Select(Math.Abs).ToArray();
 
             // Do the same again for the second template.
             data = ImageUtilities.Convolve(template2, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
-            Parallel.For(0, data.Length, i => absData[i] = Math.Abs(data[i]));
-            checked
-            {
-                var max = absData.AsParallel().Max();
-                var data1 = new byte[absData.Length];
-                Parallel.For(0, absData.Length, i => { data1[i] = (byte)(absData[i] * 255 / max); });
-                output.YData = data1;
-            }
+            output.YData = data.AsParallel().Select(Math.Abs).ToArray();
 
             return output;
         }

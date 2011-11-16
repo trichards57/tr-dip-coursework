@@ -55,19 +55,19 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <summary>
         /// The upper threshold for the hysteresis thresholding.
         /// </summary>
-        private readonly byte highT;
+        private readonly int highT;
 
         /// <summary>
         /// The lower threshold for the hysteresis thresholding.
         /// </summary>
-        private readonly byte lowT;
+        private readonly int lowT;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CannyFilter"/> class.
         /// </summary>
         /// <param name="highThreshold">The high threshold.</param>
         /// <param name="lowThreshold">The low threshold.</param>
-        public CannyFilter(byte highThreshold, byte lowThreshold)
+        public CannyFilter(int highThreshold, int lowThreshold)
         {
             hysteresis = new HysteresisThresholding(highThreshold, lowThreshold);
             nonMaximal = new NonMaximumSuppression();

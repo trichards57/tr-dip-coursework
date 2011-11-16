@@ -30,6 +30,7 @@ namespace ManagedDigitalImageProcessing.Images
     using System;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
     using System.Runtime.InteropServices;
 
     using ManagedDigitalImageProcessing.Images.Exceptions;
@@ -61,7 +62,7 @@ namespace ManagedDigitalImageProcessing.Images
             instream.Seek(-length, SeekOrigin.End);
             var binaryReader = new BinaryReader(instream);
 
-            var data = binaryReader.ReadBytes(length);
+            var data = binaryReader.ReadBytes(length).Cast<int>().ToArray();
 
             if (data.Length < header.Height * header.Width)
             {
@@ -86,7 +87,7 @@ namespace ManagedDigitalImageProcessing.Images
             Marshal.Copy(info.Scan0, values, 0, bytes);
             file.UnlockBits(info);
 
-            return new ImageData { Data = values, Height = file.Height, Width = info.Stride };
+            return new ImageData { Data = values.Cast<int>().ToArray(), Height = file.Height, Width = info.Stride };
         }
 
         /// <summary>

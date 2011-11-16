@@ -82,7 +82,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                     // Iterate through each point in the column.
                     for (var j = 0; j < output.Height; j++)
                     {
-                        var list = new byte[windowSize * windowSize];
+                        var list = new int[windowSize * windowSize];
                         var count = 0;
 
                         // Iterate through each of the items in the window, adding the value to a list.
