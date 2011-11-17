@@ -75,7 +75,6 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>The band-stop filtered image</returns>
         public ImageData Filter(ImageData input)
         {
-
             var width = input.Width;
             var height = input.Height;
 
@@ -105,15 +104,15 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                         var dist = Math.Sqrt((distX * distX) + (distY * distY));
                         if (dist < inner && dist > inner - rampLength)
                         {
-                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] *= Math.Abs(dist - inner) / rampLength;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth)] *= Math.Abs(dist - inner) / rampLength;
                         }
                         else if (dist > inner && dist < outer)
                         {
-                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] = 0;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth)] = 0;
                         }
                         else if (dist > outer && dist < outer + rampLength)
                         {
-                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] *= Math.Abs(dist - outer) / rampLength;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth)] *= Math.Abs(dist - outer) / rampLength;
                         }
                     }
                 });
@@ -121,9 +120,8 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var ifftOutput = FFT.InverseDitFFT2D(fftOutput, newWidth, newHeight);
 
             var magnitudes = ifftOutput.Select(n => n.Magnitude()).ToList();
-            var max = magnitudes.Max();
 
-            var output = new ImageData { Data = magnitudes.Cast<int>().ToArray(), Height = newHeight, Width = newWidth };
+            var output = new ImageData { Data = magnitudes.Select(t => (int)t).ToArray(), Height = newHeight, Width = newWidth };
 
             return output;
         }

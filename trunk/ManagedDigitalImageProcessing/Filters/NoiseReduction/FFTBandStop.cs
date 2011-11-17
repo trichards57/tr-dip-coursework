@@ -100,7 +100,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                         var distSquared = (distX * distX) + (distY * distY);
                         if (distSquared > innerSquared && distSquared < outerSquared)
                         {
-                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth, newHeight)] = 0;
+                            fftOutput[ImageUtilities.CalculateIndex(i, j, newWidth)] = 0;
                         }
                     }
                 });
@@ -108,9 +108,8 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var ifftOutput = FFT.InverseDitFFT2D(fftOutput, newWidth, newHeight);
 
             var magnitudes = ifftOutput.Select(n => n.Magnitude()).ToList();
-            var max = magnitudes.Max();
 
-            var output = new ImageData { Data = magnitudes.Cast<int>().ToArray(), Width = newWidth, Height = newHeight };
+            var output = new ImageData { Data = magnitudes.Select(t => (int)t).ToArray(), Width = newWidth, Height = newHeight };
 
             return output;
         }

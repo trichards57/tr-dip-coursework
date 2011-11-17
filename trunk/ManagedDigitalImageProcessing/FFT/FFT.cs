@@ -28,6 +28,8 @@
 namespace ManagedDigitalImageProcessing.FFT
 {
     using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Static class, used to perform an Fast Fourier Transform or Inverse Fast Fourier Transform on data.
@@ -79,34 +81,40 @@ namespace ManagedDigitalImageProcessing.FFT
             var list2 = new ComplexNumber[x.Length / 2];
 
             // Partition the list into two interleaved lists.
-            for (var i = 0; i < x.Length; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    list1[i / 2] = x[i];
-                }
-                else
-                {
-                    list2[i / 2] = x[i];
-                }
-            }
+            Parallel.For(
+                0,
+                x.Length,
+                i =>
+                    {
+                        if (i % 2 == 0)
+                        {
+                            list1[i / 2] = x[i];
+                        }
+                        else
+                        {
+                            list2[i / 2] = x[i];
+                        }
+                    });
 
             // Run the FFT on each one
-            list1 = DitFFT(list1);
-            list2 = DitFFT(list2);
+            var outlist1 = DitFFT(list1);
+            var outlist2 = DitFFT(list2);
 
             // Multiply the results back together.
-            var output = new ComplexNumber[list1.Length + list2.Length];
-            for (var i = 0; i < list1.Length; i++)
-            {
-                var t = list1[i];
-                output[i] = t + (new ComplexNumber(
-                                Math.Cos(2 * Math.PI * i / (list1.Length * 2)),
-                                     -Math.Sin(2 * Math.PI * i / (list1.Length * 2))) * list2[i]);
-                output[i + list1.Length] = t - (new ComplexNumber(
-                                                Math.Cos(2 * Math.PI * i / (list1.Length * 2)),
-                                                -Math.Sin(2 * Math.PI * i / (list1.Length * 2))) * list2[i]);
-            }
+            var output = new ComplexNumber[outlist1.Length + outlist2.Length];
+            Parallel.For(
+                0,
+                outlist1.Length,
+                i =>
+                    {
+                        var t = outlist1[i];
+                        var twoPiI = 2 * Math.PI * i / (outlist1.Length * 2);
+                        output[i] = t + (new ComplexNumber(Math.Cos(twoPiI), -Math.Sin(twoPiI)) * outlist2[i]);
+                        output[i + outlist1.Length] = t
+                                                      -
+                                                      (new ComplexNumber(Math.Cos(twoPiI), -Math.Sin(twoPiI))
+                                                       * outlist2[i]);
+                    });
 
             return output;
         }
@@ -121,21 +129,11 @@ namespace ManagedDigitalImageProcessing.FFT
         /// </remarks>
         private static ComplexNumber[] InverseDitFFT(ComplexNumber[] x)
         {
-            var swappedList = new ComplexNumber[x.Length];
-            for (var i = 0; i < x.Length; i++)
-            {
-                swappedList[i] = x[i].Swap();
-            }
+            var swappedList = x.AsParallel().AsOrdered().Select(i => i.Swap()).ToArray();
 
-            var outputTemp = DitFFT(swappedList);
+            var output = DitFFT(swappedList);
 
-            swappedList = new ComplexNumber[outputTemp.Length];
-            for (var i = 0; i < outputTemp.Length; i++)
-            {
-                swappedList[i] = outputTemp[i].Swap();
-            }
-
-            return swappedList;
+            return output.AsParallel().AsOrdered().Select(i => i.Swap()).ToArray();
         }
 
         /// <summary>
@@ -161,13 +159,16 @@ namespace ManagedDigitalImageProcessing.FFT
             if (centerOutput)
             {
                 // To move the 0 Hz point to the center of the image, multiple each pixel by -1^(i+j)
-                for (var i = 0; i < width; i++)
-                {
-                    for (var j = 0; j < height; j++)
-                    {
-                        buffer[i + (j * width)] = x[i + (j * width)] * Math.Pow(-1, i + j);
-                    }
-                }
+                Parallel.For(
+                    0,
+                    width,
+                    i =>
+                        {
+                            for (var j = 0; j < height; j++)
+                            {
+                                buffer[i + (j * width)] = x[i + (j * width)] * Math.Pow(-1, i + j);
+                            }
+                        });
             }
             else
             {
@@ -176,35 +177,41 @@ namespace ManagedDigitalImageProcessing.FFT
 
             var outputTemp = new ComplexNumber[x.Length];
 
-            for (var i = 0; i < height; i++)
-            {
-                // Perform the a 1D FFT on each line.
-                var buf = new ComplexNumber[width];
-                Array.Copy(buffer, i * width, buf, 0, width);
-                var fftOutput = fftOp(buf);
-                Array.Copy(fftOutput, 0, outputTemp, i * width, width);
-            }
+            Parallel.For(
+                0,
+                height,
+                i =>
+                    {
+                        // Perform the a 1D FFT on each line.
+                        var buf = new ComplexNumber[width];
+                        Array.Copy(buffer, i * width, buf, 0, width);
+                        var fftOutput = fftOp(buf);
+                        Array.Copy(fftOutput, 0, outputTemp, i * width, width);
+                    });
 
             var output = new ComplexNumber[width * height];
-            for (var i = 0; i < width; i++)
-            {
-                // Copy a column into a temporary buffer
-                var buf = new ComplexNumber[height];
-                for (var j = 0; j < height; j++)
-                {
-                    var index = i + (j * width);
-                    buf[j] = outputTemp[index];
-                }
+            Parallel.For(
+                0,
+                width,
+                i =>
+                    {
+                        // Copy a column into a temporary buffer
+                        var buf = new ComplexNumber[height];
+                        for (var j = 0; j < height; j++)
+                        {
+                            var index = i + (j * width);
+                            buf[j] = outputTemp[index];
+                        }
 
-                // Run the FFT on each of the columns
-                var colOut = fftOp(buf);
+                        // Run the FFT on each of the columns
+                        var colOut = fftOp(buf);
 
-                // Copy the column into the output
-                for (var j = 0; j < height; j++)
-                {
-                    output[i + (j * width)] = colOut[j];
-                }
-            }
+                        // Copy the column into the output
+                        for (var j = 0; j < height; j++)
+                        {
+                            output[i + (j * width)] = colOut[j];
+                        }
+                    });
 
             return output;
         }

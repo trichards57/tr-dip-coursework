@@ -46,11 +46,6 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// The non maximul suppression filter used by the process.
         /// </summary>
         private readonly NonMaximumSuppression nonMaximal;
-        
-        /// <summary>
-        /// The sobel operator filter used by the process.
-        /// </summary>
-        private readonly SobelOperator edgeFilter;
 
         /// <summary>
         /// The upper threshold for the hysteresis thresholding.
@@ -71,7 +66,6 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         {
             hysteresis = new HysteresisThresholding(highThreshold, lowThreshold);
             nonMaximal = new NonMaximumSuppression();
-            edgeFilter = new SobelOperator();
             highT = highThreshold;
             lowT = lowThreshold;
         }
@@ -84,18 +78,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <remarks>Algorithm taken from @cite imageProcessingBook</remarks>
         public ImageData Filter(ImageData input)
         {
-            return hysteresis.Filter(nonMaximal.Filter(edgeFilter.FilterSplit(input)).ToPgmImage());
-        }
-
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Format("Canny {0} {1}", highT, lowT);
+            return hysteresis.Filter(nonMaximal.Filter(SobelOperator.FilterSplit(input)));
         }
     }
 }

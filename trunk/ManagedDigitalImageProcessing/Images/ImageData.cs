@@ -90,21 +90,24 @@ namespace ManagedDigitalImageProcessing.Images
             var maxElement = Data.AsParallel().Max();
             var minElement = Data.AsParallel().Min();
 
-            for (var i = 0; i < Height; i++)
+            for (var i = 0; i < Width; i++)
             {
-                for (var j = 0; j < Width; j++)
+                for (var j = 0; j < Height; j++)
                 {
                     // We've been working with int values until now.
                     // Normalise and scale them so that the full range is shown in the image.
-                    double val = Data[ImageUtilities.CalculateIndex(i, j, Width, Height)];
+                    double val = Data[ImageUtilities.CalculateIndex(i, j, Width)];
                     val -= minElement;
-                    val *= 255.0 / (maxElement - minElement);
-                    
+                    if (maxElement != minElement)
+                    {
+                        val *= 255.0 / (maxElement - minElement);
+                    }
+
                     // This shouldn't ever throw an exception, but this will prevent odd images being produced if the integer overflows.
                     checked
                     {
                         var pixValue = (byte)Math.Floor(val);
-                        output.SetPixel(j, i, Color.FromArgb(pixValue, pixValue, pixValue));
+                        output.SetPixel(i, j, Color.FromArgb(pixValue, pixValue, pixValue));
                     }  
                 }
             }

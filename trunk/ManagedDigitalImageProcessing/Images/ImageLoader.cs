@@ -62,7 +62,7 @@ namespace ManagedDigitalImageProcessing.Images
             instream.Seek(-length, SeekOrigin.End);
             var binaryReader = new BinaryReader(instream);
 
-            var data = binaryReader.ReadBytes(length).Cast<int>().ToArray();
+            var data = binaryReader.ReadBytes(length).Select(t => (int)t).ToArray();
 
             if (data.Length < header.Height * header.Width)
             {
@@ -87,7 +87,7 @@ namespace ManagedDigitalImageProcessing.Images
             Marshal.Copy(info.Scan0, values, 0, bytes);
             file.UnlockBits(info);
 
-            return new ImageData { Data = values.Cast<int>().ToArray(), Height = file.Height, Width = info.Stride };
+            return new ImageData { Data = values.Select(t => (int)t).ToArray(), Height = file.Height, Width = info.Stride };
         }
 
         /// <summary>

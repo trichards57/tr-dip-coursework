@@ -45,75 +45,74 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public NonMaximumResult Filter(SobelOperatorResult input)
+        public ImageData Filter(SobelOperatorResult input)
         {
-            var result = new NonMaximumResult { XData = input.XData, YData = input.YData, Peak = new int[input.XData.Length], Width = input.Width, Height = input.Height };
+            var result = new ImageData(input.Width, input.Height);
 
             // Convenience function to calculate the index of an entry
-            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
-            
+            Func<int, int, int> calculateIndex =
+                (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateOutputIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, result.Width);
+
             // Convenience function to calculate the magnitude of a vector
             Func<double, double, double> magnitude = (x, y) => Math.Sqrt((x * x) + (y * y));
 
             // Convenience function to transform magnitude(x,y) to accept a coordinate as an input
-            Func<int, int, double> pointMagnitude = (x, y) => magnitude(input.XData[calculateIndex(x, y)], input.YData[calculateIndex(x, y)]);
-
-            // Convenience function to get the direction from a vector
-            Func<double, double, double> direction = (x, y) => Math.Atan(x / y);
+            Func<int, int, double> pointMagnitude =
+                (x, y) => magnitude(input.XData[calculateIndex(x, y)], input.YData[calculateIndex(x, y)]);
 
             Parallel.For(
-                0, 
-                input.Width, 
+                0,
+                input.Width,
                 i =>
-            {
-                for (var j = 0; j < input.Height; j++)
                 {
-                    // Moving through every row and column
-                    // Keep the data in local variables to clean up the code
-                    var mx = input.XData[calculateIndex(i, j)];
-                    var my = input.YData[calculateIndex(i, j)];
-
-                    double angle;
-
-                    // Calculate the edge direction
-                    if (my != 0)
+                    for (var j = 0; j < input.Height; j++)
                     {
-                        angle = direction(mx, my);
-                    }
+                        // Moving through every row and column
+                        // Keep the data in local variables to clean up the code
+                        var mx = input.XData[calculateIndex(i, j)];
+                        var my = input.YData[calculateIndex(i, j)];
 
-                    // Allowing for the my == 0 and mx == 0 cases
-                    else if (my == 0 && mx > 0)
-                    {
-                        angle = Math.PI / 2;
-                    }
-                    else
-                    {
-                        angle = -Math.PI / 2;
-                    }
+                        double angle;
 
-                    // Work out the two points normal to the edge
-                    var coords = GetCoordinates(angle);
-                    var m1 = (my * pointMagnitude(i + coords.X1, j + coords.Y1)) + ((mx - my) * pointMagnitude(i + coords.X2, j + coords.Y2));
-                    coords = GetCoordinates(angle + Math.PI);
-                    var m2 = (my * pointMagnitude(i + coords.X1, j + coords.Y1)) + ((mx - my) * pointMagnitude(i + coords.X2, j + coords.Y2));
-
-
-                    // If the point is at the maximum of it's edge, set the pixel to it's value
-                    if ((mx * magnitude(mx, my) > m1 && mx * magnitude(mx, my) >= m2) || (mx * magnitude(mx, my) < m1 && mx * magnitude(mx, my) <= m2))
-                    {
-                        checked
+                        // Calculate the edge direction, allowing for the my == 0 and mx == 0 cases
+                        if (my != 0)
                         {
-                            result.Peak[calculateIndex(i, j)] = (int)Math.Round(magnitude(mx, my));
+                            angle = Math.Atan((double)mx / my);
+                        }
+                        else if (my == 0 && mx > 0)
+                        {
+                            angle = Math.PI / 2;
+                        }
+                        else
+                        {
+                            angle = -Math.PI / 2;
+                        }
+
+                        // Work out the two points normal to the edge
+                        var coords = GetCoordinates(angle);
+                        var m1 = (my * pointMagnitude(i + coords.X1, j + coords.Y1))
+                                 + ((mx - my) * pointMagnitude(i + coords.X2, j + coords.Y2));
+                        coords = GetCoordinates(angle + Math.PI);
+                        var m2 = (my * pointMagnitude(i + coords.X1, j + coords.Y1))
+                                 + ((mx - my) * pointMagnitude(i + coords.X2, j + coords.Y2));
+
+                        // If the point is at the maximum of it's edge, set the pixel to it's value,
+                        // otherwise set the value to 0, suppressing that edge point.
+                        if ((mx * magnitude(mx, my) > m1 && mx * magnitude(mx, my) >= m2) 
+                            || (mx * magnitude(mx, my) < m1 && mx * magnitude(mx, my) <= m2))
+                        {
+                            checked
+                            {
+                                result.Data[calculateOutputIndex(i, j)] = (int)Math.Round(magnitude(mx, my));
+                            }
+                        }
+                        else
+                        {
+                            result.Data[calculateOutputIndex(i, j)] = 0;
                         }
                     }
-
-                    // Otherwise set the value to 0, suppressing that edge point.
-                    else
-                    {
-                        result.Peak[calculateIndex(i, j)] = 0;
-                    }
-                }
-            });
+                });
 
             return result;
         }

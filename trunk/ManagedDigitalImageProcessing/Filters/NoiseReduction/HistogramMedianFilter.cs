@@ -74,6 +74,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateOutputIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, output.Width);
 
             var offset = windowSize / 2;
             var medianPosition = ((windowSize * windowSize) / 2) + 1;
@@ -132,7 +133,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 
                             // We've reached the histogram item that contains the median value.
                             // Return it.
-                            output.Data[calculateIndex(i, j)] = k;
+                            output.Data[calculateOutputIndex(i, j)] = k;
                             break;
                         }
                     }
