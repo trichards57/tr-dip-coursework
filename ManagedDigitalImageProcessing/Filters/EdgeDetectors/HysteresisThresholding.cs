@@ -70,7 +70,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 
             var outImage = new ImageData(input.Width, input.Height);
 
-            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width);
 
             // Run through the image, searching for unprocessing pixels that are higher than the upper threshold, and so the
             // start of an edge
@@ -102,7 +102,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         }
 
         /// <summary>
-        /// Recursivly connects the point at the specified coordinate with any adjected edges.
+        /// Recursivly connects the point at the specified coordinate with any adjacent edges.
         /// </summary>
         /// <param name="x">The x coordinate of the pixel.</param>
         /// <param name="y">The y coordinate of the pixel.</param>

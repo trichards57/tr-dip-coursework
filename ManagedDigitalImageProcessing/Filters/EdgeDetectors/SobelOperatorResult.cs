@@ -27,8 +27,6 @@
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    using ManagedDigitalImageProcessing.Images;
-
     /// <summary>
     /// A class to hold the vector data returned by the Sobel operator.
     /// </summary>

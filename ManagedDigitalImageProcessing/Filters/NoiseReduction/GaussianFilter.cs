@@ -80,7 +80,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var templateTemp = new double[size * size];
             double sum = 0;
 
-            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, size, size);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, size);
 
             var centre = size / 2;
 
@@ -120,17 +120,6 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 
 
             return output;
-        }
-
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Format("Gauss {0}", sigma);
         }
     }
 }

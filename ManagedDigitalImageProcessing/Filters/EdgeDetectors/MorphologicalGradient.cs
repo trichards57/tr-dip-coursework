@@ -27,6 +27,8 @@
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
+    using System.Linq;
+
     using ManagedDigitalImageProcessing.Filters.NoiseReduction;
     using ManagedDigitalImageProcessing.Images;
 
@@ -82,26 +84,9 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var er = erodeFilter.Filter(image);
             var di = dilateFilter.Filter(image);
 
-            var buffer = new int[er.Data.Length];
-            var max = 0;
-
             // Now take the differences of the two images to create a new image
-            for (var i = 0; i < er.Data.Length; i++)
-            {
-                var val = di.Data[i] - er.Data[i];
-
-                // Constrain value to greater than 0
-                if (val < 0)
-                {
-                    val = 0;
-                }
-
-                buffer[i] = val;
-                if (val > max)
-                {
-                    max = val;
-                }
-            }
+            var buffer =
+                di.Data.AsParallel().AsOrdered().Zip(er.Data.AsParallel().AsOrdered(), (d, e) => d - e).ToArray();
 
             return new ImageData { Width = image.Width, Height = image.Height, Data = buffer };
         }

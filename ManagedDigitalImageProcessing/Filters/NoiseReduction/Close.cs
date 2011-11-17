@@ -49,7 +49,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </summary>
         /// <param name="erodeSize">Size of the erosion structuring object.</param>
         /// <param name="dilateSize">Size of the dilate structuring object.</param>
-        public Close(int erodeSize, int dilateSize)
+        public Close(int erodeSize = 3, int dilateSize = 3)
         {
             this.erodeSize = erodeSize;
             this.dilateSize = dilateSize;
@@ -59,7 +59,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// Initializes a new instance of the <see cref="Close"/> class.
         /// </summary>
         /// <param name="filterSize">Size of the structuring objects.</param>
-        public Close(int filterSize)
+        public Close(int filterSize = 3)
             : this(filterSize, filterSize)
         {
         }

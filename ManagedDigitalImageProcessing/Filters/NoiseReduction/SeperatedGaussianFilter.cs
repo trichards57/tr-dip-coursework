@@ -49,11 +49,6 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         private readonly int size;
 
         /// <summary>
-        /// The sigma value used to create the template
-        /// </summary>
-        private readonly double sigma;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SeperatedGaussianFilter"/> class.
         /// </summary>
         /// <param name="sigma">The sigma value to use.</param>
@@ -61,7 +56,6 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         public SeperatedGaussianFilter(double sigma)
             : this((int)((2 * Math.Ceiling(3 * sigma)) + 1), sigma)
         {
-            this.sigma = sigma;
         }
 
         /// <summary>

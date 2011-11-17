@@ -52,7 +52,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// The value of the scaling constant used to determine the filter weights.
         /// </summary>
         private readonly double scalingConstant;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AdaptiveHistogramMedianFilter"/> class.
         /// </summary>
@@ -84,6 +84,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 
             // Convenience function to simplify index calculation.
             Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
+            Func<int, int, int> calculateOutputIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, output.Width);
 
             var offset = windowSize / 2;
             var itemCount = windowSize * windowSize;
@@ -93,87 +94,73 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                 0,
                 output.Width,
                 i =>
+                {
+                    // Iterate through each point in the column.
+                    for (var j = 0; j < output.Height; j++)
                     {
-                        // Iterate through each point in the column.
-                        for (var j = 0; j < output.Height; j++)
+                        var sum = 0.0;
+                        var histogram = new uint[256];
+
+                        for (var k = -offset; k <= offset; k++)
                         {
-                            var sum = 0L;
-                            var histogram = new uint[256];
-
-                            for (var k = -offset; k <= offset; k++)
+                            for (var l = -offset; l <= offset; l++)
                             {
-                                for (var l = -offset; l <= offset; l++)
-                                {
-                                    var level =
-                                        input.Data[calculateIndex(i + k, j + l)];
-                                    sum += level;
-                                }
-                            }
-
-                            uint counter = 0;
-
-                            var mean = (double)sum / itemCount;
-                            var squareDiffTotal = 0.0;
-
-                            for (var k = -offset; k <= offset; k++)
-                            {
-                                for (var l = -offset; l <= offset; l++)
-                                {
-                                    var level =
-                                        input.Data[calculateIndex(i + k, j + l)];
-                                    var diff = level - mean;
-                                    squareDiffTotal += diff * diff;
-                                }
-                            }
-
-                            var variance = squareDiffTotal / itemCount;
-                            uint weightSum = 0;
-
-                            for (var k = -offset; k <= offset; k++)
-                            {
-                                for (var l = -offset; l <= offset; l++)
-                                {
-                                    var level =
-                                        input.Data[calculateIndex(i + k, j + l)];
-                                    var distance = Math.Sqrt((k * k) + (l * l));
-                                    var weight = centreWeight - (scalingConstant * distance * variance / mean);
-                                    weight = weight < 0 ? 0 : Math.Round(weight);
-                                    histogram[level] += (uint)weight;
-                                    weightSum += (uint)weight;
-                                }
-                            }
-
-                            var medianPosition = (weightSum / 2) + 1;
-
-                            // Count through the histogram until the median is found or passed.
-                            for (var k = 0; k < 256; k++)
-                            {
-                                counter += histogram[k];
-                                if (counter < medianPosition)
-                                {
-                                    continue;
-                                }
-
-                                // We've reached the histogram item that contains the median value.
-                                // Return it.
-                                output.Data[calculateIndex(i, j)] = k;
-                                break;
+                                var level = input.Data[calculateIndex(i + k, j + l)];
+                                sum += level;
                             }
                         }
-                    });
+
+                        uint counter = 0;
+
+                        var mean = sum / itemCount;
+                        var squareDiffTotal = 0.0;
+
+                        for (var k = -offset; k <= offset; k++)
+                        {
+                            for (var l = -offset; l <= offset; l++)
+                            {
+                                var level = input.Data[calculateIndex(i + k, j + l)];
+                                var diff = level - mean;
+                                squareDiffTotal += diff * diff;
+                            }
+                        }
+
+                        var variance = squareDiffTotal / itemCount;
+                        uint weightSum = 0;
+
+                        for (var k = -offset; k <= offset; k++)
+                        {
+                            for (var l = -offset; l <= offset; l++)
+                            {
+                                var level = input.Data[calculateIndex(i + k, j + l)];
+                                var distance = Math.Sqrt((k * k) + (l * l));
+                                var weight = centreWeight - (scalingConstant * distance * variance / mean);
+                                weight = weight < 0 ? 0 : Math.Round(weight);
+                                histogram[level] += (uint)weight;
+                                weightSum += (uint)weight;
+                            }
+                        }
+
+                        var medianPosition = (weightSum / 2) + 1;
+
+                        // Count through the histogram until the median is found or passed.
+                        for (var k = 0; k < 256; k++)
+                        {
+                            counter += histogram[k];
+                            if (counter < medianPosition)
+                            {
+                                continue;
+                            }
+
+                            // We've reached the histogram item that contains the median value.
+                            // Return it.
+                            output.Data[calculateOutputIndex(i, j)] = k;
+                            break;
+                        }
+                    }
+                });
 
             return output;
-        }
-
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Format("Histogram {0}", windowSize);
         }
     }
 }

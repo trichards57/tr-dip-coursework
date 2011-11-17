@@ -27,6 +27,7 @@
 namespace ManagedDigitalImageProcessing.Filters.Utilities
 {
     using System;
+    using System.Threading.Tasks;
 
     using ManagedDigitalImageProcessing.Images;
 
@@ -71,44 +72,43 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
 
             // Convenience functions to ease the calculation of array indexes
             Func<int, int, int> originalIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, width, height);
-            Func<int, int, int> newIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, targetWidth, targetHeight);
-
-            if (targetWidth == width && targetHeight == height)
-            {
-                return input;
-            }
+            Func<int, int, int> newIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, targetWidth);
 
             var output = new int[targetHeight * targetWidth];
 
-            for (var i = 0; i < targetWidth; i++)
-            {
-                for (var j = 0; j < targetHeight; j++)
-                {
-                    var x = i * ((double)width / targetWidth);
-                    var y = j * ((double)height / targetHeight);
-
-                    var newI = (int)Math.Floor(x);
-                    var newJ = (int)Math.Floor(y);
-
-                    var dx = x - newI;
-                    var dy = y - newJ;
-
-                    double sum = 0;
-
-                    for (var m = -1; m <= 2; m++)
+            Parallel.For(
+                0,
+                targetWidth,
+                i =>
                     {
-                        for (var n = -1; n <= 2; n++)
+                        for (var j = 0; j < targetHeight; j++)
                         {
-                            sum += input.Data[originalIndex(newI + m, newJ + n)] * Weighting(m - dx) * Weighting(dy - n);
-                        }
-                    }
+                            var x = i * ((double)width / targetWidth);
+                            var y = j * ((double)height / targetHeight);
 
-                    checked
-                    {
-                        output[newIndex(i, j)] = (int)sum;
-                    }
-                }
-            }
+                            var newI = (int)Math.Floor(x);
+                            var newJ = (int)Math.Floor(y);
+
+                            var dx = x - newI;
+                            var dy = y - newJ;
+
+                            double sum = 0;
+
+                            for (var m = -1; m <= 2; m++)
+                            {
+                                for (var n = -1; n <= 2; n++)
+                                {
+                                    sum += input.Data[originalIndex(newI + m, newJ + n)] * Weighting(m - dx)
+                                           * Weighting(dy - n);
+                                }
+                            }
+
+                            checked
+                            {
+                                output[newIndex(i, j)] = (int)sum;
+                            }
+                        }
+                    });
 
             return new ImageData { Data = output, Width = targetWidth, Height = targetHeight };
         }

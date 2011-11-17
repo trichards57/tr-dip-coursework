@@ -68,10 +68,11 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// </remarks>
         public ImageData Filter(ImageData input)
         {
+            var output = new ImageData(input.Width, input.Height);
+
             // Partial function application to simplify index calculation.
             Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
-
-            var output = new ImageData(input.Width, input.Height);
+            Func<int, int, int> calculateOutputIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, output.Width);
 
             var offset = windowSize / 2;
 
@@ -105,7 +106,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                         }
 
                         // Set the output image's pixel value to the maximum value.
-                        output.Data[calculateIndex(i, j)] = max;
+                        output.Data[calculateOutputIndex(i, j)] = max;
                     }
                 });
 

@@ -66,9 +66,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         public ImageData Filter(ImageData input)
         {
             var output = new ImageData(input.Width, input.Height);
-            
 
             // Partial function application to simplify index calculation.
+            Func<int, int, int> calculateOutputIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, output.Width);
             Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
 
             var offset = windowSize / 2;
@@ -98,7 +98,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                         Array.Sort(list);
 
                         // Take the middle value (the median) and insert it in to the new image.
-                        output.Data[calculateIndex(i, j)] = list[list.Length / 2];
+                        output.Data[calculateOutputIndex(i, j)] = list[list.Length / 2];
                     }
                 });
 

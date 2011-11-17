@@ -43,19 +43,21 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The filtered image.</returns>
-        public ImageData Filter(ImageData input)
+        public static ImageData Filter(ImageData input)
         {
-            var output = new ImageData(input.Width, input.Height);
-
             var outputTemp = FilterSplit(input);
 
-            // Transform, in parallel, the calculated vectors in to their magnitudes
-            Parallel.For(
-                0,
-                input.Data.Length,
-                i =>
-                output.Data[i] = (int)Math.Round(Math.Sqrt((outputTemp.XData[i] * outputTemp.XData[i]) + (outputTemp.YData[i] * outputTemp.YData[i]))));
-
+            // Transform, in parallel, the calculated vectors in to their magnitudes, and create the output data
+            var output = new ImageData
+                {
+                    Height = input.Height,
+                    Width = input.Width,
+                    Data =
+                        outputTemp.XData.AsParallel().AsOrdered().Zip(
+                            outputTemp.YData.AsParallel().AsOrdered(),
+                            (x, y) => (int)Math.Round(Math.Sqrt((x * x) + (y * y)))).ToArray()
+                };
+            
             return output;
         }
 
@@ -64,7 +66,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The edge vectors from the filtered image.</returns>
-        public SobelOperatorResult FilterSplit(ImageData input)
+        public static SobelOperatorResult FilterSplit(ImageData input)
         {
             var output = new SobelOperatorResult { Width = input.Width, Height = input.Height };
 
