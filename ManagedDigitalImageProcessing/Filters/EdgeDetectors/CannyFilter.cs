@@ -27,7 +27,7 @@
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Filter class, used to perform the canny edge detection on an image in one step.
@@ -47,6 +47,12 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// The edge detected output.
         /// </returns>
         /// <remarks>
+        /// Runs the following filters in order:
+        /// 
+        /// -# SobelOperator
+        /// -# NonMaximumSuppression
+        /// -# HysteresisThresholding
+        /// 
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
         public static ImageData Filter(ImageData input, int highThreshold, int lowThreshold)

@@ -30,7 +30,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Apply a median filter to the input, using a histogram to optimise the median operation.

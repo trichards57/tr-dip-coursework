@@ -32,6 +32,7 @@ namespace ManagedDigitalImageProcessing.FFT
     /// <summary>
     /// Represents a complex number, used by the FFT functions.
     /// </summary>
+    /// <seealso cref="FFT"/>
     public sealed class ComplexNumber
     {
         /// <summary>
@@ -64,10 +65,10 @@ namespace ManagedDigitalImageProcessing.FFT
         /// <summary>
         /// Implements the operator +.
         /// </summary>
-        /// <param name="c1">The c1.</param>
-        /// <param name="c2">The c2.</param>
+        /// <param name="c1">Complex number one.</param>
+        /// <param name="c2">Complex number two.</param>
         /// <returns>
-        /// The result of the operator.
+        /// Returns \f$c1+c2\f$.
         /// </returns>
         public static ComplexNumber operator +(ComplexNumber c1, ComplexNumber c2)
         {
@@ -77,10 +78,10 @@ namespace ManagedDigitalImageProcessing.FFT
         /// <summary>
         /// Implements the operator -.
         /// </summary>
-        /// <param name="c1">The c1.</param>
-        /// <param name="c2">The c2.</param>
+        /// <param name="c1">Complex number one.</param>
+        /// <param name="c2">Complex number two.</param>
         /// <returns>
-        /// The result of the operator.
+        /// Returns \f$c1-c2\f$.
         /// </returns>
         public static ComplexNumber operator -(ComplexNumber c1, ComplexNumber c2)
         {
@@ -90,10 +91,10 @@ namespace ManagedDigitalImageProcessing.FFT
         /// <summary>
         /// Implements the operator *.
         /// </summary>
-        /// <param name="c1">The c1.</param>
-        /// <param name="c2">The c2.</param>
+        /// <param name="c1">Complex number one.</param>
+        /// <param name="c2">Complex number two.</param>
         /// <returns>
-        /// The result of the operator.
+        /// Returns \f$c1 \times c2\f$.
         /// </returns>
         public static ComplexNumber operator *(ComplexNumber c1, ComplexNumber c2)
         {
@@ -105,7 +106,7 @@ namespace ManagedDigitalImageProcessing.FFT
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>
-        /// The result of the conversion.
+        /// Returns a ComplexNumber with <see cref="Real"/> set to <paramref name="value"/>.
         /// </returns>
         public static implicit operator ComplexNumber(int value)
         {
@@ -117,7 +118,7 @@ namespace ManagedDigitalImageProcessing.FFT
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>
-        /// The result of the conversion.
+        /// Returns a ComplexNumber with <see cref="Real"/> set to <paramref name="value"/>.
         /// </returns>
         public static implicit operator ComplexNumber(double value)
         {
@@ -125,20 +126,9 @@ namespace ManagedDigitalImageProcessing.FFT
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Format("{0}+({1})j", Real, Imaginary);
-        }
-
-        /// <summary>
         /// Returns the magnitude of this complex number.
         /// </summary>
-        /// <returns>The magnitude</returns>
+        /// <returns>The magnitude of the complex number, defined as: \f[ \sqrt{(Real \times Real)+(Imaginary \times Imaginary)} \f].</returns>
         public double Magnitude()
         {
             return Math.Sqrt((Real * Real) + (Imaginary * Imaginary));
@@ -147,7 +137,7 @@ namespace ManagedDigitalImageProcessing.FFT
         /// <summary>
         /// Returns the phase of this complex number.
         /// </summary>
-        /// <returns>The phase, in radians</returns>
+        /// <returns>The phase, in radians, of the complex number, defined as: \f$ \arctan{\left(\frac{Imaginary}{Real}\right)} \f$</returns>
         public double Phase()
         {
             return Math.Atan(Imaginary / Real);
@@ -157,6 +147,10 @@ namespace ManagedDigitalImageProcessing.FFT
         /// Swaps the imaginary and real terms. Used by the FFT functions.
         /// </summary>
         /// <returns>The complex number with the imaginary and real terms swapped.</returns>
+        /// <seealso cref="FFT"/>
+        /// <remarks>
+        /// Converts \f$ a+bi \f$ to \f$ b+ai \f$.
+        /// </remarks>
         public ComplexNumber Swap()
         {
             return new ComplexNumber(Imaginary, Real);

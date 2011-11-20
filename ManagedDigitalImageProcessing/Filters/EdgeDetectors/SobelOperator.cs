@@ -25,12 +25,14 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Drawing;
+
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     using System;
     using System.Linq;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Filter class, used to run the Sobel operator on an image.
@@ -44,6 +46,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <returns>The filtered image.</returns>
         public static ImageData Filter(ImageData input)
         {
+            // Calculate the edge vectors.
             var outputTemp = FilterSplit(input);
 
             // Transform, in parallel, the calculated vectors in to their magnitudes, and create the output data
@@ -76,11 +79,11 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             var intData = input.Data;
 
             // Convolve the first template across the image, using the absolute value to ensure edges in both direction are treated equally
-            var data = ImageUtilities.Convolve(template1, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
+            var data = ImageUtilities.Convolve(template1, intData, new Size(3, 3), new Size(input.Width, input.Height));
             output.XData = data.AsParallel().Select(Math.Abs).ToArray();
 
             // Do the same again for the second template.
-            data = ImageUtilities.Convolve(template2, intData, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
+            data = ImageUtilities.Convolve(template2, intData, new Size(3, 3), new Size(input.Width, input.Height));
             output.YData = data.AsParallel().Select(Math.Abs).ToArray();
 
             return output;

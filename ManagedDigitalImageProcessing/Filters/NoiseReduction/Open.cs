@@ -27,7 +27,7 @@
 
 namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// A filter class to apply the open morphological operator to an image.
@@ -43,6 +43,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>
         /// The opened image
         /// </returns>
+        /// <remarks>
+        /// Algorithm taken from @cite lectures
+        /// </remarks>
         public static ImageData Filter(ImageData image, int erodeSize, int dilateSize)
         {
             return Dilate.Filter(Erode.Filter(image, erodeSize), dilateSize);

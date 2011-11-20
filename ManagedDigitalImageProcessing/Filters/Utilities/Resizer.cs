@@ -29,7 +29,7 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// A filter class that resizes the image using bicubic interpolation
@@ -66,17 +66,21 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
                     {
                         for (var j = 0; j < targetHeight; j++)
                         {
+                            // For each pixel in the output image, calculate the original pixel it is derived from
                             var x = i * ((double)width / targetWidth);
                             var y = j * ((double)height / targetHeight);
 
+                            // Convert these values to actual pixel values (which must be integers).
                             var newI = (int)Math.Floor(x);
                             var newJ = (int)Math.Floor(y);
 
+                            // Work out the difference between the actual pixel coordinates and the calculated ones
                             var dx = x - newI;
                             var dy = y - newJ;
 
                             double sum = 0;
 
+                            // Look at the surrounding pixels and, using the weights calculate the new pixel value
                             for (var m = -1; m <= 2; m++)
                             {
                                 for (var n = -1; n <= 2; n++)
@@ -86,6 +90,7 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
                                 }
                             }
 
+                            // Convert the sum back to an integer to fit in the image.
                             checked
                             {
                                 output[newIndex(i, j)] = (int)sum;

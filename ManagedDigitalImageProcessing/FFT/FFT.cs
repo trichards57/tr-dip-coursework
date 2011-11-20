@@ -45,6 +45,7 @@ namespace ManagedDigitalImageProcessing.FFT
         /// <returns>The FFT transformed data.</returns>
         public static ComplexNumber[] DitFFT2D(ComplexNumber[] x, int width, int height)
         {
+            // Calls the core FFT algorithm, using the DitFFT funtion to perform the transform.
             return DitFFT2D(x, width, height, true, DitFFT);
         }
 
@@ -57,6 +58,7 @@ namespace ManagedDigitalImageProcessing.FFT
         /// <returns>The FFT transformed data.</returns>
         public static ComplexNumber[] InverseDitFFT2D(ComplexNumber[] x, int width, int height)
         {
+            // Calls the core FFT algorithm, using the InverseDitFFT function to perform the transform.
             return DitFFT2D(x, width, height, false, InverseDitFFT);
         }
 
@@ -129,6 +131,7 @@ namespace ManagedDigitalImageProcessing.FFT
         /// </remarks>
         private static ComplexNumber[] InverseDitFFT(ComplexNumber[] x)
         {
+            // Swap the real and imaginary components of the complex numbers to perform the FFT.
             var swappedList = x.AsParallel().AsOrdered().Select(i => i.Swap()).ToArray();
 
             var output = DitFFT(swappedList);
@@ -158,7 +161,7 @@ namespace ManagedDigitalImageProcessing.FFT
 
             if (centerOutput)
             {
-                // To move the 0 Hz point to the center of the image, multiple each pixel by -1^(i+j)
+                // To move the 0 Hz point to the center of the image, multiple each pixel by -1^(x+y)
                 Parallel.For(
                     0,
                     width,
@@ -172,6 +175,7 @@ namespace ManagedDigitalImageProcessing.FFT
             }
             else
             {
+                // If the output doesn't need to be centered, just copy the image as is in to the buffer.
                 Array.Copy(x, buffer, x.Length);
             }
 
