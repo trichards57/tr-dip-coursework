@@ -27,7 +27,7 @@
 
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// A filter object to apply the Laplacian Operator to an image.
@@ -46,8 +46,10 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         {
             var output = new ImageData(input.Width, input.Height);
 
+            // Produce the template for the Laplacian
             var template = new[] { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
 
+            // Convolve it across the image
             output.Data = ImageUtilities.Convolve(template, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
 
             return output;

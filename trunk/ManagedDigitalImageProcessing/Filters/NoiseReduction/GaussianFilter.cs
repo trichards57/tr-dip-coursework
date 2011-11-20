@@ -31,7 +31,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     using System.Drawing;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Filter class to apply a Gaussian smoothing filter to an image.
@@ -74,6 +74,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 
             var centre = size / 2;
 
+            // Produce the template
             Parallel.For(
                 0,
                 size,
@@ -88,9 +89,11 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                     }
                 });
 
+            // Normalise the template
             var template = new double[templateTemp.Length];
             Parallel.For(0, templateTemp.Length, i => template[i] = templateTemp[i] / sum);
 
+            // Apply the template to the image.
             var output = new ImageData
                 {
                     Width = input.Width,

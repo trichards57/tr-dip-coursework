@@ -27,7 +27,7 @@
 
 namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
 {
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// A filter class to apply the close morphological operator to an image.
@@ -44,7 +44,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// The closed image
         /// </returns>
         /// <remarks>
-        /// Algorithm taken from @cite imageProcessingBook
+        /// Algorithm taken from @cite lectures
         /// </remarks>
         public static ImageData Filter(ImageData image, int erodeSize, int dilateSize)
         {
@@ -53,7 +53,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         }
 
         /// <summary>
-        /// Filters the specified image.
+        /// Filters the specified image, using equal sized structuring elements.
         /// </summary>
         /// <param name="image">The image.</param>
         /// <param name="structuringElementSize">Size of the structuring elements.</param>

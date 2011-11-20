@@ -31,11 +31,15 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
-    /// A filter object that applies Hysteresis Thresholding to the edges in an edge detected image.
+    /// A filter object that applies Hysteresis Thresholding to the edges in an edge detected image, to join linked edges.
     /// </summary>
+    /// <remarks>
+    /// This makes up part of the CannyFilter.
+    /// </remarks>
+    /// <seealso cref="CannyFilter"/>
     public static class HysteresisThresholding
     {
         /// <summary>
@@ -104,7 +108,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
             {
                 for (var j = y - 1; j < y + 2; j++)
                 {
-                    // If the pixel is below the threshold, or has already been processed considered to be an edge, skip it
+                    // If the neighbouring pixel is below the threshold, or has already been processed and considered to be an edge, skip it
                     if (input[calculateIndex(i, j)] <= lowThreshold || output[calculateIndex(i, j)])
                     {
                         continue;

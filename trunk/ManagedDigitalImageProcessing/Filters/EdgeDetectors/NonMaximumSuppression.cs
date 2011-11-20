@@ -30,11 +30,15 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Filter class to remove any non-maximum edges in the input data.
     /// </summary>
+    /// <remarks>
+    /// This makes up part of the CannyFilter.
+    /// </remarks>
+    /// <seealso cref="CannyFilter"/>
     public static class NonMaximumSuppression
     {
         /// <summary>
@@ -118,12 +122,15 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         }
 
         /// <summary>
-        /// Gets the coordinates of two points normal to a line on the given angle.
+        /// Gets the relative coordinates of two points normal to a line on the given angle.
         /// </summary>
         /// <param name="angle">The angle.</param>
         /// <returns>A pair of coordinates</returns>
         /// <remarks>
-        /// Algorithm taken from @cite imageProcessingBook
+        /// Algorithm taken from @cite imageProcessingBook .
+        /// 
+        /// The are calculated by added the return value to the coordinate of the point under
+        /// examination.
         /// </remarks>
         private static CoordinatePair GetCoordinates(double angle)
         {

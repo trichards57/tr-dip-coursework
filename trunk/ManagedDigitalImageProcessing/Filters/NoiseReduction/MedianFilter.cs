@@ -30,7 +30,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Filter class to apply a median filter to the input.

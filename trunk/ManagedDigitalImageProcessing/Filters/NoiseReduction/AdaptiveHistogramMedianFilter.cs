@@ -30,12 +30,12 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Apply an adaptive median filter to the input, using a histogram to optimise the median operation.
     /// </summary>
-    /// From 'An Adaptive Weighted Median Filter for Speckle Suppression in Medical Ultrasonic Images'
+    /// Algorithm taken from @cite adaptiveMedianPaper
     public static class AdaptiveHistogramMedianFilter
     {
         /// <summary>
@@ -74,8 +74,8 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                     for (var j = 0; j < output.Height; j++)
                     {
                         var sum = 0.0;
-                        var histogram = new uint[256];
 
+                        // First take the sum of all the pixels
                         for (var k = -offset; k <= offset; k++)
                         {
                             for (var l = -offset; l <= offset; l++)
@@ -85,11 +85,11 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                             }
                         }
 
-                        uint counter = 0;
-
+                        // Calculate the mean
                         var mean = sum / itemCount;
                         var squareDiffTotal = 0.0;
 
+                        // Calculate the variance of the window
                         for (var k = -offset; k <= offset; k++)
                         {
                             for (var l = -offset; l <= offset; l++)
@@ -101,8 +101,12 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                         }
 
                         var variance = squareDiffTotal / itemCount;
+                        
                         uint weightSum = 0;
 
+                        // A new histogram is required for each window position.
+                        var histogram = new uint[256];
+                        // Populate the histogram, weighting the values based on the variance
                         for (var k = -offset; k <= offset; k++)
                         {
                             for (var l = -offset; l <= offset; l++)
@@ -110,13 +114,19 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                                 var level = input.Data[calculateIndex(i + k, j + l)];
                                 var distance = Math.Sqrt((k * k) + (l * l));
                                 var weight = centreWeight - (scalingConstant * distance * variance / mean);
+                                // Ensure that the weight is not negative
                                 weight = weight < 0 ? 0 : Math.Round(weight);
                                 histogram[level] += (uint)weight;
+                                // Calculate the total number of entries added to the histogram 
                                 weightSum += (uint)weight;
                             }
                         }
 
+                        // The median is the center value.  This ignores the problem that occurs when weightSum is even,
+                        // as it probably won't make a massive difference to the result and the solution is non-trivial.
                         var medianPosition = (weightSum / 2) + 1;
+
+                        uint counter = 0;
 
                         // Count through the histogram until the median is found or passed.
                         for (var k = 0; k < 256; k++)
@@ -124,6 +134,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                             counter += histogram[k];
                             if (counter < medianPosition)
                             {
+                                // We've not got to the median yet.  Keep counting.
                                 continue;
                             }
 

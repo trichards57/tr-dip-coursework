@@ -30,7 +30,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     using System;
     using System.Threading.Tasks;
 
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
 
     /// <summary>
     /// Filer class that applies the dilate morphological operator to an image.
@@ -47,7 +47,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// The dilated image.
         /// </returns>
         /// <remarks>
-        /// Algorithm taken from @cite imageProcessingBook
+        /// Algorithm taken from @cite lectures
         /// </remarks>
         public static ImageData Filter(ImageData input, int structuringElementSize = 3, bool square = false)
         {

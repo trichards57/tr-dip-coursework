@@ -28,9 +28,8 @@
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     using System.Linq;
-
-    using ManagedDigitalImageProcessing.Filters.NoiseReduction;
-    using ManagedDigitalImageProcessing.Images;
+    using Images;
+    using NoiseReduction;
 
     /// <summary>
     /// Filter class to apply a morpholgical gradient operation to an image, highlighting the edges.
