@@ -34,38 +34,21 @@ namespace ManagedDigitalImageProcessing.Filters.Utilities
     /// <summary>
     /// A filter class that resizes the image using bicubic interpolation
     /// </summary>
-    public sealed class Resizer
+    public static class Resizer
     {
-        /// <summary>
-        /// The final width of the output image.
-        /// </summary>
-        private readonly int targetWidth;
-
-        /// <summary>
-        /// The final height of the output image.
-        /// </summary>
-        private readonly int targetHeight;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Resizer"/> class.
-        /// </summary>
-        /// <param name="targetWidth">Width of the target image.</param>
-        /// <param name="targetHeight">Height of the target image.</param>
-        public Resizer(int targetWidth, int targetHeight)
-        {
-            this.targetHeight = targetHeight;
-            this.targetWidth = targetWidth;
-        }
-
         /// <summary>
         /// Resizes the specified input.
         /// </summary>
         /// <param name="input">The input image.</param>
-        /// <returns>The resized image.</returns>
+        /// <param name="targetWidth">Target width of the image.</param>
+        /// <param name="targetHeight">Target height of the image.</param>
+        /// <returns>
+        /// The resized image.
+        /// </returns>
         /// <remarks>
         /// Algorithm taken from @cite resizeAlgorithm
         /// </remarks>
-        public ImageData Filter(ImageData input)
+        public static ImageData Filter(ImageData input, int targetWidth, int targetHeight)
         {
             var width = input.Width;
             var height = input.Height;

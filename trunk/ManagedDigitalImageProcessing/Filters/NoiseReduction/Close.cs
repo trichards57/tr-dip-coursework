@@ -32,53 +32,37 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// A filter class to apply the close morphological operator to an image.
     /// </summary>
-    public class Close
+    public static class Close
     {
-        /// <summary>
-        /// The size of the erosion structuring object
-        /// </summary>
-        private readonly int erodeSize;
-        
-        /// <summary>
-        /// The size of the dilation structuring object
-        /// </summary>
-        private readonly int dilateSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Close"/> class.
-        /// </summary>
-        /// <param name="erodeSize">Size of the erosion structuring object.</param>
-        /// <param name="dilateSize">Size of the dilate structuring object.</param>
-        public Close(int erodeSize = 3, int dilateSize = 3)
-        {
-            this.erodeSize = erodeSize;
-            this.dilateSize = dilateSize;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Close"/> class.
-        /// </summary>
-        /// <param name="filterSize">Size of the structuring objects.</param>
-        public Close(int filterSize = 3)
-            : this(filterSize, filterSize)
-        {
-        }
-
         /// <summary>
         /// Applies the close operator to the input image.
         /// </summary>
         /// <param name="image">The input image.</param>
-        /// <returns>The closed image</returns>
+        /// <param name="erodeSize">Size of the erode structuring element.</param>
+        /// <param name="dilateSize">Size of the dilate structuring element.</param>
+        /// <returns>
+        /// The closed image
+        /// </returns>
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public ImageData Filter(ImageData image)
+        public static ImageData Filter(ImageData image, int erodeSize, int dilateSize)
         {
-            var erodeFilter = new Erode(erodeSize);
-            var dilateFilter = new Dilate(dilateSize);
-
             // Closing is a dilation followed by an erosion
-            return erodeFilter.Filter(dilateFilter.Filter(image));
+            return Erode.Filter(Dilate.Filter(image, dilateSize), erodeSize);
+        }
+
+        /// <summary>
+        /// Filters the specified image.
+        /// </summary>
+        /// <param name="image">The image.</param>
+        /// <param name="structuringElementSize">Size of the structuring elements.</param>
+        /// <returns>
+        /// The closed image
+        /// </returns>
+        public static ImageData Filter(ImageData image, int structuringElementSize)
+        {
+            return Filter(image, structuringElementSize, structuringElementSize);
         }
     }
 }

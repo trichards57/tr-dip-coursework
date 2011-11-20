@@ -29,14 +29,13 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     using System;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using ManagedDigitalImageProcessing.Images;
 
     /// <summary>
     /// Filter class, used to run the Sobel operator on an image.
     /// </summary>
-    public sealed class SobelOperator
+    public static class SobelOperator
     {
         /// <summary>
         /// Applies the Sobel operator to the specified input.

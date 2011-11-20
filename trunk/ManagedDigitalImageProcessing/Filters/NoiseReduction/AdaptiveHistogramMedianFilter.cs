@@ -36,58 +36,33 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// Apply an adaptive median filter to the input, using a histogram to optimise the median operation.
     /// </summary>
     /// From 'An Adaptive Weighted Median Filter for Speckle Suppression in Medical Ultrasonic Images'
-    public sealed class AdaptiveHistogramMedianFilter
+    public static class AdaptiveHistogramMedianFilter
     {
-        /// <summary>
-        /// The size of the filter window.
-        /// </summary>
-        private readonly int windowSize;
-
-        /// <summary>
-        /// The value of the center weight of the filter.
-        /// </summary>
-        private readonly double centreWeight;
-
-        /// <summary>
-        /// The value of the scaling constant used to determine the filter weights.
-        /// </summary>
-        private readonly double scalingConstant;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdaptiveHistogramMedianFilter"/> class.
-        /// </summary>
-        /// <param name="centreWeight">The centre weight for the filter.</param>
-        /// <param name="scalingConstant">The scaling constant used to determine the filter weights.</param>
-        /// <param name="size">The size of the filter window.</param>
-        public AdaptiveHistogramMedianFilter(double centreWeight, double scalingConstant, int size = 3)
-        {
-            if (size % 2 == 0)
-            {
-                throw new ArgumentOutOfRangeException("size", size, "The size must be odd.");
-            }
-
-            windowSize = size;
-            this.centreWeight = centreWeight;
-            this.scalingConstant = scalingConstant;
-        }
-
         /// <summary>
         /// Filters the specified input.
         /// </summary>
         /// <param name="input">The input image.</param>
+        /// <param name="centreWeight">The centre weight of the template.</param>
+        /// <param name="scalingConstant">The scaling constant used to create the template.</param>
+        /// <param name="templateSize">The size of the template.</param>
         /// <returns>
         /// The filtered image.
         /// </returns>
-        public ImageData Filter(ImageData input)
+        public static ImageData Filter(ImageData input, double centreWeight, double scalingConstant, int templateSize = 3)
         {
+            if (templateSize % 2 == 0)
+            {
+                throw new ArgumentOutOfRangeException("templateSize", templateSize, "The size must be odd.");
+            }
+
             var output = new ImageData(input.Width, input.Height);
 
             // Convenience function to simplify index calculation.
             Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
             Func<int, int, int> calculateOutputIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, output.Width);
 
-            var offset = windowSize / 2;
-            var itemCount = windowSize * windowSize;
+            var offset = templateSize / 2;
+            var itemCount = templateSize * templateSize;
 
             // Iterate through each column.
             Parallel.For(

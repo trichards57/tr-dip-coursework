@@ -35,50 +35,23 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <remarks>
     /// This code skips the intial smoothing/filtering step, which should be performed on the data before it is passed in.
     /// </remarks>
-    public sealed class CannyFilter
+    public static class CannyFilter
     {
-        /// <summary>
-        /// The hysteresis thresholding filter used by the process.
-        /// </summary>
-        private readonly HysteresisThresholding hysteresis;
-
-        /// <summary>
-        /// The non maximul suppression filter used by the process.
-        /// </summary>
-        private readonly NonMaximumSuppression nonMaximal;
-
-        /// <summary>
-        /// The upper threshold for the hysteresis thresholding.
-        /// </summary>
-        private readonly int highT;
-
-        /// <summary>
-        /// The lower threshold for the hysteresis thresholding.
-        /// </summary>
-        private readonly int lowT;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CannyFilter"/> class.
-        /// </summary>
-        /// <param name="highThreshold">The high threshold.</param>
-        /// <param name="lowThreshold">The low threshold.</param>
-        public CannyFilter(int highThreshold, int lowThreshold)
-        {
-            hysteresis = new HysteresisThresholding(highThreshold, lowThreshold);
-            nonMaximal = new NonMaximumSuppression();
-            highT = highThreshold;
-            lowT = lowThreshold;
-        }
-
         /// <summary>
         /// Applies the Canny Edge Detector to the input.
         /// </summary>
         /// <param name="input">The input.</param>
-        /// <returns>The edge detected output.</returns>
-        /// <remarks>Algorithm taken from @cite imageProcessingBook</remarks>
-        public ImageData Filter(ImageData input)
+        /// <param name="highThreshold">The high threshold.</param>
+        /// <param name="lowThreshold">The low threshold.</param>
+        /// <returns>
+        /// The edge detected output.
+        /// </returns>
+        /// <remarks>
+        /// Algorithm taken from @cite imageProcessingBook
+        /// </remarks>
+        public static ImageData Filter(ImageData input, int highThreshold, int lowThreshold)
         {
-            return hysteresis.Filter(nonMaximal.Filter(SobelOperator.FilterSplit(input)));
+            return HysteresisThresholding.Filter(NonMaximumSuppression.Filter(SobelOperator.FilterSplit(input)), highThreshold, lowThreshold);
         }
     }
 }

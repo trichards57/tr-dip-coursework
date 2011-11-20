@@ -1,0 +1,68 @@
+\documentclass[a4paper]{article}
+\usepackage{makeidx}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{ifthen}
+\usepackage[table]{xcolor}
+\usepackage{textcomp}
+\usepackage{alltt}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\else
+\usepackage[ps2pdf,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\usepackage{pspicture}
+\fi
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage{courier}
+\usepackage{sectsty}
+\usepackage[titles]{tocloft}
+\usepackage{doxygen}
+\lstset{language=C++,inputencoding=utf8,basicstyle=\footnotesize,breaklines=true,breakatwhitespace=true,tabsize=8,numbers=left }
+\makeindex
+\setcounter{tocdepth}{1}
+\hfuzz=15pt
+\setlength{\emergencystretch}{15pt}
+\hbadness=750
+\tolerance=750
+\begin{document}
+\hypersetup{pageanchor=false,citecolor=blue}
+\begin{titlepage}
+\centering
+  \vspace*{11\baselineskip}
+  \linespread{1.1}
+  \large
+  \textbf{
+  Digital Image Processing Coursework\\
+  Code Documentation\\
+  }
+  \normalfont
+  \small
+  Anthony Richards\\
+  Student Number: 070879966\\
+  Personal Tutor: Dr Balchin\\
+  \today
+\end{titlepage}
+\pagenumbering{roman}
+{
+  \setlength{\parskip}{0ex plus 0.5ex minus 0.2ex}
+  \tableofcontents
+}
+\cleardoublepage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true,citecolor=blue}
