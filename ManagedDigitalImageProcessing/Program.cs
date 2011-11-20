@@ -43,15 +43,11 @@ namespace ManagedDigitalImageProcessing
         /// </summary>
         public static void Main()
         {
-            var med = new HistogramMedianFilter(21);
-            var sobel = new SobelOperator();
-            var canny = new CannyFilter(40, 39);
-
             using (var inFile = File.OpenRead(@"..\..\..\Base Images\foetus.pgm"))
             {
                 var data = ImageLoader.LoadPgmImage(inFile);
-                var output1 = med.Filter(data);
-                var output2 = canny.Filter(output1);
+                var output1 = HistogramMedianFilter.Filter(data, 21);
+                var output2 = CannyFilter.Filter(output1, 40, 39);
                 var output3 = SobelOperator.Filter(output1);
 
                 output1.ToBitmap().Save("Median.png");

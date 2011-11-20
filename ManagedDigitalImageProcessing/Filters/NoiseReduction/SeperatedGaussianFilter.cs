@@ -36,36 +36,28 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class to apply a Gaussian filter to an image (using a seperated template)
     /// </summary>
-    public sealed class SeperatedGaussianFilter
+    public static class SeperatedGaussianFilter
     {
         /// <summary>
-        /// The template to apply to the image
+        /// Applies the Gaussian filter to the supplied image.
         /// </summary>
-        private readonly double[] template;
-
-        /// <summary>
-        /// The size of the template
-        /// </summary>
-        private readonly int size;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeperatedGaussianFilter"/> class.
-        /// </summary>
+        /// <param name="input">The input image.</param>
         /// <param name="sigma">The sigma value to use.</param>
-        /// <remarks>Sets the size of the template to be large enough to hold \f$3\sigma\f$</remarks>
-        public SeperatedGaussianFilter(double sigma)
-            : this((int)((2 * Math.Ceiling(3 * sigma)) + 1), sigma)
+        /// <returns>The filtered image</returns>
+        public static ImageData Filter(ImageData input, double sigma)
         {
+            return Filter(input, (int)((2 * Math.Ceiling(3 * sigma)) + 1), sigma);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SeperatedGaussianFilter"/> class.
+        /// Applies the Gaussian filter to the supplied image.
         /// </summary>
+        /// <param name="input">The input image.</param>
         /// <param name="size">The size of the template to use.</param>
         /// <param name="sigma">The sigma value to use.</param>
-        public SeperatedGaussianFilter(int size, double sigma)
+        /// <returns>The filtered image</returns>
+        public static ImageData Filter(ImageData input, int size, double sigma)
         {
-            this.size = size;
             var templateTemp = new double[size];
             double sum = 0;
 
@@ -80,17 +72,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                     sum += templateTemp[i];
                 });
 
-            template = new double[templateTemp.Length];
+            var template = new double[templateTemp.Length];
             Parallel.For(0, templateTemp.Length, i => template[i] = templateTemp[i] / sum);
-        }
 
-        /// <summary>
-        /// Applies the Gaussian filter to the supplied image.
-        /// </summary>
-        /// <param name="input">The input image.</param>
-        /// <returns>The filtered image</returns>
-        public ImageData Filter(ImageData input)
-        {
             var output = new ImageData(input.Width, input.Height);
 
             var tempData = ImageUtilities.Convolve(

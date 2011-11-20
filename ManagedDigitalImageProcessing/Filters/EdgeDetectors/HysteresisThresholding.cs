@@ -36,35 +36,18 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <summary>
     /// A filter object that applies Hysteresis Thresholding to the edges in an edge detected image.
     /// </summary>
-    public sealed class HysteresisThresholding
+    public static class HysteresisThresholding
     {
-        /// <summary>
-        /// The high threshold for the hysteresis
-        /// </summary>
-        private readonly int highT;
-
-        /// <summary>
-        /// The low threshold for the hysteresis
-        /// </summary>
-        private readonly int lowT;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HysteresisThresholding"/> class.
-        /// </summary>
-        /// <param name="highThreshold">The high hysteresis threshold.</param>
-        /// <param name="lowThreshold">The low hysteresis threshold.</param>
-        public HysteresisThresholding(int highThreshold, int lowThreshold)
-        {
-            highT = highThreshold;
-            lowT = lowThreshold;
-        }
-
         /// <summary>
         /// Applies hysteresis thresholding to the input image.
         /// </summary>
         /// <param name="input">The input image.</param>
-        /// <returns>The thresholded image.</returns>
-        public ImageData Filter(ImageData input)
+        /// <param name="highThreshold">The high hysteresis threshold.</param>
+        /// <param name="lowThreshold">The low hysteresis threshold.</param>
+        /// <returns>
+        /// The thresholded image.
+        /// </returns>
+        public static ImageData Filter(ImageData input, int highThreshold, int lowThreshold)
         {
             var output = new bool[input.Height * input.Width];
 
@@ -82,7 +65,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                         for (var j = 0; j < input.Height; j++)
                         {
                             // If the pixel is below the higher threshold or has already been processed, skip it.
-                            if (input.Data[calculateIndex(i, j)] <= highT || output[calculateIndex(i, j)])
+                            if (input.Data[calculateIndex(i, j)] <= highThreshold || output[calculateIndex(i, j)])
                             {
                                 continue;
                             }
@@ -91,7 +74,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
                             output[calculateIndex(i, j)] = true;
                             
                             // Mark any connected pixels as edges if they are above the lower threshold.
-                            output = Connect(i, j, output, input.Data, lowT, calculateIndex);
+                            output = Connect(i, j, output, input.Data, lowThreshold, calculateIndex);
                         }
                     });
 

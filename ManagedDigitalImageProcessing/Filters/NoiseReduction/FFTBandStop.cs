@@ -38,35 +38,18 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class to apply a bandstop filter using FFT techinques.
     /// </summary>
-    public class FFTBandStop
+    public static class FFTBandStop
     {
-        /// <summary>
-        /// The inner position of the stop band
-        /// </summary>
-        private readonly int inner;
-
-        /// <summary>
-        /// The output position of the stop band
-        /// </summary>
-        private readonly int outer;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FFTBandStop"/> class.
-        /// </summary>
-        /// <param name="inner">The inner position (in pixels) of the stop band.</param>
-        /// <param name="outer">The outer position (in pixels) of the stop band.</param>
-        public FFTBandStop(int inner, int outer)
-        {
-            this.inner = inner;
-            this.outer = outer;
-        }
-
         /// <summary>
         /// Applies the band stop to the specified image.
         /// </summary>
         /// <param name="input">The input image.</param>
-        /// <returns>The band-stop filtered image</returns>
-        public ImageData Filter(ImageData input)
+        /// <param name="inner">The inner edge of the bandstop (in pixels).</param>
+        /// <param name="outer">The outer edge of the bandstop (in pixels).</param>
+        /// <returns>
+        /// The band-stop filtered image
+        /// </returns>
+        public static ImageData Filter(ImageData input, int inner, int outer)
         {
             var width = input.Width;
             var height = input.Height;
@@ -74,8 +57,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             var newWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log(width, 2)));
             var newHeight = (int)Math.Pow(2, Math.Ceiling(Math.Log(height, 2)));
 
-            var resizer = new Resizer(newWidth, newHeight);
-            var resizedImage = resizer.Filter(input);
+            var resizedImage = Resizer.Filter(input, newWidth, newHeight);
 
             var complexInputData = new ComplexNumber[newWidth * newHeight];
             Parallel.For(0, newWidth * newHeight, i => complexInputData[i] = resizedImage.Data[i]);

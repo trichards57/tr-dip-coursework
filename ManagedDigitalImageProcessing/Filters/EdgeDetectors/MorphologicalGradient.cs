@@ -35,60 +35,42 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <summary>
     /// Filter class to apply a morpholgical gradient operation to an image, highlighting the edges.
     /// </summary>
-    public class MorphologicalGradient
+    public static class MorphologicalGradient
     {
-        /// <summary>
-        /// The size of the erosion operator structuring element.
-        /// </summary>
-        private readonly int erodeSize;
-
-        /// <summary>
-        /// The size of the dilation operator structuring element.
-        /// </summary>
-        private readonly int dilateSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MorphologicalGradient"/> class.
-        /// </summary>
-        /// <param name="erodeSize">Size of the erosion structuring element.</param>
-        /// <param name="dilateSize">Size of the dilation structuring element.</param>
-        public MorphologicalGradient(int erodeSize, int dilateSize)
-        {
-            this.erodeSize = erodeSize;
-            this.dilateSize = dilateSize;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MorphologicalGradient"/> class.
-        /// </summary>
-        /// <param name="filterSize">Size of the both of the structuring elements.</param>
-        public MorphologicalGradient(int filterSize)
-            : this(filterSize, filterSize)
-        {
-        }
-
         /// <summary>
         /// Filters the specified image.
         /// </summary>
         /// <param name="image">The image.</param>
-        /// <returns>An image with the edges highlighted by the morphological gradient operator.</returns>
+        /// <param name="erodeElementSize">Size of the erode.</param>
+        /// <param name="dilateElementSize">Size of the dilate.</param>
+        /// <returns>
+        /// An image with the edges highlighted by the morphological gradient operator.
+        /// </returns>
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public ImageData Filter(ImageData image)
+        public static ImageData Filter(ImageData image, int erodeElementSize, int dilateElementSize)
         {
-            var dilateFilter = new Dilate(dilateSize);
-            var erodeFilter = new Erode(erodeSize);
-
             // First create two images, one an erosion of the original and one a dilation
-            var er = erodeFilter.Filter(image);
-            var di = dilateFilter.Filter(image);
+            var er = Erode.Filter(image, erodeElementSize);
+            var di = Dilate.Filter(image, dilateElementSize);
 
             // Now take the differences of the two images to create a new image
             var buffer =
                 di.Data.AsParallel().AsOrdered().Zip(er.Data.AsParallel().AsOrdered(), (d, e) => d - e).ToArray();
 
             return new ImageData { Width = image.Width, Height = image.Height, Data = buffer };
+        }
+
+        /// <summary>
+        /// Filters the specified image.
+        /// </summary>
+        /// <param name="image">The image.</param>
+        /// <param name="structuringElementSize">Size of the structuring element.</param>
+        /// <returns>An image with the edges highlighted by the morphological gradient operator.</returns>
+        public static ImageData Filter(ImageData image, int structuringElementSize)
+        {
+            return Filter(image, structuringElementSize, structuringElementSize);
         }
     }
 }

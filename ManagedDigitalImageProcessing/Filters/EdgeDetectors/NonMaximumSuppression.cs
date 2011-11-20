@@ -35,7 +35,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <summary>
     /// Filter class to remove any non-maximum edges in the input data.
     /// </summary>
-    public sealed class NonMaximumSuppression
+    public static class NonMaximumSuppression
     {
         /// <summary>
         /// Applies non-maximum suppression to the specified input.
@@ -45,7 +45,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public ImageData Filter(SobelOperatorResult input)
+        public static ImageData Filter(SobelOperatorResult input)
         {
             var result = new ImageData(input.Width, input.Height);
 

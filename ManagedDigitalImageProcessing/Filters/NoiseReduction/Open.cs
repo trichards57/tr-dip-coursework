@@ -32,48 +32,31 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// A filter class to apply the open morphological operator to an image.
     /// </summary>
-    public class Open
+    public static class Open
     {
         /// <summary>
-        /// The size of the erosion operator
+        /// Applies the open operator to a specified image.
         /// </summary>
-        private readonly int erodeSize;
-        
-        /// <summary>
-        /// The size of the dilation operator
-        /// </summary>
-        private readonly int dilateSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Open"/> class.
-        /// </summary>
-        /// <param name="erodeSize">Size of the erosion structuring elements.</param>
-        /// <param name="dilateSize">Size of the dilation structuring elements.</param>
-        public Open(int erodeSize, int dilateSize)
+        /// <param name="image">The input image.</param>
+        /// <param name="erodeSize">Size of the erode structuring element.</param>
+        /// <param name="dilateSize">Size of the dilate structuring element.</param>
+        /// <returns>
+        /// The opened image
+        /// </returns>
+        public static ImageData Filter(ImageData image, int erodeSize, int dilateSize)
         {
-            this.erodeSize = erodeSize;
-            this.dilateSize = dilateSize;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Open"/> class.
-        /// </summary>
-        /// <param name="filterSize">Size of the structuring elements.</param>
-        public Open(int filterSize) : this(filterSize, filterSize)
-        {
+            return Dilate.Filter(Erode.Filter(image, erodeSize), dilateSize);
         }
 
         /// <summary>
         /// Applies the open operator to a specified image.
         /// </summary>
         /// <param name="image">The input image.</param>
+        /// <param name="structuringElementSize">Size of the structuring elements.</param>
         /// <returns>The opened image</returns>
-        public ImageData Filter(ImageData image)
+        public static ImageData Filter(ImageData image, int structuringElementSize)
         {
-            var erodeFilter = new Erode(erodeSize);
-            var dilateFilter = new Dilate(dilateSize);
-
-            return dilateFilter.Filter(erodeFilter.Filter(image));
+            return Filter(image, structuringElementSize, structuringElementSize);
         }
     }
 }

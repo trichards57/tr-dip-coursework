@@ -32,7 +32,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
     /// <summary>
     /// A filter object to apply the Laplacian Operator to an image.
     /// </summary>
-    public sealed class LaplacianOperator
+    public static class LaplacianOperator
     {
         /// <summary>
         /// Applies the Laplacian Operator to the given image.
@@ -42,7 +42,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public ImageData Filter(ImageData input)
+        public static ImageData Filter(ImageData input)
         {
             var output = new ImageData(input.Width, input.Height);
 

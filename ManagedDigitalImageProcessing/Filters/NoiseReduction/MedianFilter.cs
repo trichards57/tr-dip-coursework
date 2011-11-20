@@ -35,36 +35,23 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class to apply a median filter to the input.
     /// </summary>
-    public sealed class MedianFilter
+    public static class MedianFilter
     {
-        /// <summary>
-        /// The size of the filter window.
-        /// </summary>
-        private readonly int windowSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MedianFilter"/> class.
-        /// </summary>
-        /// <param name="size">The filter window size.</param>
-        public MedianFilter(int size = 3)
-        {
-            if (size % 2 == 0)
-            {
-                throw new ArgumentOutOfRangeException("size", size, "The size must be odd.");
-            }
-
-            windowSize = size;
-        }
-
         /// <summary>
         /// Filters the specified input.
         /// </summary>
         /// <param name="input">The input image.</param>
+        /// <param name="windowSize">Size of the filter window.</param>
         /// <returns>
         /// The filtered image.
         /// </returns>
-        public ImageData Filter(ImageData input)
+        public static ImageData Filter(ImageData input, int windowSize = 3)
         {
+            if (windowSize % 2 == 0)
+            {
+                throw new ArgumentOutOfRangeException("windowSize", windowSize, "The size must be odd.");
+            }
+
             var output = new ImageData(input.Width, input.Height);
 
             // Partial function application to simplify index calculation.

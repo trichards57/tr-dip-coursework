@@ -35,38 +35,21 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
     /// <summary>
     /// Filter class that applies the erode morphological operator to an image.
     /// </summary>
-    public class Erode
+    public static class Erode
     {
-        /// <summary>
-        /// The size of the structuring element
-        /// </summary>
-        private readonly int windowSize;
-
-        /// <summary>
-        /// <c>true</c> if the structuring element should be square
-        /// </summary>
-        private readonly bool square;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Erode"/> class.
-        /// </summary>
-        /// <param name="functionSize">Size of the function.</param>
-        /// <param name="square">if set to <c>true</c>, the structuring object will be square.</param>
-        public Erode(int functionSize = 3, bool square = false)
-        {
-            windowSize = functionSize;
-            this.square = square;
-        }
-
         /// <summary>
         /// Applies the operator to the specified image.
         /// </summary>
         /// <param name="input">The input image.</param>
-        /// <returns>The eroded image.</returns>
+        /// <param name="structuringElementSize">Size of the structuring element.</param>
+        /// <param name="square">if set to <c>true</c>, the structuring element will be square.</param>
+        /// <returns>
+        /// The eroded image.
+        /// </returns>
         /// <remarks>
         /// Algorithm taken from @cite imageProcessingBook
         /// </remarks>
-        public ImageData Filter(ImageData input)
+        public static ImageData Filter(ImageData input, int structuringElementSize = 3, bool square = false)
         {
             var output = new ImageData(input.Width, input.Height);
             
@@ -74,7 +57,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
             Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
             Func<int, int, int> calculateOutputIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, output.Width);
 
-            var offset = windowSize / 2;
+            var offset = structuringElementSize / 2;
 
             // Iterate through each column.
             Parallel.For(
@@ -92,7 +75,7 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
                     {
                         for (var l = -offset; l <= offset; l++)
                         {
-                            if (!this.square && Math.Sqrt((k * k) + (l * l)) >= offset)
+                            if (!square && Math.Sqrt((k * k) + (l * l)) >= offset)
                             {
                                 continue;
                             }
