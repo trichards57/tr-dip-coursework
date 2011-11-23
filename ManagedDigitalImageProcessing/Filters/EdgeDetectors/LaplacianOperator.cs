@@ -25,6 +25,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
+
 namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 {
     using Images;
@@ -51,6 +54,11 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 
             // Convolve it across the image
             output.Data = ImageUtilities.Convolve(template, input.Data, new System.Drawing.Size(3, 3), new System.Drawing.Size(input.Width, input.Height));
+
+            Parallel.For(0, output.Data.Length, i =>
+                                                    {
+                                                        output.Data[i] = Math.Abs(output.Data[i]);
+                                                    });
 
             return output;
         }

@@ -57,7 +57,7 @@ namespace ManagedDigitalImageProcessing.Filters.EdgeDetectors
 
             var outImage = new ImageData(input.Width, input.Height);
 
-            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width);
+            Func<int, int, int> calculateIndex = (x, y) => ImageUtilities.CalculateIndex(x, y, input.Width, input.Height);
 
             // Run through the image, searching for unprocessing pixels that are higher than the upper threshold, and so the
             // start of an edge
