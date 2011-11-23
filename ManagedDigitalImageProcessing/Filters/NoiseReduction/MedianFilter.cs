@@ -45,6 +45,9 @@ namespace ManagedDigitalImageProcessing.Filters.NoiseReduction
         /// <returns>
         /// The filtered image.
         /// </returns>
+        /// <remarks>
+        /// Algorithm taken from @cite lectures
+        /// </remarks>
         public static ImageData Filter(ImageData input, int windowSize = 3)
         {
             if (windowSize % 2 == 0)
