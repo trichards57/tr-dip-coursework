@@ -1,0 +1,7 @@
+H:\tr-dip-coursework\TimingTest\bin\Debug\TimingTest.exe
+H:\tr-dip-coursework\TimingTest\bin\Debug\TimingTest.pdb
+H:\tr-dip-coursework\TimingTest\bin\Debug\ManagedDigitalImageProcessing.exe
+H:\tr-dip-coursework\TimingTest\bin\Debug\ManagedDigitalImageProcessing.pdb
+H:\tr-dip-coursework\TimingTest\obj\x86\Debug\ResolveAssemblyReference.cache
+H:\tr-dip-coursework\TimingTest\obj\x86\Debug\TimingTest.exe
+H:\tr-dip-coursework\TimingTest\obj\x86\Debug\TimingTest.pdb
