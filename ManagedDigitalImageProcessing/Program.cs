@@ -32,6 +32,7 @@ namespace ManagedDigitalImageProcessing
     using ManagedDigitalImageProcessing.Filters.EdgeDetectors;
     using ManagedDigitalImageProcessing.Filters.NoiseReduction;
     using ManagedDigitalImageProcessing.Images;
+    using Microsoft.ConcurrencyVisualizer.Instrumentation;
 
     /// <summary>
     /// The main class for the program.
@@ -46,11 +47,10 @@ namespace ManagedDigitalImageProcessing
             using (var inFile = File.OpenRead(@"..\..\..\Base Images\foetus.pgm"))
             {
                 var data = ImageLoader.LoadPgmImage(inFile);
+
+                var s = Markers.EnterSpan("Median Filter");
                 var output1 = HistogramMedianFilter.Filter(data, 13);
-
-                output1 = LaplacianOperator.Filter(output1);
-
-                output1.ToBitmap().Save("foetusMorphological.png");
+                s.Leave();
             }
         }
     }
